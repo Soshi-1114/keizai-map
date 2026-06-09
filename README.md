@@ -5,7 +5,7 @@
 賃金・物価・税収・為替の推移を政権とともに一画面で可視化するWebサービス。
 バラバラに語られてきた経済データを重ねることで、「なぜ生活が苦しくなったのか」を数字で見せる。
 
-🔗 **[keizaimap.vercel.app](https://keizaimap.vercel.app)** （準備中）
+🔗 **https://keizai-map.vercel.app/**
 
 -----
 
