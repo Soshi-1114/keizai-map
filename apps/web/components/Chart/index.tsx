@@ -12,8 +12,8 @@ import {
   ReferenceLine,
   ReferenceArea,
 } from "recharts";
-import type { DataPoint, EconomicEvent, IndicatorKey, Administration } from "@keizai-map/types";
-import { INDICATOR_CONFIGS } from "@keizai-map/data";
+import type { DataPoint, EconomicEvent, IndicatorKey, Administration } from "@/lib/types";
+import { INDICATOR_CONFIGS } from "@/lib/data";
 
 interface Props {
   data: DataPoint[];

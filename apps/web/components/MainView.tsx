@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import type { IndicatorKey, EventCategory } from "@keizai-map/types";
-import { RAW_DATA, ADMINISTRATIONS, EVENTS, INDICATOR_CONFIGS } from "@keizai-map/data";
+import type { IndicatorKey, EventCategory } from "@/lib/types";
+import { RAW_DATA, ADMINISTRATIONS, EVENTS, INDICATOR_CONFIGS } from "@/lib/data";
 import { Chart } from "./Chart";
 import { AdminBar } from "./AdminBar";
 import { RangeSlider } from "./RangeSlider";

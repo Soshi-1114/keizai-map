@@ -1,4 +1,4 @@
-import type { Administration } from "@keizai-map/types";
+import type { Administration } from "@/lib/types";
 
 interface Props {
   administrations: Administration[];

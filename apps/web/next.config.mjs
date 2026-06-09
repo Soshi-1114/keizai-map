@@ -1,6 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  transpilePackages: ["@keizai-map/types", "@keizai-map/data"],
-};
+const nextConfig = {};
 
 export default nextConfig;

@@ -1,4 +1,4 @@
-import type { DataPoint } from "@keizai-map/types";
+import type { DataPoint } from "@/lib/types";
 
 interface Props {
   data: DataPoint[];

@@ -1,6 +1,6 @@
 "use client";
 
-import type { EventCategory } from "@keizai-map/types";
+import type { EventCategory } from "@/lib/types";
 
 interface Props {
   categories: EventCategory[];

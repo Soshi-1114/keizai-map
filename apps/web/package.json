@@ -12,9 +12,7 @@
     "react": "^18",
     "react-dom": "^18",
     "next": "14.2.35",
-    "recharts": "^2.12.7",
-    "@keizai-map/types": "workspace:*",
-    "@keizai-map/data": "workspace:*"
+    "recharts": "^2.12.7"
   },
   "devDependencies": {
     "typescript": "^5",
