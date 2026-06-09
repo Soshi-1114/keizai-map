@@ -1,0 +1,33 @@
+export type IndicatorKey = "wage" | "cpi" | "tax" | "fx";
+export type EventCategory = "税制" | "経済" | "経済政策";
+
+export interface DataPoint {
+  year: number;
+  wage: number;
+  cpi: number;
+  tax: number;
+  fx: number;
+}
+
+export interface Administration {
+  name: string;
+  start: number;
+  end: number;
+  party: string;
+  color: string;
+}
+
+export interface EconomicEvent {
+  year: number;
+  label: string;
+  category: EventCategory;
+  color: string;
+}
+
+export interface IndicatorConfig {
+  key: IndicatorKey;
+  label: string;
+  color: string;
+  unit: string;
+  yAxis: "left" | "right";
+}

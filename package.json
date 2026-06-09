@@ -1,0 +1,13 @@
+{
+  "name": "keizai-map",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "lint": "pnpm --filter web lint"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  },
+  "packageManager": "pnpm@9.0.0"
+}
