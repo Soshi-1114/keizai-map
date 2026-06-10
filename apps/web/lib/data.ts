@@ -1,7 +1,14 @@
 import type { DataPoint, Administration, EconomicEvent, IndicatorConfig } from "./types";
-import generatedData from "./data.generated.json";
+import generatedFile from "./data.generated.json";
 
-export const RAW_DATA: DataPoint[] = generatedData as DataPoint[];
+const { generatedAt, data: rawArray } = generatedFile as unknown as {
+  generatedAt: string;
+  data: DataPoint[];
+};
+
+export const RAW_DATA: DataPoint[] = rawArray;
+/** フォーマット: "YYYY-MM" */
+export const DATA_UPDATED_AT: string = generatedAt ?? "";
 
 export const ADMINISTRATIONS: Administration[] = [
   { name: "海部",     start: 1989, end: 1991, party: "自民党",   color: "#3B6FD4" },

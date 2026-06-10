@@ -193,8 +193,12 @@ async function main() {
     process.cwd(),
     "../../apps/web/lib/data.generated.json",
   );
+  const output = {
+    generatedAt: new Date().toISOString().slice(0, 7), // "YYYY-MM"
+    data,
+  };
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
-  fs.writeFileSync(outPath, JSON.stringify(data, null, 2) + "\n");
+  fs.writeFileSync(outPath, JSON.stringify(output, null, 2) + "\n");
 
   const latest = data[data.length - 1];
   console.log(`\n✅ ${data.length}件 → ${outPath}`);

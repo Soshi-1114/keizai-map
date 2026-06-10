@@ -1,40 +1,65 @@
-const INSIGHTS = [
-  {
-    icon: "📉",
-    title: "賃金は30年でほぼ横ばい",
-    body: "実質賃金の指数は1990年比でほぼ変わらず。同期間に物価は28%上昇。",
-    color: "#4F8EF7",
-  },
-  {
-    icon: "💰",
-    title: "税収は過去最高水準",
-    body: "2022年度の税収は71兆円超。バブル期（60兆円台）を大きく上回る。",
-    color: "#E05C5C",
-  },
-  {
-    icon: "💴",
-    title: "円は半値以下に",
-    body: "1995年の最高値79円台から、2024年には151円台まで円安が進行。",
-    color: "#4FD9A0",
-  },
-];
+import type { DataPoint } from "@/lib/types";
+import { INDICATOR_CONFIGS } from "@/lib/data";
 
-export function InsightCards() {
+interface Props {
+  data: DataPoint[];
+  yearRange?: [number, number];
+}
+
+export function InsightCards({ data }: Props) {
+  if (data.length < 2) return null;
+
+  const start = data[0];
+  const end = data[data.length - 1];
+  const sameYear = start.year === end.year;
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-      {INSIGHTS.map(({ icon, title, body, color }) => (
-        <div
-          key={title}
-          className="rounded-xl border p-4"
-          style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-xl">{icon}</span>
-            <span className="text-sm font-bold" style={{ color }}>{title}</span>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      {INDICATOR_CONFIGS.map(cfg => {
+        const startVal = start[cfg.key] as number | null;
+        const endVal   = end[cfg.key]   as number | null;
+        if (startVal == null || endVal == null) return null;
+
+        const delta    = endVal - startVal;
+        const deltaPct = startVal !== 0 ? (delta / startVal) * 100 : 0;
+        const sign     = delta >= 0 ? "+" : "";
+        const deltaColor = delta >= 0 ? "#22c55e" : "#ef4444";
+
+        const unitShort =
+          cfg.key === "tax" ? "兆円" :
+          cfg.key === "fx"  ? "円"   : "";
+
+        return (
+          <div
+            key={cfg.key}
+            className="rounded-xl border p-4"
+            style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+          >
+            <div className="text-xs font-medium mb-2 truncate" style={{ color: cfg.color }}>
+              {cfg.label}
+            </div>
+
+            {sameYear ? (
+              <div className="text-xl font-bold tabular-nums" style={{ color: cfg.color }}>
+                {endVal.toFixed(1)}{unitShort && <span className="text-sm ml-0.5">{unitShort}</span>}
+              </div>
+            ) : (
+              <div className="text-2xl font-bold tabular-nums leading-none" style={{ color: deltaColor }}>
+                {sign}{deltaPct.toFixed(1)}%
+              </div>
+            )}
+
+            <div className="mt-2 space-y-0.5">
+              <div className="text-[11px]" style={{ color: "var(--muted)" }}>
+                {start.year}年 → {end.year}年
+              </div>
+              <div className="text-[11px] tabular-nums" style={{ color: "var(--muted)" }}>
+                {startVal.toFixed(1)}{unitShort} → {endVal.toFixed(1)}{unitShort}
+              </div>
+            </div>
           </div>
-          <p className="text-xs leading-relaxed" style={{ color: "var(--muted)" }}>{body}</p>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

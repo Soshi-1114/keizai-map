@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
 import { useIsMobile } from "@/lib/hooks";
-import { RAW_DATA, ADMINISTRATIONS, EVENTS, INDICATOR_CONFIGS } from "@/lib/data";
+import { RAW_DATA, ADMINISTRATIONS, EVENTS, INDICATOR_CONFIGS, DATA_UPDATED_AT } from "@/lib/data";
 import { Chart } from "./Chart";
 import { AdminBar } from "./AdminBar";
 import { RangeSlider } from "./RangeSlider";
@@ -17,6 +17,21 @@ const ALL_CATEGORIES: EventCategory[] = ["税制", "経済", "経済政策"];
 const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key);
 const MIN_YEAR = 1990;
 const MAX_YEAR = 2024;
+
+// 注目の期間ショートカット（すべて隔年データに合わせた偶数年）
+const ERA_SHORTCUTS: { label: string; range: [number, number] }[] = [
+  { label: "バブル崩壊",    range: [1990, 1998] },
+  { label: "小泉改革",      range: [2002, 2008] },
+  { label: "アベノミクス",   range: [2012, 2020] },
+  { label: "コロナ禍",      range: [2018, 2022] },
+  { label: "円安加速",      range: [2020, 2024] },
+];
+
+function formatUpdatedAt(ym: string): string {
+  const [y, m] = ym.split("-");
+  if (!y || !m) return ym;
+  return `${y}年${parseInt(m, 10)}月`;
+}
 
 function parseRange(param: string | null): [number, number] {
   if (!param) return [MIN_YEAR, MAX_YEAR];
@@ -53,7 +68,7 @@ export function MainView() {
 
   const filteredData = RAW_DATA.filter(d => d.year >= yearRange[0] && d.year <= yearRange[1]);
 
-  // URL を更新（スライダー連打による SecurityError を防ぐため 300ms デバウンス）
+  // URL 更新（スライダー連打による SecurityError を防ぐため 300ms デバウンス）
   const urlTimer = useRef<ReturnType<typeof setTimeout>>();
   useEffect(() => {
     clearTimeout(urlTimer.current);
@@ -134,7 +149,6 @@ export function MainView() {
 
         {/* Chart + AdminBar */}
         <div className="rounded-xl border p-4" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
-          {/* Chart header with share button */}
           <div className="flex items-center justify-end mb-2">
             <button
               onClick={handleShare}
@@ -155,21 +169,48 @@ export function MainView() {
             activeIndicators={activeIndicators}
             activeCategories={activeCategories}
           />
-          {/* AdminBar: pl/pr matches YAxis width */}
           <div className={isMobile ? "pl-[38px] pr-[38px]" : "pl-[55px] pr-[55px]"}>
             <AdminBar administrations={ADMINISTRATIONS} yearRange={yearRange} />
           </div>
         </div>
 
-        {/* Insight cards */}
-        <InsightCards />
+        {/* Insight cards（動的：選択期間の変化率を表示） */}
+        <InsightCards data={filteredData} yearRange={yearRange} />
 
         {/* Controls */}
         <div className="rounded-xl border p-4 space-y-5" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
+          {/* 注目の期間ショートカット */}
+          <div>
+            <h3 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>注目の期間</h3>
+            <div className="flex gap-2 flex-wrap">
+              {ERA_SHORTCUTS.map(({ label, range }) => {
+                const isActive = yearRange[0] === range[0] && yearRange[1] === range[1];
+                return (
+                  <button
+                    key={label}
+                    onClick={() => setYearRange(range)}
+                    className="px-3 py-1 rounded-full text-xs border transition-all"
+                    style={{
+                      borderColor: isActive ? "#4F8EF7" : "var(--border)",
+                      color: isActive ? "#4F8EF7" : "var(--muted)",
+                      backgroundColor: isActive ? "#4F8EF720" : "transparent",
+                      fontWeight: isActive ? 600 : 400,
+                    }}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 表示期間スライダー */}
           <div>
             <h3 className="text-xs font-medium mb-3" style={{ color: "var(--muted)" }}>表示期間</h3>
             <RangeSlider min={MIN_YEAR} max={MAX_YEAR} value={yearRange} onChange={setYearRange} step={2} />
           </div>
+
+          {/* イベントフィルター */}
           <div>
             <h3 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>経済イベントフィルター</h3>
             <EventFilter
@@ -181,8 +222,11 @@ export function MainView() {
         </div>
 
         {/* Footer */}
-        <footer className="text-xs text-center pt-4 border-t" style={{ color: "var(--muted)", borderColor: "var(--border)" }}>
-          データ出典: 厚労省・総務省・財務省・日本銀行 &nbsp;|&nbsp; 数値はすべて公開統計に基づきます
+        <footer className="text-xs text-center pt-4 border-t space-y-1" style={{ color: "var(--muted)", borderColor: "var(--border)" }}>
+          <p>データ出典: 厚労省・総務省・財務省・日本銀行 &nbsp;|&nbsp; 数値はすべて公開統計に基づきます</p>
+          {DATA_UPDATED_AT && (
+            <p>最終更新: {formatUpdatedAt(DATA_UPDATED_AT)}</p>
+          )}
         </footer>
       </div>
     </main>
