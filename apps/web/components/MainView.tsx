@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
 import { useIsMobile } from "@/lib/hooks";
 import { RAW_DATA, ADMINISTRATIONS, EVENTS, INDICATOR_CONFIGS } from "@/lib/data";
@@ -40,7 +40,6 @@ function parseCategories(param: string | null): EventCategory[] {
 export function MainView() {
   const isMobile = useIsMobile();
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   const [yearRange, setYearRange] = useState<[number, number]>(() =>
     parseRange(searchParams.get("range"))
@@ -54,23 +53,15 @@ export function MainView() {
 
   const filteredData = RAW_DATA.filter(d => d.year >= yearRange[0] && d.year <= yearRange[1]);
 
-  // Sync URL whenever state changes
-  const updateURL = useCallback((
-    indicators: IndicatorKey[],
-    range: [number, number],
-    events: EventCategory[]
-  ) => {
-    const params = new URLSearchParams({
-      indicators: indicators.join(","),
-      range: range.join(","),
-      events: events.join(","),
-    });
-    router.replace(`/?${params.toString()}`, { scroll: false });
-  }, [router]);
-
+  // ナビゲーションを発生させずに URL だけ更新
   useEffect(() => {
-    updateURL(activeIndicators, yearRange, activeCategories);
-  }, [activeIndicators, yearRange, activeCategories, updateURL]);
+    const params = new URLSearchParams({
+      indicators: activeIndicators.join(","),
+      range: yearRange.join(","),
+      events: activeCategories.join(","),
+    });
+    window.history.replaceState(null, "", `/?${params.toString()}`);
+  }, [activeIndicators, yearRange, activeCategories]);
 
   const toggleIndicator = (key: IndicatorKey) =>
     setActiveIndicators(prev =>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useCallback } from "react";
 import { useIsMobile } from "@/lib/hooks";
 
 interface Props {
@@ -19,23 +20,90 @@ export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
   const handleSize = isMobile ? 24 : 16;
   const halfHandle = handleSize / 2;
 
+  const trackRef = useRef<HTMLDivElement>(null);
+  // Which handle is being dragged: "lo" | "hi" | null
+  const dragging = useRef<"lo" | "hi" | null>(null);
+
+  /** ポインター X 座標からスナップ済み値を計算 */
+  const xToValue = useCallback(
+    (clientX: number): number => {
+      const rect = trackRef.current!.getBoundingClientRect();
+      const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      return Math.round((min + ratio * range) / step) * step;
+    },
+    [min, range, step],
+  );
+
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      trackRef.current!.setPointerCapture(e.pointerId);
+
+      const val = xToValue(e.clientX);
+      // より近いハンドルを選択（同距離なら lo を優先）
+      dragging.current =
+        Math.abs(val - lo) <= Math.abs(val - hi) ? "lo" : "hi";
+
+      // クリック位置に即時移動
+      if (dragging.current === "lo") {
+        onChange([Math.max(min, Math.min(val, hi - step)), hi]);
+      } else {
+        onChange([lo, Math.min(max, Math.max(val, lo + step))]);
+      }
+    },
+    [lo, hi, min, max, step, onChange, xToValue],
+  );
+
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (!dragging.current) return;
+      const val = xToValue(e.clientX);
+      if (dragging.current === "lo") {
+        onChange([Math.max(min, Math.min(val, hi - step)), hi]);
+      } else {
+        onChange([lo, Math.min(max, Math.max(val, lo + step))]);
+      }
+    },
+    [lo, hi, min, max, step, onChange, xToValue],
+  );
+
+  const handlePointerUp = useCallback(() => {
+    dragging.current = null;
+  }, []);
+
   return (
     <div className="space-y-3">
       <div className="flex justify-between text-sm" style={{ color: "var(--text)" }}>
         <span>{lo}年</span>
         <span>{hi}年</span>
       </div>
-      <div className="relative flex items-center select-none" style={{ height: handleSize + 8 }}>
-        {/* Track */}
-        <div className="absolute inset-x-0 h-1 rounded-full" style={{ backgroundColor: "var(--border)" }} />
-        {/* Active fill */}
+
+      <div
+        ref={trackRef}
+        className="relative select-none cursor-pointer"
+        style={{ height: handleSize + 8, touchAction: "none" }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+      >
+        {/* トラック背景 */}
         <div
-          className="absolute h-1 rounded-full bg-[#4F8EF7]"
-          style={{ left: `${loPct}%`, right: `${100 - hiPct}%` }}
+          className="absolute top-1/2 -translate-y-1/2 inset-x-0 h-1 rounded-full"
+          style={{ backgroundColor: "var(--border)" }}
         />
-        {/* Visual handles */}
+        {/* アクティブ区間 */}
         <div
-          className="absolute rounded-full shadow pointer-events-none z-10"
+          className="absolute top-1/2 -translate-y-1/2 h-1 rounded-full"
+          style={{
+            left: `${loPct}%`,
+            right: `${100 - hiPct}%`,
+            backgroundColor: "#4F8EF7",
+          }}
+        />
+        {/* lo ハンドル */}
+        <div
+          className="absolute top-1/2 -translate-y-1/2 rounded-full shadow pointer-events-none"
           style={{
             width: handleSize,
             height: handleSize,
@@ -44,8 +112,9 @@ export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
             border: "2px solid var(--bg)",
           }}
         />
+        {/* hi ハンドル */}
         <div
-          className="absolute rounded-full shadow pointer-events-none z-10"
+          className="absolute top-1/2 -translate-y-1/2 rounded-full shadow pointer-events-none"
           style={{
             width: handleSize,
             height: handleSize,
@@ -53,27 +122,6 @@ export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
             backgroundColor: "#4F8EF7",
             border: "2px solid var(--bg)",
           }}
-        />
-        {/* Invisible inputs */}
-        <input
-          type="range"
-          min={min} max={max} step={step} value={lo}
-          onChange={e => {
-            const v = Math.min(Number(e.target.value), hi - step);
-            onChange([v, hi]);
-          }}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-          style={{ zIndex: lo > max - step ? 5 : 3 }}
-        />
-        <input
-          type="range"
-          min={min} max={max} step={step} value={hi}
-          onChange={e => {
-            const v = Math.max(Number(e.target.value), lo + step);
-            onChange([lo, v]);
-          }}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-          style={{ zIndex: 4 }}
         />
       </div>
     </div>
