@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
 import { useIsMobile } from "@/lib/hooks";
 import { RAW_DATA, ADMINISTRATIONS, EVENTS, INDICATOR_CONFIGS } from "@/lib/data";
@@ -10,20 +11,66 @@ import { AdminBar } from "./AdminBar";
 import { RangeSlider } from "./RangeSlider";
 import { EventFilter } from "./EventFilter";
 import { InsightCards } from "./InsightCards";
+import { ThemeToggle } from "./ThemeToggle";
 
 const ALL_CATEGORIES: EventCategory[] = ["税制", "経済", "経済政策"];
+const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key);
 const MIN_YEAR = 1990;
 const MAX_YEAR = 2024;
 
+function parseRange(param: string | null): [number, number] {
+  if (!param) return [MIN_YEAR, MAX_YEAR];
+  const [s, e] = param.split(",").map(Number);
+  if (s >= MIN_YEAR && e <= MAX_YEAR && s < e) return [s, e];
+  return [MIN_YEAR, MAX_YEAR];
+}
+
+function parseIndicators(param: string | null): IndicatorKey[] {
+  if (!param) return ALL_INDICATOR_KEYS;
+  const keys = param.split(",").filter(k => ALL_INDICATOR_KEYS.includes(k as IndicatorKey)) as IndicatorKey[];
+  return keys.length > 0 ? keys : ALL_INDICATOR_KEYS;
+}
+
+function parseCategories(param: string | null): EventCategory[] {
+  if (!param) return [...ALL_CATEGORIES];
+  const cats = param.split(",").filter(c => ALL_CATEGORIES.includes(c as EventCategory)) as EventCategory[];
+  return cats.length > 0 ? cats : [...ALL_CATEGORIES];
+}
+
 export function MainView() {
   const isMobile = useIsMobile();
-  const [yearRange, setYearRange] = useState<[number, number]>([MIN_YEAR, MAX_YEAR]);
-  const [activeIndicators, setActiveIndicators] = useState<IndicatorKey[]>(
-    INDICATOR_CONFIGS.map(c => c.key)
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const [yearRange, setYearRange] = useState<[number, number]>(() =>
+    parseRange(searchParams.get("range"))
   );
-  const [activeCategories, setActiveCategories] = useState<EventCategory[]>([...ALL_CATEGORIES]);
+  const [activeIndicators, setActiveIndicators] = useState<IndicatorKey[]>(() =>
+    parseIndicators(searchParams.get("indicators"))
+  );
+  const [activeCategories, setActiveCategories] = useState<EventCategory[]>(() =>
+    parseCategories(searchParams.get("events"))
+  );
 
   const filteredData = RAW_DATA.filter(d => d.year >= yearRange[0] && d.year <= yearRange[1]);
+
+  // Sync URL whenever state changes
+  const updateURL = useCallback((
+    indicators: IndicatorKey[],
+    range: [number, number],
+    events: EventCategory[]
+  ) => {
+    const params = new URLSearchParams({
+      indicators: indicators.join(","),
+      range: range.join(","),
+      events: events.join(","),
+    });
+    router.replace(`/?${params.toString()}`, { scroll: false });
+  }, [router]);
+
+  useEffect(() => {
+    updateURL(activeIndicators, yearRange, activeCategories);
+  }, [activeIndicators, yearRange, activeCategories, updateURL]);
 
   const toggleIndicator = (key: IndicatorKey) =>
     setActiveIndicators(prev =>
@@ -35,6 +82,15 @@ export function MainView() {
       prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
     );
 
+  const handleShare = () => {
+    const text = `賃金・物価・税収・為替の推移を政権帯とともに確認できます。\n\n#KeizaiMap #日本経済\n${window.location.href}`;
+    window.open(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
+
   return (
     <main className="min-h-screen p-4 md:p-10" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
       <div className="max-w-7xl mx-auto space-y-5">
@@ -42,12 +98,20 @@ export function MainView() {
         {/* Header */}
         <header className="flex items-end justify-between pb-4 border-b" style={{ borderColor: "var(--border)" }}>
           <div>
-            <h1 className="font-bold tracking-tight" style={{ fontSize: "clamp(22px, 5vw, 38px)" }}>KeizaiMap</h1>
+            <h1
+              className="font-bold tracking-tight"
+              style={{ fontSize: "clamp(22px, 5vw, 38px)" }}
+            >
+              KeizaiMap
+            </h1>
             <p className="text-sm mt-0.5" style={{ color: "var(--muted)" }}>数字で見る、日本の30年</p>
           </div>
-          <Link href="/about" className="text-xs hover:underline" style={{ color: "var(--muted)" }}>
-            データソースについて
-          </Link>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Link href="/about" className="text-xs hover:underline" style={{ color: "var(--muted)" }}>
+              データソースについて
+            </Link>
+          </div>
         </header>
 
         {/* Indicator toggles */}
@@ -74,6 +138,20 @@ export function MainView() {
 
         {/* Chart + AdminBar */}
         <div className="rounded-xl border p-4" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
+          {/* Chart header with share button */}
+          <div className="flex items-center justify-end mb-2">
+            <button
+              onClick={handleShare}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-opacity hover:opacity-80"
+              style={{ backgroundColor: "#1DA1F2", color: "#fff" }}
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.736-8.842L1.254 2.25H8.08l4.253 5.622 5.91-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+              </svg>
+              Xでシェア
+            </button>
+          </div>
+
           <Chart
             data={filteredData}
             events={EVENTS}

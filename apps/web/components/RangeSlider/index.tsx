@@ -35,19 +35,23 @@ export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
         />
         {/* Visual handles */}
         <div
-          className="absolute rounded-full bg-[#4F8EF7] border-2 border-[#10121A] shadow pointer-events-none z-10"
+          className="absolute rounded-full shadow pointer-events-none z-10"
           style={{
             width: handleSize,
             height: handleSize,
             left: `calc(${loPct}% - ${halfHandle}px)`,
+            backgroundColor: "#4F8EF7",
+            border: "2px solid var(--bg)",
           }}
         />
         <div
-          className="absolute rounded-full bg-[#4F8EF7] border-2 border-[#10121A] shadow pointer-events-none z-10"
+          className="absolute rounded-full shadow pointer-events-none z-10"
           style={{
             width: handleSize,
             height: handleSize,
             left: `calc(${hiPct}% - ${halfHandle}px)`,
+            backgroundColor: "#4F8EF7",
+            border: "2px solid var(--bg)",
           }}
         />
         {/* Invisible inputs */}

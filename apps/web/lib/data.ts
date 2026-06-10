@@ -45,14 +45,14 @@ export const ADMINISTRATIONS: Administration[] = [
 
 export const EVENTS: EconomicEvent[] = [
   { year: 1991, label: "バブル崩壊",   category: "経済",     color: "#E05C5C" },
-  { year: 1997, label: "消費税3→5%",   category: "税制",     color: "#F7C94F" },
+  { year: 1997, label: "消費税3→5%",   category: "税制",     color: "#D97706" },
   { year: 1998, label: "金融危機",     category: "経済",     color: "#E05C5C" },
   { year: 2008, label: "リーマン",     category: "経済",     color: "#E05C5C" },
   { year: 2011, label: "東日本大震災", category: "経済",     color: "#E05C5C" },
   { year: 2013, label: "アベノミクス", category: "経済政策", color: "#4FD9A0" },
-  { year: 2014, label: "消費税5→8%",   category: "税制",     color: "#F7C94F" },
+  { year: 2014, label: "消費税5→8%",   category: "税制",     color: "#D97706" },
   { year: 2016, label: "マイナス金利", category: "経済政策", color: "#4FD9A0" },
-  { year: 2019, label: "消費税8→10%",  category: "税制",     color: "#F7C94F" },
+  { year: 2019, label: "消費税8→10%",  category: "税制",     color: "#D97706" },
   { year: 2020, label: "コロナ禍",     category: "経済",     color: "#E05C5C" },
   { year: 2022, label: "円安加速",     category: "経済政策", color: "#4FD9A0" },
   { year: 2024, label: "日銀利上げ",   category: "経済政策", color: "#4FD9A0" },
@@ -60,7 +60,7 @@ export const EVENTS: EconomicEvent[] = [
 
 export const INDICATOR_CONFIGS: IndicatorConfig[] = [
   { key: "wage", label: "実質賃金",         color: "#4F8EF7", unit: "（1990=100）", yAxis: "left"  },
-  { key: "cpi",  label: "消費者物価（CPI）", color: "#F7C94F", unit: "（1990=100）", yAxis: "left"  },
+  { key: "cpi",  label: "消費者物価（CPI）", color: "#D97706", unit: "（1990=100）", yAxis: "left"  },
   { key: "tax",  label: "税収",             color: "#E05C5C", unit: "（兆円）",      yAxis: "right" },
   { key: "fx",   label: "USD/JPY",          color: "#4FD9A0", unit: "（円）",        yAxis: "right" },
 ];

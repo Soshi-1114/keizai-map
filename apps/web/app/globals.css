@@ -2,18 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Light theme (default) ── */
 :root {
-  --bg: #10121A;
-  --card: #161921;
+  --bg:     #F7F8FC;
+  --card:   #FFFFFF;
+  --border: #E1E4EF;
+  --text:   #1A1D2E;
+  --muted:  #6B7280;
+
+  color-scheme: light;
+}
+
+/* ── Dark theme ── */
+.dark {
+  --bg:     #10121A;
+  --card:   #161921;
   --border: #2E3245;
-  --text: #E8EAF0;
-  --muted: #6B7280;
+  --text:   #E8EAF0;
+  --muted:  #8B95A8;
+
+  color-scheme: dark;
 }
 
 body {
   background-color: var(--bg);
   color: var(--text);
   font-family: 'Hiragino Sans', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* Dual range slider thumb styles */
