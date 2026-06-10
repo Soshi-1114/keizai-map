@@ -100,17 +100,38 @@ cd keizai-map
 # 依存関係インストール
 pnpm install
 
-# 開発サーバー起動
+# Web アプリを起動
 pnpm dev
 
 # ブラウザで確認
 open http://localhost:3000
 ```
 
-### 環境変数
+### 便利なコマンド
 
 ```bash
-# apps/web/.env.local
+# ルートから Web アプリを起動
+pnpm dev
+
+# ビルド
+pnpm build
+
+# ESLint を実行
+pnpm lint
+
+# データ取得スクリプトを実行
+pnpm data:fetch
+```
+
+### 環境変数
+
+ルートから `apps/web/.env.example` をコピーして `apps/web/.env.local` を作成してください。
+
+```bash
+cp apps/web/.env.example apps/web/.env.local
+```
+
+```bash
 ESTAT_API_KEY=your_api_key  # e-Stat APIキー（無料登録）
 ```
 

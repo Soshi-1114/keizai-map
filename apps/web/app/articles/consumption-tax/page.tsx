@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+
+const SLUG = "consumption-tax";
 
 export const metadata: Metadata = {
   title: "消費税率引き上げの歴史と家計への影響 | KeizaiMap",
@@ -7,13 +11,38 @@ export const metadata: Metadata = {
 };
 
 export default function ConsumptionTaxPage() {
+  const articleJsonLd = generateArticleJsonLd({
+    title: "消費税率引き上げの歴史と家計への影響",
+    description: "1989年の3%導入から2019年の10%まで、消費税はどのように変化してきたのか。各増税のタイミングで物価や税収にどんな変化があったかをデータで確認します。",
+    slug: SLUG,
+    readingTime: 4,
+    tags: ["消費税", "税収", "物価"],
+  });
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
+  const organizationJsonLd = generateOrganizationJsonLd();
   return (
-    <ArticleLayout
-      title="消費税率引き上げの歴史と家計への影響"
-      description="1989年の3%導入から2019年の10%まで、消費税はどのように変化してきたのか。各増税のタイミングで物価や税収にどんな変化があったかをデータで確認します。"
-      readingTime={4}
-      tags={["消費税", "税収", "物価"]}
-    >
+    <>
+      <Script
+        id="article-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <Script
+        id="breadcrumb-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <Script
+        id="org-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <ArticleLayout
+        title="消費税率引き上げの歴史と家計への影響"
+        description="1989年の3%導入から2019年の10%まで、消費税はどのように変化してきたのか。各増税のタイミングで物価や税収にどんな変化があったかをデータで確認します。"
+        readingTime={4}
+        tags={["消費税", "税収", "物価"]}
+      >
       <Section heading="消費税とは">
         <p>
           消費税は、商品・サービスの消費に対して課税される間接税です。
@@ -119,5 +148,6 @@ export default function ConsumptionTaxPage() {
         </p>
       </Section>
     </ArticleLayout>
+    </>
   );
 }

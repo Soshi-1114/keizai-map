@@ -173,7 +173,7 @@ function ShockChart() {
       const base   = RAW_DATA.find(d => d.year === ev.year);
       const target = RAW_DATA.find(d => d.year === ev.year + rel);
       row[ev.label] =
-        base && target
+        base && target && base[indicator] && target[indicator]
           ? Math.round((target[indicator] / base[indicator]) * 1000) / 10
           : null;
     }

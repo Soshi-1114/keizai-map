@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+
+const SLUG = "lost-decades";
 
 export const metadata: Metadata = {
   title: "「失われた30年」─ 数字で見る日本経済の停滞 | KeizaiMap",
@@ -7,13 +11,38 @@ export const metadata: Metadata = {
 };
 
 export default function LostDecadesPage() {
+  const articleJsonLd = generateArticleJsonLd({
+    title: "「失われた30年」─ 数字で見る日本経済の停滞",
+    description: "バブル崩壊から現在まで、日本経済は何を失ったのか。実質賃金・物価・税収・為替の推移をデータで俯瞰します。",
+    slug: SLUG,
+    readingTime: 5,
+    tags: ["バブル崩壊", "デフレ", "長期停滞"],
+  });
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
+  const organizationJsonLd = generateOrganizationJsonLd();
   return (
-    <ArticleLayout
-      title="「失われた30年」─ 数字で見る日本経済の停滞"
-      description="バブル崩壊から現在まで、日本経済は何を失ったのか。実質賃金・物価・税収・為替の推移をデータで俯瞰します。"
-      readingTime={5}
-      tags={["バブル崩壊", "デフレ", "長期停滞"]}
-    >
+    <>
+      <Script
+        id="article-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <Script
+        id="breadcrumb-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <Script
+        id="org-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <ArticleLayout
+        title="「失われた30年」─ 数字で見る日本経済の停滞"
+        description="バブル崩壊から現在まで、日本経済は何を失ったのか。実質賃金・物価・税収・為替の推移をデータで俯瞰します。"
+        readingTime={5}
+        tags={["バブル崩壊", "デフレ", "長期停滞"]}
+      >
       <Section heading="「失われた30年」とは">
         <p>
           1991年のバブル崩壊から現在まで約30年間、日本経済は他の先進国と比較して成長が停滞しています。
@@ -163,5 +192,6 @@ export default function LostDecadesPage() {
         </p>
       </Section>
     </ArticleLayout>
+    </>
   );
 }

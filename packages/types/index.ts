@@ -1,4 +1,4 @@
-export type IndicatorKey = "wage" | "cpi" | "tax" | "fx";
+export type IndicatorKey = "wage" | "cpi" | "tax" | "fx" | "nikkei" | "housing" | "debt" | "births" | "insurance";
 export type EventCategory = "税制" | "経済" | "経済政策";
 
 export interface DataPoint {
@@ -7,6 +7,11 @@ export interface DataPoint {
   cpi: number;
   tax: number;
   fx: number;
+  nikkei?: number;
+  housing?: number;
+  debt?: number;
+  births?: number;
+  insurance?: number;
 }
 
 export interface Administration {

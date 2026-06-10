@@ -1,0 +1,32 @@
+import type { MetadataRoute } from "next";
+import { ARTICLES } from "@/lib/articles";
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://keizai-map.vercel.app";
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const now = new Date();
+
+  const mainRoutes: MetadataRoute.Sitemap = [
+    {
+      url: BASE_URL,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 1,
+    },
+    {
+      url: `${BASE_URL}/articles`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+  ];
+
+  const articleRoutes: MetadataRoute.Sitemap = ARTICLES.map((article) => ({
+    url: `${BASE_URL}/articles/${article.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  return [...mainRoutes, ...articleRoutes];
+}

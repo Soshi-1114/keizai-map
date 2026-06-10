@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+
+const SLUG = "real-wages";
 
 export const metadata: Metadata = {
   title: "実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか | KeizaiMap",
@@ -7,13 +11,38 @@ export const metadata: Metadata = {
 };
 
 export default function RealWagesPage() {
+  const articleJsonLd = generateArticleJsonLd({
+    title: "実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか",
+    description: "実質賃金とは、物価変動を考慮した賃金です。給料が増えても物価がそれ以上に上がれば、実際の購買力は低下します。日本人の生活水準を数字で確認しましょう。",
+    slug: SLUG,
+    readingTime: 3,
+    tags: ["賃金", "物価", "生活水準"],
+  });
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
+  const organizationJsonLd = generateOrganizationJsonLd();
   return (
-    <ArticleLayout
-      title="実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか"
-      description="実質賃金とは、物価変動を考慮した賃金です。給料が増えても物価がそれ以上に上がれば、実際の購買力は低下します。日本人の生活水準を数字で確認しましょう。"
-      readingTime={3}
-      tags={["賃金", "物価", "生活水準"]}
-    >
+    <>
+      <Script
+        id="article-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <Script
+        id="breadcrumb-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <Script
+        id="org-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <ArticleLayout
+        title="実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか"
+        description="実質賃金とは、物価変動を考慮した賃金です。給料が増えても物価がそれ以上に上がれば、実際の購買力は低下します。日本人の生活水準を数字で確認しましょう。"
+        readingTime={3}
+        tags={["賃金", "物価", "生活水準"]}
+      >
       <Section heading="実質賃金とは">
         <p>
           実質賃金とは、物価変動を考慮した賃金です。
@@ -96,5 +125,6 @@ export default function RealWagesPage() {
         </p>
       </Section>
     </ArticleLayout>
+    </>
   );
 }

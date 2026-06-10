@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+
+const SLUG = "yen-depreciation";
 
 export const metadata: Metadata = {
   title: "円安が進む仕組みと日本経済への影響 | KeizaiMap",
@@ -7,13 +11,38 @@ export const metadata: Metadata = {
 };
 
 export default function YenDepreciationPage() {
+  const articleJsonLd = generateArticleJsonLd({
+    title: "円安が進む仕組みと日本経済への影響",
+    description: "2012年に1ドル=79.8円だった円相場は、2024年には151.8円まで下落しました。なぜ円安が進んだのか、その仕組みと影響を解説します。",
+    slug: SLUG,
+    readingTime: 4,
+    tags: ["為替", "円安", "日銀"],
+  });
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
+  const organizationJsonLd = generateOrganizationJsonLd();
   return (
-    <ArticleLayout
-      title="円安が進む仕組みと日本経済への影響"
-      description="2012年に1ドル=79.8円だった円相場は、2024年には151.8円まで下落しました。なぜ円安が進んだのか、その仕組みと影響を解説します。"
-      readingTime={4}
-      tags={["為替", "円安", "日銀"]}
-    >
+    <>
+      <Script
+        id="article-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <Script
+        id="breadcrumb-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <Script
+        id="org-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <ArticleLayout
+        title="円安が進む仕組みと日本経済への影響"
+        description="2012年に1ドル=79.8円だった円相場は、2024年には151.8円まで下落しました。なぜ円安が進んだのか、その仕組みと影響を解説します。"
+        readingTime={4}
+        tags={["為替", "円安", "日銀"]}
+      >
       <Section heading="為替レートの基礎：なぜ円の価値は変わるのか">
         <p>
           為替レートは、2つの通貨の交換比率です。
@@ -105,5 +134,6 @@ export default function YenDepreciationPage() {
         </p>
       </Section>
     </ArticleLayout>
+    </>
   );
 }

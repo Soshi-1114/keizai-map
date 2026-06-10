@@ -52,4 +52,9 @@ export const INDICATOR_CONFIGS: IndicatorConfig[] = [
   { key: "cpi",  label: "消費者物価（CPI）", color: "#D97706", unit: "（1990=100）", yAxis: "left"  },
   { key: "tax",  label: "税収",             color: "#E05C5C", unit: "（兆円）",      yAxis: "right" },
   { key: "fx",   label: "USD/JPY",          color: "#4FD9A0", unit: "（円）",        yAxis: "right" },
+  { key: "nikkei", label: "日経平均",       color: "#8B5CF6", unit: "（1990=100）", yAxis: "left"  },
+  { key: "housing", label: "住宅価格",      color: "#EC4899", unit: "（1990=100）", yAxis: "left"  },
+  { key: "debt", label: "国債残高",         color: "#06B6D4", unit: "（兆円）",      yAxis: "right" },
+  { key: "births", label: "出生数",         color: "#F59E0B", unit: "（万人）",      yAxis: "left"  },
+  { key: "insurance", label: "社会保険料", color: "#10B981", unit: "（%）",         yAxis: "right" },
 ];

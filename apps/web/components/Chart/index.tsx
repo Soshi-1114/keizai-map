@@ -33,6 +33,11 @@ const STROKE_DASH: Record<IndicatorKey, string | undefined> = {
   cpi:  "6 3",           // 長破線
   tax:  "3 3",           // 短破線（点線）
   fx:   "10 3 3 3",      // 一点鎖線
+  nikkei: "2 2",         // 細点線
+  housing: "5 2 2 2",    // 複合破線
+  debt: "8 4",           // 中破線
+  births: "1 3",         // 極細点線
+  insurance: undefined,  // 実線
 };
 
 export function Chart({ data, events, administrations, activeIndicators, activeCategories }: Props) {

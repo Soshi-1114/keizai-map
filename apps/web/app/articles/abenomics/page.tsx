@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+
+const SLUG = "abenomics";
 
 export const metadata: Metadata = {
   title: "アベノミクスとは何か ─ 3本の矢と経済指標の変化 | KeizaiMap",
@@ -7,13 +11,38 @@ export const metadata: Metadata = {
 };
 
 export default function AbenomicsPage() {
+  const articleJsonLd = generateArticleJsonLd({
+    title: "アベノミクスとは何か ─ 3本の矢と経済指標の変化",
+    description: "2012年末に第二次安倍政権が掲げた経済政策「アベノミクス」。8年間の在任期間中に賃金・物価・税収・為替はどう変化したか、データで確認します。",
+    slug: SLUG,
+    readingTime: 5,
+    tags: ["アベノミクス", "金融政策", "税収"],
+  });
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
+  const organizationJsonLd = generateOrganizationJsonLd();
   return (
-    <ArticleLayout
-      title="アベノミクスとは何か ─ 3本の矢と経済指標の変化"
-      description="2012年末に第二次安倍政権が掲げた経済政策「アベノミクス」。8年間の在任期間中に賃金・物価・税収・為替はどう変化したか、データで確認します。"
-      readingTime={5}
-      tags={["アベノミクス", "金融政策", "税収"]}
-    >
+    <>
+      <Script
+        id="article-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <Script
+        id="breadcrumb-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <Script
+        id="org-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <ArticleLayout
+        title="アベノミクスとは何か ─ 3本の矢と経済指標の変化"
+        description="2012年末に第二次安倍政権が掲げた経済政策「アベノミクス」。8年間の在任期間中に賃金・物価・税収・為替はどう変化したか、データで確認します。"
+        readingTime={5}
+        tags={["アベノミクス", "金融政策", "税収"]}
+      >
       <Section heading="アベノミクスとは">
         <p>
           アベノミクスとは、2012年12月に発足した第二次安倍晋三内閣が推進した一連の経済政策の総称です。
@@ -99,5 +128,6 @@ export default function AbenomicsPage() {
         </p>
       </Section>
     </ArticleLayout>
+    </>
   );
 }
