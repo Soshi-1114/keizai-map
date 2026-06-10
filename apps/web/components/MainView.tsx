@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
+import { useIsMobile } from "@/lib/hooks";
 import { RAW_DATA, ADMINISTRATIONS, EVENTS, INDICATOR_CONFIGS } from "@/lib/data";
 import { Chart } from "./Chart";
 import { AdminBar } from "./AdminBar";
@@ -15,6 +16,7 @@ const MIN_YEAR = 1990;
 const MAX_YEAR = 2024;
 
 export function MainView() {
+  const isMobile = useIsMobile();
   const [yearRange, setYearRange] = useState<[number, number]>([MIN_YEAR, MAX_YEAR]);
   const [activeIndicators, setActiveIndicators] = useState<IndicatorKey[]>(
     INDICATOR_CONFIGS.map(c => c.key)
@@ -82,8 +84,8 @@ export function MainView() {
             activeIndicators={activeIndicators}
             activeCategories={activeCategories}
           />
-          {/* AdminBar: pl/pr matches YAxis width={55} */}
-          <div className="pl-[55px] pr-[55px]">
+          {/* AdminBar: pl/pr matches YAxis width */}
+          <div className={isMobile ? "pl-[38px] pr-[38px]" : "pl-[55px] pr-[55px]"}>
             <AdminBar administrations={ADMINISTRATIONS} yearRange={yearRange} />
           </div>
         </div>
