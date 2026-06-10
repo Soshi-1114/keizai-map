@@ -42,7 +42,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
     : data.map(d => d.year);
 
   const yAxisWidth = isMobile ? 38 : 55;
-  const chartHeight = isMobile ? 300 : 420;
+  const chartHeight = isMobile ? 260 : 360;
   const chartMargin = isMobile
     ? { top: 8, right: 0, left: 0, bottom: 5 }
     : { top: 36, right: 0, left: 0, bottom: 5 };

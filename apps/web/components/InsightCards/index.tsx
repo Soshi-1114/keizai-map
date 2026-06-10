@@ -1,53 +1,40 @@
-import type { DataPoint } from "@/lib/types";
-
-interface Props {
-  data: DataPoint[];
-  yearRange: [number, number];
-}
-
-function findClosest(data: DataPoint[], year: number): DataPoint | undefined {
-  return data.reduce((prev, curr) =>
-    Math.abs(curr.year - year) < Math.abs(prev.year - year) ? curr : prev
-  );
-}
-
-const CARDS = [
-  { key: "wage" as const, label: "実質賃金",       color: "#4F8EF7", unit: "",    suffix: "" },
-  { key: "cpi"  as const, label: "消費者物価",     color: "#F7C94F", unit: "",    suffix: "" },
-  { key: "tax"  as const, label: "税収",            color: "#E05C5C", unit: "兆円", suffix: "" },
-  { key: "fx"   as const, label: "USD/JPY",         color: "#4FD9A0", unit: "円",  suffix: "" },
+const INSIGHTS = [
+  {
+    icon: "📉",
+    title: "賃金は30年でほぼ横ばい",
+    body: "実質賃金の指数は1990年比でほぼ変わらず。同期間に物価は28%上昇。",
+    color: "#4F8EF7",
+  },
+  {
+    icon: "💰",
+    title: "税収は過去最高水準",
+    body: "2022年度の税収は71兆円超。バブル期（60兆円台）を大きく上回る。",
+    color: "#E05C5C",
+  },
+  {
+    icon: "💴",
+    title: "円は半値以下に",
+    body: "1995年の最高値79円台から、2024年には151円台まで円安が進行。",
+    color: "#4FD9A0",
+  },
 ];
 
-export function InsightCards({ data, yearRange }: Props) {
-  const [startYear, endYear] = yearRange;
-  const startPoint = findClosest(data, startYear);
-  const endPoint   = findClosest(data, endYear);
-
-  if (!startPoint || !endPoint) return null;
-
+export function InsightCards() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      {CARDS.map(({ key, label, color, unit }) => {
-        const current = endPoint[key];
-        const delta   = endPoint[key] - startPoint[key];
-        const sign    = delta >= 0 ? "+" : "";
-        return (
-          <div
-            key={key}
-            className="rounded-lg p-4 border"
-            style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
-          >
-            <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>{label}</div>
-            <div className="text-xl font-bold" style={{ color }}>
-              {current.toFixed(1)}{unit && <span className="text-sm ml-0.5">{unit}</span>}
-            </div>
-            <div className={`text-xs mt-1 ${delta >= 0 ? "text-emerald-400" : "text-red-400"}`}>
-              {sign}{delta.toFixed(1)}{unit}
-              <span className="ml-1" style={{ color: "var(--muted)" }}>({startYear}年比)</span>
-            </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      {INSIGHTS.map(({ icon, title, body, color }) => (
+        <div
+          key={title}
+          className="rounded-xl border p-4"
+          style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+        >
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xl">{icon}</span>
+            <span className="text-sm font-bold" style={{ color }}>{title}</span>
           </div>
-        );
-      })}
+          <p className="text-xs leading-relaxed" style={{ color: "var(--muted)" }}>{body}</p>
+        </div>
+      ))}
     </div>
   );
 }
