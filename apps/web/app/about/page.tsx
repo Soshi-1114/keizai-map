@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const metadata: Metadata = {
   title: "KeizaiMapについて — データソース・サービス概要",
@@ -50,9 +51,12 @@ export default function AboutPage() {
 
         {/* Header */}
         <div className="pb-6">
-          <Link href="/" className="text-sm hover:underline mb-4 block" style={{ color: "#4F8EF7" }}>
-            ← KeizaiMap に戻る
-          </Link>
+          <div className="flex items-center justify-between mb-4">
+            <Link href="/" className="text-sm hover:underline" style={{ color: "#4F8EF7" }}>
+              ← KeizaiMap に戻る
+            </Link>
+            <ThemeToggle />
+          </div>
           <h1 className="text-2xl font-bold">KeizaiMapについて</h1>
           <p className="text-sm mt-2" style={{ color: "var(--muted)" }}>
             サービスの概要・データ出典・政治的中立性についての説明です。

@@ -11,6 +11,7 @@ import { AdminBar } from "./AdminBar";
 import { RangeSlider } from "./RangeSlider";
 import { EventFilter } from "./EventFilter";
 import { InsightCards } from "./InsightCards";
+import { ThemeToggle } from "./ThemeToggle";
 
 const ALL_CATEGORIES: EventCategory[] = ["税制", "経済", "経済政策"];
 const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key);
@@ -105,9 +106,12 @@ export function MainView() {
             </h1>
             <p className="text-sm mt-0.5" style={{ color: "var(--muted)" }}>数字で見る、日本の30年</p>
           </div>
-          <Link href="/about" className="text-xs hover:underline" style={{ color: "var(--muted)" }}>
-            データソースについて
-          </Link>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Link href="/about" className="text-xs hover:underline" style={{ color: "var(--muted)" }}>
+              データソースについて
+            </Link>
+          </div>
         </header>
 
         {/* Indicator toggles */}

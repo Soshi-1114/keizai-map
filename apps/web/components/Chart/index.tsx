@@ -24,8 +24,8 @@ interface Props {
   activeCategories: string[];
 }
 
-const TICK_STYLE = { fill: "#6B7280", fontSize: 11 };
-const TICK_STYLE_SM = { fill: "#6B7280", fontSize: 10 };
+const TICK_STYLE = { fill: "var(--muted)", fontSize: 11 };
+const TICK_STYLE_SM = { fill: "var(--muted)", fontSize: 10 };
 
 export function Chart({ data, events, administrations, activeIndicators, activeCategories }: Props) {
   const isMobile = useIsMobile();
@@ -83,14 +83,14 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             />
           ))}
 
-        <CartesianGrid strokeDasharray="3 3" stroke="#2E3245" vertical={false} />
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
 
         <XAxis
           dataKey="year"
           type="number"
           domain={[minYear, maxYear]}
           ticks={xTicks}
-          stroke="#2E3245"
+          stroke="var(--border)"
           tick={isMobile ? TICK_STYLE_SM : TICK_STYLE}
           tickLine={false}
         />
@@ -102,7 +102,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
           tick={isMobile ? TICK_STYLE_SM : TICK_STYLE}
           tickLine={false}
           domain={[85, 140]}
-          label={isMobile ? undefined : { value: "指数（1990=100）", angle: -90, position: "insideLeft", fill: "#6B7280", fontSize: 10, dx: -2 }}
+          label={isMobile ? undefined : { value: "指数（1990=100）", angle: -90, position: "insideLeft", fill: "var(--muted)", fontSize: 10, dx: -2 }}
         />
         <YAxis
           yAxisId="right"
@@ -112,12 +112,12 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
           tick={isMobile ? TICK_STYLE_SM : TICK_STYLE}
           tickLine={false}
           domain={[30, 170]}
-          label={isMobile ? undefined : { value: "税収（兆円）/ 為替（円）", angle: 90, position: "insideRight", fill: "#6B7280", fontSize: 10, dx: 10 }}
+          label={isMobile ? undefined : { value: "税収（兆円）/ 為替（円）", angle: 90, position: "insideRight", fill: "var(--muted)", fontSize: 10, dx: 10 }}
         />
 
         <Tooltip
-          contentStyle={{ backgroundColor: "#161921", border: "1px solid #2E3245", borderRadius: "8px", fontSize: 12 }}
-          labelStyle={{ color: "#E8EAF0", fontWeight: "bold", marginBottom: 4 }}
+          contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: 12 }}
+          labelStyle={{ color: "var(--text)", fontWeight: "bold", marginBottom: 4 }}
           labelFormatter={(label) => `${label}年`}
           formatter={(value: number, name: string) => {
             const cfg = INDICATOR_CONFIGS.find(c => c.label === name);
@@ -127,7 +127,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
 
         <Legend
           wrapperStyle={{ paddingTop: 8 }}
-          formatter={v => <span style={{ color: "#E8EAF0", fontSize: isMobile ? 11 : 12 }}>{v}</span>}
+          formatter={v => <span style={{ color: "var(--text)", fontSize: isMobile ? 11 : 12 }}>{v}</span>}
           iconSize={isMobile ? 8 : 14}
         />
 
@@ -157,7 +157,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             stroke={cfg.color}
             strokeWidth={isMobile ? 1.5 : 2}
             dot={{ fill: cfg.color, r: isMobile ? 2 : 3, strokeWidth: 0 }}
-            activeDot={{ r: 4, strokeWidth: 2, stroke: "#10121A" }}
+            activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--card)" }}
             yAxisId={cfg.yAxis}
           />
         ))}
