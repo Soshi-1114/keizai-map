@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
+// Route Handler のため動的生成は自動的に適用される
 
 const STATS = [
   { label: "実質賃金", value: "99.2", unit: "指数", color: "#4F8EF7" },
