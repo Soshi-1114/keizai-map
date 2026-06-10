@@ -12,6 +12,7 @@ import { RangeSlider } from "./RangeSlider";
 import { EventFilter } from "./EventFilter";
 import { InsightCards } from "./InsightCards";
 import { ThemeToggle } from "./ThemeToggle";
+import { ComparisonView } from "./ComparisonView";
 
 const ALL_CATEGORIES: EventCategory[] = ["税制", "経済", "経済政策"];
 const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key);
@@ -104,10 +105,19 @@ function parseCategories(param: string | null): EventCategory[] {
   return cats.length > 0 ? cats : [...ALL_CATEGORIES];
 }
 
+type ViewMode = "chart" | "admin" | "shock";
+
+const VIEW_MODES: { key: ViewMode; label: string }[] = [
+  { key: "chart", label: "グラフ" },
+  { key: "admin", label: "政権比較" },
+  { key: "shock", label: "ショック比較" },
+];
+
 export function MainView() {
   const isMobile = useIsMobile();
   const searchParams = useSearchParams();
 
+  const [viewMode, setViewMode] = useState<ViewMode>("chart");
   const [yearRange, setYearRange] = useState<[number, number]>(() =>
     parseRange(searchParams.get("range"))
   );
@@ -231,9 +241,31 @@ export function MainView() {
           );
         })()}
 
-        {/* Chart + AdminBar */}
+        {/* Chart + AdminBar / 比較モード */}
         <div className="rounded-xl border p-4" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
-          <div className="flex items-center justify-end mb-2">
+          {/* モード切替 + シェアボタン */}
+          <div className="flex items-center gap-2 mb-3 flex-wrap">
+            <div
+              className="flex gap-0.5 rounded-lg p-0.5"
+              style={{ backgroundColor: "var(--bg)", border: "1px solid var(--border)" }}
+            >
+              {VIEW_MODES.map(({ key, label }) => (
+                <button
+                  key={key}
+                  onClick={() => setViewMode(key)}
+                  className="px-3 py-1 rounded-md transition-all text-xs"
+                  style={{
+                    backgroundColor: viewMode === key ? "var(--card)" : "transparent",
+                    color:           viewMode === key ? "var(--text)" : "var(--muted)",
+                    fontWeight:      viewMode === key ? 600 : 400,
+                    boxShadow:       viewMode === key ? "0 1px 3px rgba(0,0,0,0.1)" : "none",
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <div className="flex-1" />
             <button
               onClick={handleShare}
               className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-opacity hover:opacity-80"
@@ -246,16 +278,23 @@ export function MainView() {
             </button>
           </div>
 
-          <Chart
-            data={filteredData}
-            events={EVENTS}
-            administrations={ADMINISTRATIONS}
-            activeIndicators={activeIndicators}
-            activeCategories={activeCategories}
-          />
-          <div className={isMobile ? "pl-[38px] pr-[38px]" : "pl-[55px] pr-[55px]"}>
-            <AdminBar administrations={ADMINISTRATIONS} yearRange={yearRange} />
-          </div>
+          {/* コンテンツ切替 */}
+          {viewMode === "chart" ? (
+            <>
+              <Chart
+                data={filteredData}
+                events={EVENTS}
+                administrations={ADMINISTRATIONS}
+                activeIndicators={activeIndicators}
+                activeCategories={activeCategories}
+              />
+              <div className={isMobile ? "pl-[38px] pr-[38px]" : "pl-[55px] pr-[55px]"}>
+                <AdminBar administrations={ADMINISTRATIONS} yearRange={yearRange} />
+              </div>
+            </>
+          ) : (
+            <ComparisonView mode={viewMode} activeIndicators={activeIndicators} />
+          )}
         </div>
 
         {/* Insight cards（動的：選択期間の変化率を表示） */}
