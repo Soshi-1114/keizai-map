@@ -33,6 +33,58 @@ function formatUpdatedAt(ym: string): string {
   return `${y}年${parseInt(m, 10)}月`;
 }
 
+/** 選択期間のデータをもとに自動解説文を生成 */
+import type { DataPoint } from "@/lib/types";
+function generateNarrative(data: DataPoint[]): string {
+  if (data.length < 2) return "";
+  const s = data[0];
+  const e = data[data.length - 1];
+  const duration = e.year - s.year;
+
+  const pct = (end: number, start: number) => ((end - start) / start) * 100;
+  const wagePct = pct(e.wage, s.wage);
+  const cpiPct  = pct(e.cpi,  s.cpi);
+  const taxPct  = pct(e.tax,  s.tax);
+  const fxPct   = pct(e.fx,   s.fx);
+
+  const wageStr = wagePct >  2 ? `${wagePct.toFixed(1)}%上昇`
+                : wagePct < -2 ? `${Math.abs(wagePct).toFixed(1)}%下落`
+                : "ほぼ横ばい";
+  const cpiStr  = cpiPct >  3 ? `${cpiPct.toFixed(1)}%上昇`
+                : cpiPct < -2 ? `${Math.abs(cpiPct).toFixed(1)}%低下`
+                : "安定";
+
+  const parts: string[] = [];
+
+  if (wagePct < 0 && cpiPct > 5) {
+    parts.push(
+      `${duration}年間で実質賃金は${wageStr}ですが、物価は${cpiStr}しました。実質的な購買力は低下しています。`,
+    );
+  } else if (wagePct > 5 && cpiPct < 3) {
+    parts.push(
+      `${duration}年間で実質賃金は${wageStr}し、物価上昇を上回る所得増加となっています。`,
+    );
+  } else {
+    parts.push(`${duration}年間で実質賃金は${wageStr}、物価は${cpiStr}の期間です。`);
+  }
+
+  if (Math.abs(taxPct) > 20) {
+    const dir = taxPct > 0 ? "増加" : "減少";
+    parts.push(
+      `税収は${Math.abs(taxPct).toFixed(0)}%${dir}（${s.tax.toFixed(1)}→${e.tax.toFixed(1)}兆円）。`,
+    );
+  }
+
+  if (Math.abs(fxPct) > 15) {
+    const dir = fxPct > 0 ? "円安が進行" : "円高が進行";
+    parts.push(
+      `ドル円は${Math.abs(fxPct).toFixed(0)}%変動し${dir}（${s.fx.toFixed(0)}→${e.fx.toFixed(0)}円）。`,
+    );
+  }
+
+  return parts.join("　");
+}
+
 function parseRange(param: string | null): [number, number] {
   if (!param) return [MIN_YEAR, MAX_YEAR];
   const [s, e] = param.split(",").map(Number);
@@ -67,6 +119,7 @@ export function MainView() {
   );
 
   const filteredData = RAW_DATA.filter(d => d.year >= yearRange[0] && d.year <= yearRange[1]);
+  const narrative = generateNarrative(filteredData);
 
   // URL 更新（スライダー連打による SecurityError を防ぐため 300ms デバウンス）
   const urlTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -147,6 +200,37 @@ export function MainView() {
           })}
         </div>
 
+        {/* ヒーロー統計バー：グラフを見る前に期間の変化を把握 */}
+        {filteredData.length >= 2 && (() => {
+          const s = filteredData[0];
+          const e = filteredData[filteredData.length - 1];
+          return (
+            <div
+              className="rounded-xl border px-4 py-3 flex flex-wrap items-center gap-x-5 gap-y-2"
+              style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+            >
+              <span className="text-xs font-semibold shrink-0" style={{ color: "var(--muted)" }}>
+                {s.year}年 → {e.year}年
+              </span>
+              {INDICATOR_CONFIGS.map(cfg => {
+                const sv = s[cfg.key] as number;
+                const ev = e[cfg.key] as number;
+                const pct = ((ev - sv) / sv) * 100;
+                const sign = pct >= 0 ? "+" : "";
+                const color = pct >= 0 ? "#22c55e" : "#ef4444";
+                return (
+                  <span key={cfg.key} className="flex items-baseline gap-1">
+                    <span className="text-xs" style={{ color: "var(--muted)" }}>{cfg.label}</span>
+                    <span className="text-sm font-bold tabular-nums" style={{ color }}>
+                      {sign}{pct.toFixed(1)}%
+                    </span>
+                  </span>
+                );
+              })}
+            </div>
+          );
+        })()}
+
         {/* Chart + AdminBar */}
         <div className="rounded-xl border p-4" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
           <div className="flex items-center justify-end mb-2">
@@ -176,6 +260,17 @@ export function MainView() {
 
         {/* Insight cards（動的：選択期間の変化率を表示） */}
         <InsightCards data={filteredData} yearRange={yearRange} />
+
+        {/* 自動解説：選択期間の傾向を文章で要約 */}
+        {narrative && (
+          <div
+            className="rounded-xl border px-5 py-4"
+            style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+          >
+            <p className="text-xs font-medium mb-1.5" style={{ color: "#4F8EF7" }}>この期間のポイント</p>
+            <p className="text-sm leading-relaxed" style={{ color: "var(--text)" }}>{narrative}</p>
+          </div>
+        )}
 
         {/* Controls */}
         <div className="rounded-xl border p-4 space-y-5" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>

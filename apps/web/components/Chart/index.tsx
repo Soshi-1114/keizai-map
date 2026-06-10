@@ -27,6 +27,14 @@ interface Props {
 const TICK_STYLE = { fill: "var(--muted)", fontSize: 11 };
 const TICK_STYLE_SM = { fill: "var(--muted)", fontSize: 10 };
 
+// 色覚多様性対応：線種で各指標を差別化
+const STROKE_DASH: Record<IndicatorKey, string | undefined> = {
+  wage: undefined,        // 実線
+  cpi:  "6 3",           // 長破線
+  tax:  "3 3",           // 短破線（点線）
+  fx:   "10 3 3 3",      // 一点鎖線
+};
+
 export function Chart({ data, events, administrations, activeIndicators, activeCategories }: Props) {
   const isMobile = useIsMobile();
   const visibleEvents = events.filter(e => activeCategories.includes(e.category));
@@ -156,6 +164,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             name={cfg.label}
             stroke={cfg.color}
             strokeWidth={isMobile ? 1.5 : 2}
+            strokeDasharray={STROKE_DASH[cfg.key]}
             dot={{ fill: cfg.color, r: isMobile ? 2 : 3, strokeWidth: 0 }}
             activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--card)" }}
             yAxisId={cfg.yAxis}
