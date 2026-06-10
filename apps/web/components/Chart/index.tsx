@@ -45,7 +45,23 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
   const chartHeight = isMobile ? 300 : 420;
   const chartMargin = isMobile
     ? { top: 8, right: 0, left: 0, bottom: 5 }
-    : { top: 20, right: 0, left: 0, bottom: 5 };
+    : { top: 36, right: 0, left: 0, bottom: 5 };
+
+  // 近接イベントのラベルを2レーンに振り分けて重なりを防ぐ（デスクトップのみ）
+  const LANE_GAP_YEARS = 3;
+  const laneMap = new Map<string, number>();
+  if (!isMobile) {
+    const sorted = [...visibleEvents].sort((a, b) => a.year - b.year);
+    let prevYear = -999;
+    let prevLane = 1;
+    for (const ev of sorted) {
+      const key = `${ev.year}-${ev.label}`;
+      const lane = ev.year - prevYear < LANE_GAP_YEARS ? (prevLane === 0 ? 1 : 0) : 0;
+      laneMap.set(key, lane);
+      prevYear = ev.year;
+      prevLane = lane;
+    }
+  }
 
   return (
     <ResponsiveContainer width="100%" height={chartHeight}>
@@ -124,7 +140,10 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             stroke={ev.color}
             strokeDasharray="4 3"
             strokeOpacity={0.7}
-            label={isMobile ? undefined : { value: ev.label, position: "top", fill: ev.color, fontSize: 9, dy: -4 }}
+            label={isMobile ? undefined : (() => {
+              const lane = laneMap.get(`${ev.year}-${ev.label}`) ?? 0;
+              return { value: ev.label, position: "top", fill: ev.color, fontSize: 9, dy: lane === 0 ? -4 : -18 };
+            })()}
           />
         ))}
 
