@@ -259,11 +259,134 @@ function ShockChart() {
 }
 
 // ─────────────────────────────────────────────────────────
+// 詳細イベント分析
+// ─────────────────────────────────────────────────────────
+
+function EventDetailChart({ activeIndicators }: { activeIndicators: IndicatorKey[] }) {
+  const [selectedEvent, setSelectedEvent] = useState<typeof SHOCK_EVENTS[0]>(SHOCK_EVENTS[0]);
+  const [selectedIndicator, setSelectedIndicator] = useState<IndicatorKey>(activeIndicators[0] || "wage");
+
+  const chartData = SHOCK_EVENTS.map(ev => {
+    const label = ev.label;
+    const values: Record<string, number | string> = { name: label };
+
+    for (let offset = -2; offset <= 4; offset++) {
+      const point = RAW_DATA.find(d => d.year === ev.year + offset);
+      if (point && point[selectedIndicator] !== undefined) {
+        const key = `y${offset}`;
+        values[key] = point[selectedIndicator] as number;
+      }
+    }
+    return values;
+  });
+
+  const selectedEvData = chartData.find(d => d.name === selectedEvent.label);
+
+  return (
+    <div style={{ padding: "1rem" }}>
+      <div style={{ marginBottom: "1.5rem", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+        <div>
+          <label style={{ fontSize: "0.875rem", color: "var(--muted)", display: "block", marginBottom: "0.5rem" }}>
+            イベント選択
+          </label>
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            {SHOCK_EVENTS.map(ev => (
+              <button
+                key={ev.label}
+                onClick={() => setSelectedEvent(ev)}
+                style={{
+                  padding: "0.5rem 1rem",
+                  borderRadius: "0.375rem",
+                  border: `1px solid ${selectedEvent.label === ev.label ? ev.color : "var(--border)"}`,
+                  backgroundColor: selectedEvent.label === ev.label ? `${ev.color}20` : "transparent",
+                  color: selectedEvent.label === ev.label ? ev.color : "var(--text)",
+                  cursor: "pointer",
+                  fontSize: "0.875rem",
+                  fontWeight: selectedEvent.label === ev.label ? 600 : 400,
+                  transition: "all 200ms",
+                }}
+              >
+                {ev.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label style={{ fontSize: "0.875rem", color: "var(--muted)", display: "block", marginBottom: "0.5rem" }}>
+            指標選択
+          </label>
+          <select
+            value={selectedIndicator}
+            onChange={(e) => setSelectedIndicator(e.target.value as IndicatorKey)}
+            style={{
+              padding: "0.5rem 1rem",
+              borderRadius: "0.375rem",
+              border: "1px solid var(--border)",
+              backgroundColor: "var(--card)",
+              color: "var(--text)",
+              cursor: "pointer",
+              fontSize: "0.875rem",
+            }}
+          >
+            {activeIndicators.map(key => {
+              const cfg = INDICATOR_CONFIGS.find(c => c.key === key);
+              return <option key={key} value={key}>{cfg?.label}</option>;
+            })}
+          </select>
+        </div>
+      </div>
+
+      {selectedEvData && (
+        <div
+          style={{
+            backgroundColor: "var(--card)",
+            border: "1px solid var(--border)",
+            borderRadius: "0.75rem",
+            padding: "1.5rem",
+            marginBottom: "1.5rem",
+          }}
+        >
+          <h3 style={{ fontSize: "0.875rem", fontWeight: 600, marginBottom: "1rem", color: "var(--muted)" }}>
+            {selectedEvent.label} 前後の {INDICATOR_CONFIGS.find(c => c.key === selectedIndicator)?.label}
+          </h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(80px, 1fr))", gap: "0.75rem" }}>
+            {[-2, -1, 0, 1, 2, 3, 4].map(offset => {
+              const key = `y${offset}`;
+              const value = selectedEvData[key];
+              return (
+                <div
+                  key={key}
+                  style={{
+                    backgroundColor: offset === 0 ? `${selectedEvent.color}30` : "transparent",
+                    border: offset === 0 ? `2px solid ${selectedEvent.color}` : "1px solid var(--border)",
+                    borderRadius: "0.375rem",
+                    padding: "0.75rem",
+                    textAlign: "center",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginBottom: "0.25rem" }}>
+                    {offset === 0 ? "発生時" : offset > 0 ? `+${offset}年` : `${offset}年`}
+                  </div>
+                  <div className="tabular-nums" style={{ fontSize: "1rem", fontWeight: 600, color: "var(--text)" }}>
+                    {value !== undefined && typeof value === "number" ? value.toFixed(1) : "—"}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
 // メインエクスポート
 // ─────────────────────────────────────────────────────────
 
 interface Props {
-  mode: "admin" | "shock";
+  mode: "admin" | "shock" | "event";
   activeIndicators: IndicatorKey[];
 }
 
@@ -272,8 +395,10 @@ export function ComparisonView({ mode, activeIndicators }: Props) {
     <>
       {mode === "admin" ? (
         <AdminChart activeIndicators={activeIndicators} />
-      ) : (
+      ) : mode === "shock" ? (
         <ShockChart />
+      ) : (
+        <EventDetailChart activeIndicators={activeIndicators} />
       )}
     </>
   );

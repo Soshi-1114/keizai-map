@@ -105,12 +105,13 @@ function parseCategories(param: string | null): EventCategory[] {
   return cats.length > 0 ? cats : [...ALL_CATEGORIES];
 }
 
-type ViewMode = "chart" | "admin" | "shock";
+type ViewMode = "chart" | "admin" | "shock" | "event";
 
 const VIEW_MODES: { key: ViewMode; label: string }[] = [
   { key: "chart", label: "グラフ" },
   { key: "admin", label: "政権比較" },
   { key: "shock", label: "ショック比較" },
+  { key: "event", label: "イベント詳細" },
 ];
 
 export function MainView() {
