@@ -1,0 +1,103 @@
+import type { Metadata } from "next";
+import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
+
+export const metadata: Metadata = {
+  title: "アベノミクスとは何か ─ 3本の矢と経済指標の変化 | KeizaiMap",
+  description: "2012年末に始まったアベノミクスの「3本の矢」を解説。8年間で税収は43.9兆円から60.8兆円へ増加し、円安も大幅に進んだ。実質賃金への影響はどうだったか。",
+};
+
+export default function AbenomicsPage() {
+  return (
+    <ArticleLayout
+      title="アベノミクスとは何か ─ 3本の矢と経済指標の変化"
+      description="2012年末に第二次安倍政権が掲げた経済政策「アベノミクス」。8年間の在任期間中に賃金・物価・税収・為替はどう変化したか、データで確認します。"
+      readingTime={5}
+      tags={["アベノミクス", "金融政策", "税収"]}
+    >
+      <Section heading="アベノミクスとは">
+        <p>
+          アベノミクスとは、2012年12月に発足した第二次安倍晋三内閣が推進した一連の経済政策の総称です。
+          「3本の矢」と呼ばれる政策の柱で構成されていました。
+        </p>
+        <div
+          className="rounded-xl border p-4 space-y-2 my-4"
+          style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+        >
+          {[
+            { n: "第1の矢", title: "大胆な金融政策", desc: "日本銀行による量的・質的金融緩和（QQE）。インフレ目標2%を設定し、大規模な国債購入を実施。" },
+            { n: "第2の矢", title: "機動的な財政政策", desc: "公共投資の拡大など、積極的な財政出動で需要を喚起。" },
+            { n: "第3の矢", title: "民間投資を喚起する成長戦略", desc: "規制緩和・女性活躍推進・農業改革など構造改革を推進。" },
+          ].map(({ n, title, desc }) => (
+            <div key={n} className="flex gap-3">
+              <span
+                className="shrink-0 text-xs font-bold px-2 py-0.5 rounded"
+                style={{ backgroundColor: "#4F8EF720", color: "#4F8EF7" }}
+              >
+                {n}
+              </span>
+              <div>
+                <div className="text-sm font-medium">{title}</div>
+                <div className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>{desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section heading="8年間の経済指標の変化（2012→2020）">
+        <p>
+          安倍政権は2020年9月まで継続し、憲政史上最長の在任期間となりました。
+          この8年間、KeizaiMapの各指標はどのように変化したでしょうか。
+        </p>
+
+        <DataBox
+          items={[
+            { label: "実質賃金",    value: "▼0.9%",  note: "97.4→96.5",   color: "#ef4444" },
+            { label: "物価（CPI）", value: "＋5.8%",  note: "101.5→107.4", color: "#D97706" },
+            { label: "税収",        value: "＋38.5%", note: "43.9→60.8兆円", color: "#22c55e" },
+            { label: "円/ドル",     value: "＋33.8%", note: "79.8→106.8円（円安）", color: "#4FD9A0" },
+          ]}
+        />
+
+        <p>
+          税収は43.9兆円から60.8兆円へ大幅に回復しました。
+          これはアベノミクスによる企業業績の改善・株高・消費税増税（5→8%）の効果が合わさった結果です。
+        </p>
+        <p>
+          円相場は歴史的な円高水準（1ドル=79.8円）から107円台の円安へと転換しました。
+          輸出企業の収益を押し上げた一方、エネルギーや食料の輸入コスト増加をもたらしました。
+        </p>
+        <p>
+          実質賃金は、わずかながら下落（97.4→96.5）しています。
+          名目賃金はある程度上昇したものの、消費税増税と物価上昇がそれを上回り、
+          実質的な購買力の改善には至りませんでした。
+        </p>
+      </Section>
+
+      <Section heading="マイナス金利と「異次元緩和」の副作用">
+        <p>
+          2016年2月、日本銀行はマイナス金利政策を導入しました。
+          銀行が日銀に預ける当座預金の一部に▲0.1%の金利を適用し、
+          融資や投資を促進することを狙った政策です。
+        </p>
+        <p>
+          しかしマイナス金利は銀行の収益を圧迫し、住宅ローン金利の低下で
+          住宅投資は一定の刺激を受けた一方、企業の設備投資や賃金への波及は限定的でした。
+          インフレ目標2%も達成されないまま、コロナ禍へと突入することになります。
+        </p>
+      </Section>
+
+      <Section heading="アベノミクスの評価">
+        <p>
+          アベノミクスに対する評価は現在も分かれています。
+          肯定的な見方としては「デフレ脱却の道筋をつけた」「雇用を増やした（失業率の低下）」、
+          否定的な見方としては「実質賃金が改善しなかった」「財政赤字の拡大」などが挙げられます。
+        </p>
+        <p>
+          KeizaiMapでは特定の政策への評価を行わず、データをそのまま提示しています。
+          政権比較モードで他の政権期間と比較し、ご自身で判断することができます。
+        </p>
+      </Section>
+    </ArticleLayout>
+  );
+}
