@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "pnpm --filter web dev",
     "build": "pnpm --filter web build",
-    "lint": "pnpm --filter web lint"
+    "lint": "pnpm --filter web lint",
+    "data:fetch": "pnpm --filter @keizai-map/data-fetcher fetch"
   },
   "devDependencies": {
     "typescript": "^5"

@@ -1,0 +1,53 @@
+name: 月次データ自動更新
+
+on:
+  schedule:
+    # 毎月1日 午前9時（JST = UTC+9）
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+    # 手動実行ボタン
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+
+      - name: pnpm セットアップ
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Node.js セットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: 依存関係インストール
+        run: pnpm install --frozen-lockfile
+
+      - name: データ取得スクリプト実行
+        env:
+          ESTAT_API_KEY: ${{ secrets.ESTAT_API_KEY }}
+        run: pnpm data:fetch
+
+      - name: 差分確認
+        run: |
+          git diff apps/web/lib/data.generated.json || true
+
+      - name: 変更をコミット・プッシュ
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add apps/web/lib/data.generated.json
+          if git diff --staged --quiet; then
+            echo "データに変更なし。スキップします。"
+          else
+            git commit -m "chore: 月次データ自動更新 $(date +'%Y-%m')"
+            git push
+          fi
