@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
@@ -53,14 +53,19 @@ export function MainView() {
 
   const filteredData = RAW_DATA.filter(d => d.year >= yearRange[0] && d.year <= yearRange[1]);
 
-  // ナビゲーションを発生させずに URL だけ更新
+  // URL を更新（スライダー連打による SecurityError を防ぐため 300ms デバウンス）
+  const urlTimer = useRef<ReturnType<typeof setTimeout>>();
   useEffect(() => {
-    const params = new URLSearchParams({
-      indicators: activeIndicators.join(","),
-      range: yearRange.join(","),
-      events: activeCategories.join(","),
-    });
-    window.history.replaceState(null, "", `/?${params.toString()}`);
+    clearTimeout(urlTimer.current);
+    urlTimer.current = setTimeout(() => {
+      const params = new URLSearchParams({
+        indicators: activeIndicators.join(","),
+        range: yearRange.join(","),
+        events: activeCategories.join(","),
+      });
+      window.history.replaceState(null, "", `/?${params.toString()}`);
+    }, 300);
+    return () => clearTimeout(urlTimer.current);
   }, [activeIndicators, yearRange, activeCategories]);
 
   const toggleIndicator = (key: IndicatorKey) =>

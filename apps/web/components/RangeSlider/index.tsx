@@ -26,8 +26,9 @@ export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
 
   /** ポインター X 座標からスナップ済み値を計算 */
   const xToValue = useCallback(
-    (clientX: number): number => {
-      const rect = trackRef.current!.getBoundingClientRect();
+    (clientX: number): number | null => {
+      if (!trackRef.current) return null;
+      const rect = trackRef.current.getBoundingClientRect();
       const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
       return Math.round((min + ratio * range) / step) * step;
     },
@@ -36,10 +37,12 @@ export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
 
   const handlePointerDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
+      if (!trackRef.current) return;
       e.preventDefault();
-      trackRef.current!.setPointerCapture(e.pointerId);
+      trackRef.current.setPointerCapture(e.pointerId);
 
       const val = xToValue(e.clientX);
+      if (val === null) return;
       // より近いハンドルを選択（同距離なら lo を優先）
       dragging.current =
         Math.abs(val - lo) <= Math.abs(val - hi) ? "lo" : "hi";
@@ -58,6 +61,7 @@ export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
     (e: React.PointerEvent<HTMLDivElement>) => {
       if (!dragging.current) return;
       const val = xToValue(e.clientX);
+      if (val === null) return;
       if (dragging.current === "lo") {
         onChange([Math.max(min, Math.min(val, hi - step)), hi]);
       } else {
