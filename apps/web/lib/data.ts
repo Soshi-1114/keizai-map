@@ -1,25 +1,7 @@
 import type { DataPoint, Administration, EconomicEvent, IndicatorConfig } from "./types";
+import generatedData from "./data.generated.json";
 
-export const RAW_DATA: DataPoint[] = [
-  { year: 1990, wage: 100.0, cpi: 100.0, tax: 60.1, fx: 144.8 },
-  { year: 1992, wage: 107.2, cpi: 104.5, tax: 54.4, fx: 126.7 },
-  { year: 1994, wage: 108.1, cpi: 106.5, tax: 51.0, fx: 102.2 },
-  { year: 1996, wage: 110.3, cpi: 107.6, tax: 52.1, fx: 108.8 },
-  { year: 1998, wage: 109.5, cpi: 109.5, tax: 49.4, fx: 130.9 },
-  { year: 2000, wage: 107.8, cpi: 108.2, tax: 50.7, fx: 107.8 },
-  { year: 2002, wage: 104.1, cpi: 107.0, tax: 43.8, fx: 125.3 },
-  { year: 2004, wage: 102.9, cpi: 106.6, tax: 45.6, fx: 108.2 },
-  { year: 2006, wage: 103.4, cpi: 106.6, tax: 49.1, fx: 116.3 },
-  { year: 2008, wage: 102.8, cpi: 109.4, tax: 44.3, fx: 103.4 },
-  { year: 2010, wage: 98.5,  cpi: 108.5, tax: 41.5, fx: 87.8  },
-  { year: 2012, wage: 97.4,  cpi: 108.4, tax: 43.9, fx: 79.8  },
-  { year: 2014, wage: 97.1,  cpi: 112.6, tax: 50.0, fx: 105.9 },
-  { year: 2016, wage: 97.5,  cpi: 112.4, tax: 55.5, fx: 108.8 },
-  { year: 2018, wage: 99.1,  cpi: 113.9, tax: 60.4, fx: 110.4 },
-  { year: 2020, wage: 96.5,  cpi: 114.5, tax: 60.8, fx: 106.8 },
-  { year: 2022, wage: 97.8,  cpi: 119.3, tax: 71.1, fx: 131.5 },
-  { year: 2024, wage: 99.2,  cpi: 128.1, tax: 72.1, fx: 151.8 },
-];
+export const RAW_DATA: DataPoint[] = generatedData as DataPoint[];
 
 export const ADMINISTRATIONS: Administration[] = [
   { name: "海部",     start: 1989, end: 1991, party: "自民党",   color: "#3B6FD4" },

@@ -1,10 +1,12 @@
 {
-  "name": "@keizai-map/data",
-  "version": "0.0.1",
+  "name": "@keizai-map/data-fetcher",
+  "version": "1.0.0",
   "private": true,
-  "main": "./index.ts",
-  "types": "./index.ts",
-  "dependencies": {
-    "@keizai-map/types": "workspace:*"
+  "scripts": {
+    "fetch": "tsx src/fetch.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.0.0"
   }
 }
