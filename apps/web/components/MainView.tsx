@@ -36,22 +36,19 @@ export function MainView() {
     );
 
   return (
-    <main className="min-h-screen p-4 md:p-6" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
+    <main className="min-h-screen p-4 md:p-10" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
       <div className="max-w-7xl mx-auto space-y-5">
 
         {/* Header */}
         <header className="flex items-end justify-between pb-4 border-b" style={{ borderColor: "var(--border)" }}>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">KeizaiMap</h1>
+            <h1 className="font-bold tracking-tight" style={{ fontSize: "clamp(22px, 5vw, 38px)" }}>KeizaiMap</h1>
             <p className="text-sm mt-0.5" style={{ color: "var(--muted)" }}>数字で見る、日本の30年</p>
           </div>
           <Link href="/about" className="text-xs hover:underline" style={{ color: "var(--muted)" }}>
             データソースについて
           </Link>
         </header>
-
-        {/* Insight cards */}
-        <InsightCards data={RAW_DATA} yearRange={yearRange} />
 
         {/* Indicator toggles */}
         <div className="flex gap-2 flex-wrap">
@@ -61,7 +58,7 @@ export function MainView() {
               <button
                 key={cfg.key}
                 onClick={() => toggleIndicator(cfg.key)}
-                className="px-3 py-1 rounded-full text-sm border transition-all"
+                className="px-3 py-1.5 md:py-1 rounded-full text-sm border transition-all"
                 style={{
                   borderColor: cfg.color,
                   color: active ? cfg.color : "var(--muted)",
@@ -89,6 +86,9 @@ export function MainView() {
             <AdminBar administrations={ADMINISTRATIONS} yearRange={yearRange} />
           </div>
         </div>
+
+        {/* Insight cards */}
+        <InsightCards />
 
         {/* Controls */}
         <div className="rounded-xl border p-4 space-y-5" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>

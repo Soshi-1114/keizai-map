@@ -1,5 +1,7 @@
 "use client";
 
+import { useIsMobile } from "@/lib/hooks";
+
 interface Props {
   min: number;
   max: number;
@@ -9,10 +11,13 @@ interface Props {
 }
 
 export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
+  const isMobile = useIsMobile();
   const [lo, hi] = value;
   const range = max - min;
-  const loPct  = ((lo - min) / range) * 100;
-  const hiPct  = ((hi - min) / range) * 100;
+  const loPct = ((lo - min) / range) * 100;
+  const hiPct = ((hi - min) / range) * 100;
+  const handleSize = isMobile ? 24 : 16;
+  const halfHandle = handleSize / 2;
 
   return (
     <div className="space-y-3">
@@ -20,7 +25,7 @@ export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
         <span>{lo}年</span>
         <span>{hi}年</span>
       </div>
-      <div className="relative h-6 flex items-center select-none">
+      <div className="relative flex items-center select-none" style={{ height: handleSize + 8 }}>
         {/* Track */}
         <div className="absolute inset-x-0 h-1 rounded-full" style={{ backgroundColor: "var(--border)" }} />
         {/* Active fill */}
@@ -28,16 +33,24 @@ export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
           className="absolute h-1 rounded-full bg-[#4F8EF7]"
           style={{ left: `${loPct}%`, right: `${100 - hiPct}%` }}
         />
-        {/* Visual handles (pointer-events-none, positioned by JS) */}
+        {/* Visual handles */}
         <div
-          className="absolute w-4 h-4 rounded-full bg-[#4F8EF7] border-2 border-[#10121A] shadow pointer-events-none z-10"
-          style={{ left: `calc(${loPct}% - 8px)` }}
+          className="absolute rounded-full bg-[#4F8EF7] border-2 border-[#10121A] shadow pointer-events-none z-10"
+          style={{
+            width: handleSize,
+            height: handleSize,
+            left: `calc(${loPct}% - ${halfHandle}px)`,
+          }}
         />
         <div
-          className="absolute w-4 h-4 rounded-full bg-[#4F8EF7] border-2 border-[#10121A] shadow pointer-events-none z-10"
-          style={{ left: `calc(${hiPct}% - 8px)` }}
+          className="absolute rounded-full bg-[#4F8EF7] border-2 border-[#10121A] shadow pointer-events-none z-10"
+          style={{
+            width: handleSize,
+            height: handleSize,
+            left: `calc(${hiPct}% - ${halfHandle}px)`,
+          }}
         />
-        {/* Invisible inputs for interaction */}
+        {/* Invisible inputs */}
         <input
           type="range"
           min={min} max={max} step={step} value={lo}
