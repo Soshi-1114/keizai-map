@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
 import { useIsMobile } from "@/lib/hooks";
 import { RAW_DATA, ADMINISTRATIONS, EVENTS, INDICATOR_CONFIGS, DATA_UPDATED_AT } from "@/lib/data";
+import { generateCSV, downloadCSV } from "@/lib/csv";
 import { Chart } from "./Chart";
 import { AdminBar } from "./AdminBar";
 import { RangeSlider } from "./RangeSlider";
@@ -291,6 +292,37 @@ export function MainView() {
               />
               <div className={isMobile ? "pl-[38px] pr-[38px]" : "pl-[55px] pr-[55px]"}>
                 <AdminBar administrations={ADMINISTRATIONS} yearRange={yearRange} />
+                <div style={{ marginTop: "1.5rem", display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+                  <button
+                    onClick={() => {
+                      const csv = generateCSV(RAW_DATA, activeIndicators, yearRange);
+                      downloadCSV(csv, `keizai-map_${yearRange[0]}-${yearRange[1]}.csv`);
+                    }}
+                    style={{
+                      padding: "0.5rem 1rem",
+                      borderRadius: "0.375rem",
+                      border: "1px solid var(--border)",
+                      backgroundColor: "var(--card)",
+                      color: "var(--text)",
+                      cursor: "pointer",
+                      fontSize: "0.875rem",
+                      fontWeight: 500,
+                      transition: "all 200ms",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = "var(--bg)";
+                      e.currentTarget.style.borderColor = "#4F8EF7";
+                      e.currentTarget.style.color = "#4F8EF7";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "var(--card)";
+                      e.currentTarget.style.borderColor = "var(--border)";
+                      e.currentTarget.style.color = "var(--text)";
+                    }}
+                  >
+                    📥 CSVでエクスポート
+                  </button>
+                </div>
               </div>
             </>
           ) : (
