@@ -4,6 +4,7 @@ export interface ArticleMeta {
   description: string;
   readingTime: number;
   tags: string[];
+  presetQuery?: string;
 }
 
 export const ARTICLES: ArticleMeta[] = [
@@ -14,6 +15,7 @@ export const ARTICLES: ArticleMeta[] = [
       "実質賃金と名目賃金の違いを解説。1990年を100とした場合、2024年の実質賃金は99.2と横ばいである一方、物価は約20%上昇した。日本の賃金停滞の実態をデータで確認する。",
     readingTime: 4,
     tags: ["賃金", "物価", "生活水準"],
+    presetQuery: "?indicators=wage,cpi&range=1990,2024&events=税制",
   },
   {
     slug: "consumption-tax",
@@ -22,6 +24,7 @@ export const ARTICLES: ArticleMeta[] = [
       "1989年の3%導入から2019年の10%まで、消費税率はどのように変化し、家計や経済にどんな影響を与えてきたか。消費者物価指数のデータとあわせて振り返る。",
     readingTime: 4,
     tags: ["消費税", "税収", "物価"],
+    presetQuery: "?indicators=cpi,tax,wage&range=1989,2024&events=税制",
   },
   {
     slug: "abenomics",
@@ -30,6 +33,7 @@ export const ARTICLES: ArticleMeta[] = [
       "2012年末に始まったアベノミクスの「3本の矢」を解説。8年間で税収は43.9兆円から60.8兆円へ増加し、円安も大幅に進んだ。実質賃金への影響はどうだったか。",
     readingTime: 5,
     tags: ["アベノミクス", "金融政策", "税収"],
+    presetQuery: "?indicators=wage,cpi,fx,nikkei&range=2012,2020&events=経済政策",
   },
   {
     slug: "yen-depreciation",
@@ -38,6 +42,7 @@ export const ARTICLES: ArticleMeta[] = [
       "2012年の1ドル=79.8円から2024年の151.8円まで、なぜ円安が進んだのか。日米金利差、日銀の金融政策との関係と、輸出企業・輸入消費者への影響を解説する。",
     readingTime: 4,
     tags: ["為替", "円安", "日銀"],
+    presetQuery: "?indicators=fx,cpi,wage&range=2012,2024",
   },
   {
     slug: "lost-decades",
@@ -46,6 +51,7 @@ export const ARTICLES: ArticleMeta[] = [
       "バブル崩壊（1991年）から現在まで、日本経済の何が「失われた」のか。実質賃金・物価・税収・為替の推移をデータで俯瞰し、長期停滞の構造を読み解く。",
     readingTime: 5,
     tags: ["バブル崩壊", "デフレ", "長期停滞"],
+    presetQuery: "?indicators=wage,cpi,nikkei,housing&range=1990,2024",
   },
   // ─ デ アナリシス記事
   {
@@ -55,6 +61,7 @@ export const ARTICLES: ArticleMeta[] = [
       "1990年の実質賃金を100とした場合、2024年は99.2。34年間で0.8%低下した実質賃金の全像。10年ごとの変動と転機、物価との乖離を数字で追う。",
     readingTime: 6,
     tags: ["実質賃金", "データ分析", "34年推移"],
+    presetQuery: "?indicators=wage,cpi&range=1990,2024",
   },
   {
     slug: "abenomics-real-wages-analysis",
@@ -63,6 +70,7 @@ export const ARTICLES: ArticleMeta[] = [
       "2012〜2020年のアベノミクス期間、実質賃金は97.4から96.5へ0.9%低下。株価・円相場・税収が上昇する中、なぜ実質賃金だけが下落したのか。8年間のデータで検証。",
     readingTime: 7,
     tags: ["アベノミクス", "実質賃金", "政策評価"],
+    presetQuery: "?indicators=wage,cpi,tax,fx,nikkei&range=2012,2020",
   },
   {
     slug: "consumption-tax-wage-price",
@@ -71,6 +79,7 @@ export const ARTICLES: ArticleMeta[] = [
       "消費税の4回の引き上げ（3→5→8→10%）で、物価はどう変わり、賃金はどう反応したのか。1997年の橋本増税と2019年の岸田増税を比較分析。",
     readingTime: 6,
     tags: ["消費税", "物価", "賃金"],
+    presetQuery: "?indicators=cpi,wage,tax&range=1989,2019&events=税制",
   },
   {
     slug: "yen-depreciation-real-wages",
@@ -79,5 +88,6 @@ export const ARTICLES: ArticleMeta[] = [
       "円相場が79.8円から151.8円へ90%下落した12年間、実質賃金はどう変わったのか。円安が輸出企業を潤す一方で、家計の購買力をどう圧迫したかを数字で解く。",
     readingTime: 6,
     tags: ["円安", "実質賃金", "家計"],
+    presetQuery: "?indicators=fx,wage,cpi&range=2012,2024",
   },
 ];

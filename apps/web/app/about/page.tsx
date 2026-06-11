@@ -33,6 +33,36 @@ const SOURCES = [
     series: "年平均レート 円/ドル",
     method: "日銀公開CSV",
   },
+  {
+    indicator: "日経平均株価",
+    source: "日本経済新聞社 / 取引所公開資料",
+    series: "日経平均株価 年末値（1990年=100に基準化）",
+    method: "公開資料からの集計",
+  },
+  {
+    indicator: "住宅価格指数",
+    source: "国土交通省 不動産価格指数",
+    series: "住宅地 1990年=100",
+    method: "国交省データベース",
+  },
+  {
+    indicator: "国債残高（兆円）",
+    source: "財務省 国債統計年報",
+    series: "普通国債残高（年度末） 兆円",
+    method: "財務省公開CSV",
+  },
+  {
+    indicator: "出生数（万人）",
+    source: "厚生労働省 人口動態調査",
+    series: "出生数 万人",
+    method: "e-Stat API",
+  },
+  {
+    indicator: "社会保険料負担率（%）",
+    source: "厚生労働省 / 財務省 国民負担率推移",
+    series: "社会保障負担率 ％",
+    method: "国民負担率統計",
+  },
 ];
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -66,7 +96,8 @@ export default function AboutPage() {
         {/* サービス概要 */}
         <Section title="KeizaiMapとは">
           <p className="text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
-            賃金・物価・税収・為替という、生活に直結する4つの経済指標の推移を
+            実質賃金・物価・税収・為替・日経平均・住宅価格・国債残高・出生数・社会保険料という、
+            日本経済を総合的に理解するための9つの経済指標の推移を
             一画面で重ねて見られる経済データダッシュボードです。
           </p>
           <p className="text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
