@@ -237,14 +237,15 @@ export function MainView({ initialParams }: MainViewProps) {
           <MobileIndicatorNav
             currentIndex={mobileIndicatorIndex}
             onIndexChange={setMobileIndicatorIndex}
+            filteredData={filteredData}
+            yearRange={yearRange}
           />
         )}
 
-        {/* ヒーロー統計バー：グラフを見る前に期間の変化を把握 */}
-        {filteredData.length >= 2 && (() => {
+        {/* ヒーロー統計バー（PC のみ） */}
+        {!isMobile && filteredData.length >= 2 && (() => {
           const s = filteredData[0];
           const e = filteredData[filteredData.length - 1];
-          const indicatorsToShow = isMobile ? [INDICATOR_CONFIGS[mobileIndicatorIndex]] : INDICATOR_CONFIGS;
           return (
             <div
               className="rounded-xl border px-4 py-3 flex flex-wrap items-center gap-x-5 gap-y-2"
@@ -253,7 +254,7 @@ export function MainView({ initialParams }: MainViewProps) {
               <span className="text-xs font-semibold shrink-0" style={{ color: "var(--muted)" }}>
                 {s.year}年 → {e.year}年
               </span>
-              {indicatorsToShow.map(cfg => {
+              {INDICATOR_CONFIGS.map(cfg => {
                 const sv = s[cfg.key] as number;
                 const ev = e[cfg.key] as number;
                 const pct = ((ev - sv) / sv) * 100;
@@ -275,15 +276,24 @@ export function MainView({ initialParams }: MainViewProps) {
         {/* フィルターボタン（モバイルのみ） */}
         {isMobile && (
           <button
-            onClick={() => setShowFiltersSheet(!showFiltersSheet)}
-            className="mb-3 px-4 py-2 rounded-lg text-xs font-medium border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            onClick={() => setShowFiltersSheet(true)}
+            className="w-full flex items-center justify-between px-4 rounded-xl border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             style={{
+              minHeight: 48,
               borderColor: "var(--border)",
-              color: "var(--muted)",
               backgroundColor: "var(--card)",
             }}
           >
-            ⚙️ フィルター
+            <div className="flex items-center gap-2">
+              <span style={{ fontSize: 16 }}>⚙️</span>
+              <span className="text-sm font-medium" style={{ color: "var(--text)" }}>フィルター</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: "var(--bg)", color: "var(--muted)" }}>
+                {yearRange[0]}–{yearRange[1]}年
+              </span>
+              <span style={{ color: "var(--muted)", fontSize: 16 }}>›</span>
+            </div>
           </button>
         )}
 
@@ -446,17 +456,17 @@ export function MainView({ initialParams }: MainViewProps) {
 
         {/* Chart + AdminBar / 比較モード */}
         <div className="rounded-xl border p-4" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
-          {/* モード切替 + シェアボタン */}
-          <div className="flex items-center gap-2 mb-3 flex-wrap">
+          {/* モード切替（モバイルは全幅、PCはシェアボタンと並列） */}
+          <div className={`flex items-center gap-2 mb-3 ${isMobile ? "flex-col" : ""}`}>
             <div
-              className="flex gap-0.5 rounded-lg p-0.5"
+              className={`flex gap-0.5 rounded-lg p-0.5 ${isMobile ? "w-full" : ""}`}
               style={{ backgroundColor: "var(--bg)", border: "1px solid var(--border)" }}
             >
               {VIEW_MODES.map(({ key, label }) => (
                 <button
                   key={key}
                   onClick={() => setViewMode(key)}
-                  className="px-3 py-1 rounded-md transition-all text-xs"
+                  className={`py-1.5 rounded-md transition-all text-xs ${isMobile ? "flex-1" : "px-3"}`}
                   style={{
                     backgroundColor: viewMode === key ? "var(--card)" : "transparent",
                     color:           viewMode === key ? "var(--text)" : "var(--muted)",
@@ -468,17 +478,19 @@ export function MainView({ initialParams }: MainViewProps) {
                 </button>
               ))}
             </div>
-            <div className="flex-1" />
-            <button
-              onClick={handleShare}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-opacity hover:opacity-80"
-              style={{ backgroundColor: "#1DA1F2", color: "#fff" }}
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.736-8.842L1.254 2.25H8.08l4.253 5.622 5.91-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-              </svg>
-              Xでシェア
-            </button>
+            {!isMobile && <div className="flex-1" />}
+            {!isMobile && (
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-opacity hover:opacity-80"
+                style={{ backgroundColor: "#1DA1F2", color: "#fff" }}
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.736-8.842L1.254 2.25H8.08l4.253 5.622 5.91-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+                Xでシェア
+              </button>
+            )}
           </div>
 
           {/* コンテンツ切替 */}
@@ -513,7 +525,7 @@ export function MainView({ initialParams }: MainViewProps) {
               />
               <div className={isMobile ? "pl-[38px] pr-[38px]" : "pl-[55px] pr-[55px]"}>
                 <AdminBar administrations={ADMINISTRATIONS} yearRange={yearRange} />
-                <div style={{ marginTop: "1.5rem", display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
+                <div style={{ marginTop: "1.5rem", display: isMobile ? "none" : "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
                   <button
                     onClick={() => {
                       const csv = generateCSV(RAW_DATA, activeIndicators, yearRange);
@@ -679,8 +691,12 @@ export function MainView({ initialParams }: MainViewProps) {
           )}
         </div>
 
-        {/* Insight cards（動的：選択期間の変化率を表示） */}
-        <InsightCards data={filteredData} yearRange={yearRange} />
+        {/* Insight cards（モバイルは選択中指標のみ、PCは全指標） */}
+        <InsightCards
+          data={filteredData}
+          yearRange={yearRange}
+          focusedKey={isMobile ? INDICATOR_CONFIGS[mobileIndicatorIndex].key : undefined}
+        />
 
         {/* 自動解説：選択期間の傾向を文章で要約 */}
         {narrative && (
@@ -693,6 +709,20 @@ export function MainView({ initialParams }: MainViewProps) {
           </div>
         )}
 
+
+        {/* モバイル：フッターのシェアボタン */}
+        {isMobile && (
+          <button
+            onClick={handleShare}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium transition-opacity hover:opacity-80"
+            style={{ backgroundColor: "#1DA1F2", color: "#fff" }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.736-8.842L1.254 2.25H8.08l4.253 5.622 5.91-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+            Xでシェア
+          </button>
+        )}
 
         {/* Footer */}
         <footer className="text-xs text-center pt-4 border-t space-y-1" style={{ color: "var(--muted)", borderColor: "var(--border)" }}>

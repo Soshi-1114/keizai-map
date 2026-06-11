@@ -1,58 +1,107 @@
 "use client";
 
-import { INDICATOR_CONFIGS, RAW_DATA } from "@/lib/data";
+import type { DataPoint } from "@/lib/types";
+import { INDICATOR_CONFIGS } from "@/lib/data";
 
 interface MobileIndicatorNavProps {
   currentIndex: number;
   onIndexChange: (index: number) => void;
+  filteredData: DataPoint[];
+  yearRange: [number, number];
 }
 
-export function MobileIndicatorNav({ currentIndex, onIndexChange }: MobileIndicatorNavProps) {
+export function MobileIndicatorNav({ currentIndex, onIndexChange, filteredData, yearRange }: MobileIndicatorNavProps) {
   const current = INDICATOR_CONFIGS[currentIndex];
+  const total = INDICATOR_CONFIGS.length;
 
-  // 1990 → 2024 の変化率を計算
-  const startVal = RAW_DATA[0]?.[current.key] ?? 100;
-  const endVal = RAW_DATA[RAW_DATA.length - 1]?.[current.key] ?? 100;
-  const pctChange = ((endVal - startVal) / startVal) * 100;
-  const sign = pctChange >= 0 ? "+" : "";
-  const color = pctChange >= 0 ? "#22c55e" : "#ef4444";
+  // 選択期間の変化率を計算
+  const startPoint = filteredData[0];
+  const endPoint = filteredData[filteredData.length - 1];
+  const startVal = startPoint?.[current.key] ?? null;
+  const endVal = endPoint?.[current.key] ?? null;
+  const pctChange = startVal && endVal ? ((endVal - startVal) / startVal) * 100 : null;
+  const sign = pctChange !== null && pctChange >= 0 ? "+" : "";
+  const changeColor = pctChange === null ? "var(--muted)" : pctChange >= 0 ? "#22c55e" : "#ef4444";
 
-  const handlePrev = () => {
-    onIndexChange(currentIndex === 0 ? INDICATOR_CONFIGS.length - 1 : currentIndex - 1);
-  };
-
-  const handleNext = () => {
-    onIndexChange((currentIndex + 1) % INDICATOR_CONFIGS.length);
-  };
+  const handlePrev = () => onIndexChange(currentIndex === 0 ? total - 1 : currentIndex - 1);
+  const handleNext = () => onIndexChange((currentIndex + 1) % total);
 
   return (
-    <div className="flex items-center justify-between gap-2 p-3 rounded-lg mb-3" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)", border: "1px solid" }}>
+    <div
+      className="flex items-center gap-3 px-3 py-2 rounded-xl"
+      style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}
+    >
+      {/* 前ボタン — 44px タップ領域確保 */}
       <button
         onClick={handlePrev}
-        className="px-2 py-1 rounded-md text-xs font-medium transition-colors hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600"
-        style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
+        aria-label="前の指標"
+        className="flex items-center justify-center rounded-lg transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600"
+        style={{
+          minWidth: 44, minHeight: 44,
+          backgroundColor: "var(--bg)",
+          color: "var(--muted)",
+          fontSize: 20,
+          flexShrink: 0,
+        }}
       >
-        ← 前
+        ‹
       </button>
 
-      <div className="flex-1 text-center">
-        <div className="text-xs" style={{ color: "var(--muted)" }}>
-          {currentIndex + 1} / {INDICATOR_CONFIGS.length}
-        </div>
-        <div className="text-sm font-bold" style={{ color: current.color }}>
+      {/* 中央：指標名 + 変化率 + ドットナビ */}
+      <div className="flex-1 flex flex-col items-center gap-1 min-w-0">
+        {/* 指標名 */}
+        <span className="text-sm font-bold truncate" style={{ color: current.color }}>
           {current.label}
+        </span>
+
+        {/* 変化率 + 期間 */}
+        <div className="flex items-baseline gap-1.5">
+          {pctChange !== null ? (
+            <span className="text-base font-bold tabular-nums" style={{ color: changeColor }}>
+              {sign}{pctChange.toFixed(1)}%
+            </span>
+          ) : (
+            <span className="text-xs" style={{ color: "var(--muted)" }}>—</span>
+          )}
+          <span className="text-[10px]" style={{ color: "var(--muted)" }}>
+            {yearRange[0]}–{yearRange[1]}
+          </span>
         </div>
-        <div className="text-xs font-semibold mt-0.5" style={{ color }}>
-          {sign}{pctChange.toFixed(1)}%
+
+        {/* ドットナビゲーター */}
+        <div className="flex gap-1 mt-0.5">
+          {INDICATOR_CONFIGS.map((cfg, i) => (
+            <button
+              key={cfg.key}
+              onClick={() => onIndexChange(i)}
+              aria-label={cfg.label}
+              style={{
+                width: i === currentIndex ? 16 : 6,
+                height: 6,
+                borderRadius: 3,
+                backgroundColor: i === currentIndex ? current.color : "var(--border)",
+                transition: "width 0.2s ease, background-color 0.2s ease",
+                flexShrink: 0,
+              }}
+            />
+          ))}
         </div>
       </div>
 
+      {/* 次ボタン — 44px タップ領域確保 */}
       <button
         onClick={handleNext}
-        className="px-2 py-1 rounded-md text-xs font-medium transition-colors hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600"
-        style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
+        aria-label="次の指標"
+        className="flex items-center justify-center rounded-lg transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600"
+        style={{
+          minWidth: 44, minHeight: 44,
+          backgroundColor: "var(--bg)",
+          color: "var(--muted)",
+          fontSize: 20,
+          flexShrink: 0,
+        }}
       >
-        次 →
+        ›
       </button>
     </div>
   );

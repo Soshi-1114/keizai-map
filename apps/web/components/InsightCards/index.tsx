@@ -1,21 +1,26 @@
-import type { DataPoint } from "@/lib/types";
+import type { DataPoint, IndicatorKey } from "@/lib/types";
 import { INDICATOR_CONFIGS } from "@/lib/data";
 
 interface Props {
   data: DataPoint[];
   yearRange?: [number, number];
+  focusedKey?: IndicatorKey;
 }
 
-export function InsightCards({ data }: Props) {
+export function InsightCards({ data, focusedKey }: Props) {
   if (data.length < 2) return null;
 
   const start = data[0];
   const end = data[data.length - 1];
   const sameYear = start.year === end.year;
 
+  const configs = focusedKey
+    ? INDICATOR_CONFIGS.filter(c => c.key === focusedKey)
+    : INDICATOR_CONFIGS;
+
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      {INDICATOR_CONFIGS.map(cfg => {
+    <div className={focusedKey ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 md:grid-cols-4 gap-3"}>
+      {configs.map(cfg => {
         const startVal = start[cfg.key] as number | null;
         const endVal   = end[cfg.key]   as number | null;
         if (startVal == null || endVal == null) return null;
