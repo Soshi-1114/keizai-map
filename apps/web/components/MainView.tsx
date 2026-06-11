@@ -271,6 +271,57 @@ export function MainView({ initialParams }: MainViewProps) {
           );
         })()}
 
+        {/* フィルターセクション - グラフの前 */}
+        <div className="rounded-xl border p-4 space-y-4" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
+          {/* 注目の期間ショートカット */}
+          <div>
+            <h2 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>注目の期間</h2>
+            <div className="flex gap-2 flex-wrap">
+              {ERA_SHORTCUTS.map(({ label, range }) => {
+                const isActive = yearRange[0] === range[0] && yearRange[1] === range[1];
+                return (
+                  <button
+                    key={label}
+                    onClick={() => setYearRange(range)}
+                    className="px-3 py-1 rounded-full text-xs border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                    style={{
+                      borderColor: isActive ? "#4F8EF7" : "var(--border)",
+                      color: isActive ? "#4F8EF7" : "var(--muted)",
+                      backgroundColor: isActive ? "#4F8EF720" : "transparent",
+                      fontWeight: isActive ? 600 : 400,
+                    }}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 表示期間スライダー */}
+          <section aria-labelledby="range-heading">
+            <h2 id="range-heading" className="text-xs font-medium mb-3" style={{ color: "var(--muted)" }}>表示期間</h2>
+            <RangeSlider
+              min={MIN_YEAR}
+              max={MAX_YEAR}
+              value={yearRange}
+              onChange={setYearRange}
+              step={2}
+              aria-label={`表示期間: ${yearRange[0]}年から${yearRange[1]}年まで`}
+            />
+          </section>
+
+          {/* イベントフィルター */}
+          <section aria-labelledby="event-heading">
+            <h2 id="event-heading" className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>経済イベントフィルター</h2>
+            <EventFilter
+              categories={ALL_CATEGORIES}
+              activeCategories={activeCategories}
+              onToggle={toggleCategory}
+            />
+          </section>
+        </div>
+
         {/* Chart + AdminBar / 比較モード */}
         <div className="rounded-xl border p-4" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
           {/* モード切替 + シェアボタン */}
@@ -311,21 +362,23 @@ export function MainView({ initialParams }: MainViewProps) {
           {/* コンテンツ切替 */}
           {viewMode === "chart" ? (
             <>
-              {/* G7比較トグル */}
-              <div className="flex items-center gap-2 mb-3 flex-wrap">
-                <button
-                  onClick={() => setShowComparison(!showComparison)}
-                  className="px-3 py-1.5 rounded-full text-xs border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                  style={{
-                    borderColor: showComparison ? "#4F8EF7" : "var(--border)",
-                    color: showComparison ? "#4F8EF7" : "var(--muted)",
-                    backgroundColor: showComparison ? "#4F8EF7" + "15" : "transparent",
-                    fontWeight: showComparison ? 600 : 400,
-                  }}
-                >
-                  🌍 G7平均と比較
-                </button>
-              </div>
+              {/* G7比較トグル - データがある場合のみ表示 */}
+              {(effectiveIndicators.includes("wage") || effectiveIndicators.includes("cpi") || effectiveIndicators.includes("fx")) && (
+                <div className="flex items-center gap-2 mb-3 flex-wrap">
+                  <button
+                    onClick={() => setShowComparison(!showComparison)}
+                    className="px-3 py-1.5 rounded-full text-xs border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                    style={{
+                      borderColor: showComparison ? "#4F8EF7" : "var(--border)",
+                      color: showComparison ? "#4F8EF7" : "var(--muted)",
+                      backgroundColor: showComparison ? "#4F8EF7" + "15" : "transparent",
+                      fontWeight: showComparison ? 600 : 400,
+                    }}
+                  >
+                    🌍 G7平均と比較
+                  </button>
+                </div>
+              )}
 
               <Chart
                 data={showComparison ? getComparisonData(filteredData) : filteredData}
@@ -334,6 +387,7 @@ export function MainView({ initialParams }: MainViewProps) {
                 activeIndicators={effectiveIndicators}
                 activeCategories={activeCategories}
                 showComparison={showComparison}
+                isSingleIndicator={isMobile}
               />
               <div className={isMobile ? "pl-[38px] pr-[38px]" : "pl-[55px] pr-[55px]"}>
                 <AdminBar administrations={ADMINISTRATIONS} yearRange={yearRange} />
@@ -517,56 +571,6 @@ export function MainView({ initialParams }: MainViewProps) {
           </div>
         )}
 
-        {/* Controls */}
-        <div className="rounded-xl border p-4 space-y-5" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
-          {/* 注目の期間ショートカット */}
-          <div>
-            <h2 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>注目の期間</h2>
-            <div className="flex gap-2 flex-wrap">
-              {ERA_SHORTCUTS.map(({ label, range }) => {
-                const isActive = yearRange[0] === range[0] && yearRange[1] === range[1];
-                return (
-                  <button
-                    key={label}
-                    onClick={() => setYearRange(range)}
-                    className="px-3 py-1 rounded-full text-xs border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                    style={{
-                      borderColor: isActive ? "#4F8EF7" : "var(--border)",
-                      color: isActive ? "#4F8EF7" : "var(--muted)",
-                      backgroundColor: isActive ? "#4F8EF720" : "transparent",
-                      fontWeight: isActive ? 600 : 400,
-                    }}
-                  >
-                    {label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* 表示期間スライダー */}
-          <section aria-labelledby="range-heading">
-            <h2 id="range-heading" className="text-xs font-medium mb-3" style={{ color: "var(--muted)" }}>表示期間</h2>
-            <RangeSlider
-              min={MIN_YEAR}
-              max={MAX_YEAR}
-              value={yearRange}
-              onChange={setYearRange}
-              step={2}
-              aria-label={`表示期間: ${yearRange[0]}年から${yearRange[1]}年まで`}
-            />
-          </section>
-
-          {/* イベントフィルター */}
-          <section aria-labelledby="event-heading">
-            <h2 id="event-heading" className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>経済イベントフィルター</h2>
-            <EventFilter
-              categories={ALL_CATEGORIES}
-              activeCategories={activeCategories}
-              onToggle={toggleCategory}
-            />
-          </section>
-        </div>
 
         {/* Footer */}
         <footer className="text-xs text-center pt-4 border-t space-y-1" style={{ color: "var(--muted)", borderColor: "var(--border)" }}>

@@ -23,6 +23,7 @@ interface Props {
   activeIndicators: IndicatorKey[];
   activeCategories: string[];
   showComparison?: boolean;
+  isSingleIndicator?: boolean;
 }
 
 const TICK_STYLE = { fill: "var(--muted)", fontSize: 11 };
@@ -41,7 +42,7 @@ const STROKE_DASH: Record<IndicatorKey, string | undefined> = {
   insurance: undefined,  // 実線
 };
 
-export function Chart({ data, events, administrations, activeIndicators, activeCategories, showComparison }: Props) {
+export function Chart({ data, events, administrations, activeIndicators, activeCategories, showComparison, isSingleIndicator }: Props) {
   const isMobile = useIsMobile();
   const visibleEvents = events.filter(e => activeCategories.includes(e.category));
   const activeConfigs = INDICATOR_CONFIGS.filter(c => activeIndicators.includes(c.key));
@@ -177,7 +178,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             name={cfg.label}
             stroke={cfg.color}
             strokeWidth={isMobile ? 1.5 : 2}
-            strokeDasharray={STROKE_DASH[cfg.key]}
+            strokeDasharray={isSingleIndicator ? undefined : STROKE_DASH[cfg.key]}
             dot={{ fill: cfg.color, r: isMobile ? 2 : 3, strokeWidth: 0 }}
             activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--card)" }}
             yAxisId={cfg.yAxis}

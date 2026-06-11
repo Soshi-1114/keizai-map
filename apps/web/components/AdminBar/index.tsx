@@ -82,6 +82,16 @@ export function AdminBar({ administrations, yearRange }: Props) {
               </span>
             )}
 
+            {/* モバイル：政党名を常に表示 */}
+            {isMobile && width > 6 && (
+              <span
+                className="text-[7px] font-bold leading-tight px-0.5 w-full text-center overflow-hidden truncate"
+                style={{ color: admin.color }}
+              >
+                {admin.party}
+              </span>
+            )}
+
             {isHovered && (
               <div
                 className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 z-50 whitespace-nowrap rounded-lg px-3 py-2 text-xs shadow-xl pointer-events-none"
