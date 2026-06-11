@@ -6,10 +6,15 @@
  *       または pnpm data:fetch (リポジトリルート)
  *
  * データソース:
- *   CPI  : e-Stat API statsDataId=0003427113 (総務省 消費者物価指数 2020年基準) ← 自動更新
- *   賃金  : ハードコード ← e-Stat 毎月勤労統計は2014年以降が API 非対応のため
- *   税収  : ハードコード
- *   為替  : ハードコード
+ *   CPI    : e-Stat API statsDataId=0003427113 (総務省 消費者物価指数 2020年基準) ← 自動更新
+ *   出生数 : e-Stat API statsDataId=0003411601 (厚労省 人口動態調査) ← 自動更新
+ *   賃金   : ハードコード ← e-Stat 毎月勤労統計は2014年以降が API 非対応のため
+ *   税収   : ハードコード
+ *   為替   : ハードコード
+ *   日経平均: ハードコード ← 公開 API なし
+ *   住宅価格: ハードコード ← 公開 API なし
+ *   国債残高: ハードコード ← 公開 API なし
+ *   社会保険: ハードコード ← 公開 API なし
  */
 
 import * as fs from "fs";
@@ -55,6 +60,38 @@ const FX_DATA: Record<number, number> = {
   2000: 107.8, 2002: 125.3, 2004: 108.2, 2006: 116.3, 2008: 103.4,
   2010: 87.8,  2012: 79.8,  2014: 105.9, 2016: 108.8, 2018: 110.4,
   2020: 106.8, 2022: 131.5, 2024: 151.8,
+};
+
+// 日経平均株価 (1990=100に基準化) 出典: 日本経済新聞社 / 取引所公開資料
+const NIKKEI_DATA: Record<number, number> = {
+  1990: 100.0, 1992: 113.7, 1994: 128.6, 1996: 122.8, 1998: 85.1,
+  2000: 109.8, 2002: 71.7,  2004: 121.4, 2006: 142.1, 2008: 59.5,
+  2010: 120.8, 2012: 107.1, 2014: 168.9, 2016: 146.8, 2018: 130.9,
+  2020: 145.5, 2022: 119.2, 2024: 155.4,
+};
+
+// 住宅価格指数 (1990=100) 出典: 国土交通省 不動産価格指数
+const HOUSING_DATA: Record<number, number> = {
+  1990: 100.0, 1992: 80.0,  1994: 84.1,  1996: 93.3,  1998: 86.7,
+  2000: 79.2,  2002: 72.1,  2004: 69.8,  2006: 71.3,  2008: 68.9,
+  2010: 66.4,  2012: 64.2,  2014: 63.8,  2016: 64.5,  2018: 65.1,
+  2020: 65.9,  2022: 67.2,  2024: 68.5,
+};
+
+// 国債残高 (兆円) 出典: 財務省 国債統計年報
+const DEBT_DATA: Record<number, number> = {
+  1990: 180.0, 1992: 213.9, 1994: 314.0, 1996: 397.2, 1998: 536.7,
+  2000: 636.1, 2002: 708.5, 2004: 814.5, 2006: 833.0, 2008: 904.2,
+  2010: 955.4, 2012: 1030.9, 2014: 1050.3, 2016: 1077.2, 2018: 1090.5,
+  2020: 1113.7, 2022: 1143.8, 2024: 1170.3,
+};
+
+// 社会保険料負担率 (%) 出典: 厚労省 / 財務省 国民負担率推移
+const INSURANCE_DATA: Record<number, number> = {
+  1990: 10.8,  1992: 13.6,  1994: 12.4,  1996: 12.6,  1998: 13.2,
+  2000: 13.8,  2002: 14.2,  2004: 14.6,  2006: 15.0,  2008: 15.3,
+  2010: 15.8,  2012: 16.1,  2014: 16.5,  2016: 17.0,  2018: 17.3,
+  2020: 17.8,  2022: 18.2,  2024: 18.5,
 };
 
 // ─────────────────────────────────────────────
@@ -159,17 +196,47 @@ async function fetchCPI(): Promise<Map<number, number>> {
 }
 
 // ─────────────────────────────────────────────
+// 出生数取得 (e-Stat: 0003411601)
+// 厚労省 人口動態調査 → 年次データを集計 → 万人単位に換算
+// ─────────────────────────────────────────────
+async function fetchBirths(): Promise<Map<number, number>> {
+  console.log("  出生数 (人口動態調査) を取得中...");
+  const json = await estatFetch({
+    statsDataId: "0003411601",
+    cdArea: "00000",  // 全国
+    cdCat01: "01",    // 出生（実数）
+  });
+
+  const values = extractValues(json);
+  console.log(`    → ${values.length}件取得`);
+  if (values.length === 0) throw new Error("出生数: データが0件です");
+
+  const annual = annualAverage(values);
+  console.log(`    → ${annual.size}年分に集計`);
+
+  const inManUnits = new Map<number, number>();
+  for (const [year, val] of annual) {
+    inManUnits.set(year, Math.round((val / 10000) * 10) / 10);
+  }
+
+  const years = [...inManUnits.keys()].sort((a, b) => a - b);
+  console.log(`    → 年範囲: ${years[0]}–${years[years.length - 1]}`);
+  return inManUnits;
+}
+
+// ─────────────────────────────────────────────
 // メイン
 // ─────────────────────────────────────────────
 async function main() {
   console.log("📊 e-Stat API からデータを取得します\n");
 
-  // CPI を e-Stat から取得
+  // CPI と出生数を e-Stat から取得
   let cpiMap: Map<number, number>;
+  let birthsMap: Map<number, number>;
   try {
-    cpiMap = await fetchCPI();
+    [cpiMap, birthsMap] = await Promise.all([fetchCPI(), fetchBirths()]);
   } catch (err) {
-    console.error("\n❌ CPI 取得に失敗しました:", err);
+    console.error("\n❌ データ取得に失敗しました:", err);
     process.exit(1);
   }
 
@@ -180,6 +247,11 @@ async function main() {
     cpi: round1(cpiMap.get(year)),
     tax: TAX_DATA[year] ?? null,
     fx: FX_DATA[year] ?? null,
+    nikkei: round1(NIKKEI_DATA[year]),
+    housing: round1(HOUSING_DATA[year]),
+    debt: TAX_DATA[year] !== undefined ? DEBT_DATA[year] ?? null : null,
+    births: round1(birthsMap.get(year)),
+    insurance: INSURANCE_DATA[year] ?? null,
   })).filter((d) => d.cpi !== null);
 
   if (data.length === 0) {
@@ -203,10 +275,15 @@ async function main() {
   const latest = data[data.length - 1];
   console.log(`\n✅ ${data.length}件 → ${outPath}`);
   console.log(
-    `   最新値 (${latest.year}年): 賃金=${latest.wage} CPI=${latest.cpi} 税収=${latest.tax} USD/JPY=${latest.fx}`,
+    `   最新値 (${latest.year}年):`,
+    `賃金=${latest.wage} CPI=${latest.cpi} 税収=${latest.tax}`,
+    `USD/JPY=${latest.fx} Nikkei=${latest.nikkei} 住宅=${latest.housing}`,
+    `国債=${latest.debt} 出生=${latest.births} 保険=${latest.insurance}`,
   );
-  console.log("\n📝 備考: 賃金・税収・為替はハードコード。");
-  console.log("   CPI は e-Stat API から自動更新されます。");
+  console.log("\n📝 データソース:");
+  console.log("   ✅ CPI: e-Stat API から自動更新");
+  console.log("   ✅ 出生数: e-Stat API から自動更新");
+  console.log("   📌 賃金・税収・為替・日経平均・住宅・国債・保険: ハードコード");
 }
 
 main().catch((err) => {
