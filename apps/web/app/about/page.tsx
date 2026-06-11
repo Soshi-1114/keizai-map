@@ -88,13 +88,13 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen p-6" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
-      <div className="mx-auto space-y-0" style={{ maxWidth: 720 }}>
+    <main className="min-h-screen p-6 overflow-x-hidden" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
+      <div className="mx-auto space-y-0 min-w-0" style={{ maxWidth: 720 }}>
 
         {/* Header */}
         <div className="pb-6">
           <div className="flex items-center justify-between mb-4">
-            <Link href="/" className="text-sm hover:underline" style={{ color: "#4F8EF7" }}>
+            <Link href="/" className="text-sm hover:underline" style={{ color: "var(--link)" }}>
               ← KeizaiMap に戻る
             </Link>
             <ThemeToggle />
@@ -122,8 +122,8 @@ export default function AboutPage() {
 
         {/* データソーステーブル */}
         <Section title="指標と出典">
-          <div className="rounded-xl border overflow-hidden" style={{ borderColor: "var(--border)" }}>
-            <table className="w-full text-sm">
+          <div className="rounded-xl border overflow-hidden overflow-x-auto" style={{ borderColor: "var(--border)" }}>
+            <table className="min-w-full text-sm">
               <thead>
                 <tr
                   className="border-b text-xs"

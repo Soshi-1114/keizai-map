@@ -48,13 +48,14 @@ export const EVENTS: EconomicEvent[] = [
 ];
 
 export const INDICATOR_CONFIGS: IndicatorConfig[] = [
-  { key: "wage", label: "実質賃金",         color: "#4F8EF7", unit: "（1990=100）", yAxis: "left"  },
-  { key: "cpi",  label: "消費者物価（CPI）", color: "#D97706", unit: "（1990=100）", yAxis: "left"  },
-  { key: "tax",  label: "税収",             color: "#E05C5C", unit: "（兆円）",      yAxis: "right" },
-  { key: "fx",   label: "USD/JPY",          color: "#4FD9A0", unit: "（円）",        yAxis: "right" },
-  { key: "nikkei", label: "日経平均",       color: "#8B5CF6", unit: "（1990=100）", yAxis: "left"  },
-  { key: "housing", label: "住宅価格",      color: "#EC4899", unit: "（1990=100）", yAxis: "left"  },
-  { key: "debt", label: "国債残高",         color: "#06B6D4", unit: "（兆円）",      yAxis: "right" },
-  { key: "births", label: "出生数",         color: "#F59E0B", unit: "（万人）",      yAxis: "left"  },
-  { key: "insurance", label: "社会保険料", color: "#10B981", unit: "（%）",         yAxis: "right" },
+  // color: グラフ・ダーク背景用, darkColor: 薄背景チップ等でのWCAG AA対応テキスト色
+  { key: "wage",      label: "実質賃金",         color: "#4F8EF7", darkColor: "#1d4ed8", unit: "（1990=100）", yAxis: "left"  },
+  { key: "cpi",       label: "消費者物価（CPI）", color: "#D97706", darkColor: "#92400e", unit: "（1990=100）", yAxis: "left"  },
+  { key: "tax",       label: "税収",             color: "#E05C5C", darkColor: "#991b1b", unit: "（兆円）",      yAxis: "right" },
+  { key: "fx",        label: "USD/JPY",          color: "#4FD9A0", darkColor: "#065f46", unit: "（円）",        yAxis: "right" },
+  { key: "nikkei",    label: "日経平均",          color: "#8B5CF6", darkColor: "#5b21b6", unit: "（1990=100）", yAxis: "left"  },
+  { key: "housing",   label: "住宅価格",          color: "#EC4899", darkColor: "#9d174d", unit: "（1990=100）", yAxis: "left"  },
+  { key: "debt",      label: "国債残高",          color: "#06B6D4", darkColor: "#155e75", unit: "（兆円）",      yAxis: "right" },
+  { key: "births",    label: "出生数",            color: "#F59E0B", darkColor: "#78350f", unit: "（万人）",      yAxis: "left"  },
+  { key: "insurance", label: "社会保険料",        color: "#10B981", darkColor: "#065f46", unit: "（%）",         yAxis: "right" },
 ];

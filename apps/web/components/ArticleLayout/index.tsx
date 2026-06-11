@@ -19,18 +19,18 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
     : [];
   return (
     <main
-      className="min-h-screen py-8 px-4 w-full min-w-0"
+      className="min-h-screen py-8 px-4 w-full min-w-0 overflow-x-hidden"
       style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
     >
-      <div className="mx-auto" style={{ maxWidth: 720 }}>
+      <div className="mx-auto min-w-0" style={{ maxWidth: 720 }}>
         {/* ナビ */}
         <div className="flex items-center justify-between mb-6">
           <nav className="flex items-center gap-2 text-xs" style={{ color: "var(--muted)" }}>
-            <Link href="/" className="hover:underline" style={{ color: "#4F8EF7" }}>
+            <Link href="/" className="hover:underline" style={{ color: "var(--link)" }}>
               KeizaiMap
             </Link>
             <span>/</span>
-            <Link href="/articles" className="hover:underline" style={{ color: "#4F8EF7" }}>
+            <Link href="/articles" className="hover:underline" style={{ color: "var(--link)" }}>
               解説記事
             </Link>
           </nav>
@@ -52,8 +52,13 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
               ))}
             </div>
           )}
-          <h1 className="text-2xl font-bold leading-snug mb-3 break-words overflow-wrap-anywhere" style={{ overflowWrap: "break-word" }}>{title}</h1>
-          <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--muted)" }}>
+          <h1
+            className="text-2xl font-bold leading-snug mb-3 break-words min-w-0"
+            style={{ overflowWrap: "break-word", wordBreak: "break-word" }}
+          >
+            {title}
+          </h1>
+          <p className="text-sm leading-relaxed mb-4 break-words min-w-0" style={{ color: "var(--muted)", overflowWrap: "anywhere" }}>
             {description}
           </p>
           <div className="text-xs" style={{ color: "var(--muted)" }}>
@@ -75,7 +80,7 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
           <Link
             href="/"
             className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition-opacity hover:opacity-80"
-            style={{ backgroundColor: "#4F8EF7", color: "#fff" }}
+            style={{ backgroundColor: "var(--accent-btn)", color: "#fff" }}
           >
             📊 KeizaiMap でグラフを見る
           </Link>
@@ -92,12 +97,12 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
                 <Link
                   key={a.slug}
                   href={`/articles/${a.slug}`}
-                  className="flex items-start gap-3 p-3 rounded-lg border transition-colors hover:border-[#4F8EF7]"
+                  className="flex items-start gap-3 p-3 rounded-lg border transition-colors hover:border-[var(--link)]"
                   style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium leading-snug line-clamp-2">{a.title}</p>
-                    <p className="text-xs mt-1" style={{ color: "#4F8EF7" }}>
+                    <p className="text-xs mt-1" style={{ color: "var(--link)" }}>
                       読了時間 約 {a.readingTime} 分 →
                     </p>
                   </div>
@@ -109,7 +114,7 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
 
         {/* 他の記事 */}
         <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--border)" }}>
-          <Link href="/articles" className="text-sm hover:underline" style={{ color: "#4F8EF7" }}>
+          <Link href="/articles" className="text-sm hover:underline" style={{ color: "var(--link)" }}>
             ← 解説記事一覧に戻る
           </Link>
         </div>
@@ -140,7 +145,7 @@ export function Section({ heading, children }: { heading?: string; children: Rea
           {heading}
         </h2>
       )}
-      <div className="text-sm leading-relaxed space-y-3" style={{ color: "var(--text)" }}>
+      <div className="text-sm leading-relaxed space-y-3 min-w-0 break-words" style={{ color: "var(--text)", overflowWrap: "anywhere" }}>
         {children}
       </div>
     </section>

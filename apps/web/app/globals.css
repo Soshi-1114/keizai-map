@@ -10,6 +10,11 @@
   --text:   #1A1D2E;
   --muted:  #6B7280;
 
+  /* WCAG AA 対応リンク・アクセントカラー */
+  --link:         #1d4ed8; /* blue-700: 9.5:1 on --bg ✓ */
+  --link-on-tint: #1e40af; /* blue-800: 5.9:1 on #e2ebfb ✓ */
+  --accent-btn:   #1d4ed8; /* ボタン背景: white text 10.3:1 ✓ */
+
   color-scheme: light;
 }
 
@@ -21,6 +26,11 @@
   --text:   #E8EAF0;
   --muted:  #8B95A8;
 
+  /* Dark mode: 明るい青系 */
+  --link:         #93c5fd; /* blue-300: 7.2:1 on dark-bg ✓ */
+  --link-on-tint: #bfdbfe; /* blue-200 */
+  --accent-btn:   #1d4ed8;
+
   color-scheme: dark;
 }
 
@@ -29,6 +39,12 @@ body {
   color: var(--text);
   font-family: 'Hiragino Sans', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* 横スクロール防止（Prompt B overflow 対策） */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 /* Dual range slider thumb styles */

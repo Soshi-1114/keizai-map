@@ -137,7 +137,7 @@ export function MainView({ initialParams }: MainViewProps) {
                   className="px-3 py-1.5 md:py-1 rounded-full text-sm border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                   style={{
                     borderColor: active ? cfg.color : "var(--border)",
-                    color: active ? cfg.color : "var(--muted)",
+                    color: active ? cfg.darkColor : "var(--muted)",
                     backgroundColor: active ? cfg.color + "15" : "transparent",
                     opacity: 1,
                     fontWeight: active ? 600 : 400,
@@ -294,9 +294,9 @@ export function MainView({ initialParams }: MainViewProps) {
                     onClick={() => setShowComparison(!showComparison)}
                     className="px-3 py-1.5 rounded-full text-xs border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                     style={{
-                      borderColor: showComparison ? "#4F8EF7" : "var(--border)",
-                      color: showComparison ? "#4F8EF7" : "var(--muted)",
-                      backgroundColor: showComparison ? "#4F8EF7" + "15" : "transparent",
+                      borderColor: showComparison ? "var(--link)" : "var(--border)",
+                      color: showComparison ? "var(--link)" : "var(--muted)",
+                      backgroundColor: showComparison ? "#1d4ed815" : "transparent",
                       fontWeight: showComparison ? 600 : 400,
                     }}
                   >
@@ -343,8 +343,8 @@ export function MainView({ initialParams }: MainViewProps) {
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = "var(--bg)";
-                      e.currentTarget.style.borderColor = "#4F8EF7";
-                      e.currentTarget.style.color = "#4F8EF7";
+                      e.currentTarget.style.borderColor = "var(--link)";
+                      e.currentTarget.style.color = "var(--link)";
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.backgroundColor = "var(--card)";
@@ -360,7 +360,7 @@ export function MainView({ initialParams }: MainViewProps) {
                       padding: "0.5rem 1rem",
                       borderRadius: "0.375rem",
                       border: "1px solid var(--border)",
-                      backgroundColor: showDataTable ? "#4F8EF7" : "var(--card)",
+                      backgroundColor: showDataTable ? "var(--link)" : "var(--card)",
                       color: showDataTable ? "#fff" : "var(--text)",
                       cursor: "pointer",
                       fontSize: "0.875rem",
@@ -370,7 +370,7 @@ export function MainView({ initialParams }: MainViewProps) {
                     onMouseEnter={(e) => {
                       if (!showDataTable) {
                         e.currentTarget.style.backgroundColor = "var(--bg)";
-                        e.currentTarget.style.borderColor = "#4F8EF7";
+                        e.currentTarget.style.borderColor = "var(--link)";
                       }
                     }}
                     onMouseLeave={(e) => {
@@ -408,7 +408,7 @@ export function MainView({ initialParams }: MainViewProps) {
             className="rounded-xl border px-5 py-4"
             style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
           >
-            <p className="text-xs font-medium mb-1.5" style={{ color: "#4F8EF7" }}>この期間のポイント</p>
+            <p className="text-xs font-medium mb-1.5" style={{ color: "var(--link)" }}>この期間のポイント</p>
             <p className="text-sm leading-relaxed" style={{ color: "var(--text)" }}>{narrative}</p>
           </div>
         )}

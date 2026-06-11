@@ -33,6 +33,8 @@ export interface IndicatorConfig {
   key: IndicatorKey;
   label: string;
   color: string;
+  /** WCAG AA 対応の濃色（薄背景上での文字色に使用） */
+  darkColor: string;
   unit: string;
   yAxis: "left" | "right";
 }

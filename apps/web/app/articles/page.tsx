@@ -16,13 +16,13 @@ export default function ArticlesPage() {
 
   return (
     <main
-      className="min-h-screen py-8 px-4"
+      className="min-h-screen py-8 px-4 overflow-x-hidden"
       style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
     >
-      <div className="mx-auto" style={{ maxWidth: 720 }}>
+      <div className="mx-auto min-w-0" style={{ maxWidth: 720 }}>
         {/* ナビ */}
         <div className="flex items-center justify-between mb-6">
-          <Link href="/" className="text-sm hover:underline" style={{ color: "#4F8EF7" }}>
+          <Link href="/" className="text-sm hover:underline" style={{ color: "var(--link)" }}>
             ← KeizaiMap に戻る
           </Link>
           <ThemeToggle />
@@ -37,15 +37,15 @@ export default function ArticlesPage() {
         </header>
 
         {/* タグフィルター */}
-        <div className="mb-6">
-          <div className="flex gap-2 flex-wrap">
+        <div className="mb-6 min-w-0">
+          <div className="flex gap-2 flex-wrap min-w-0">
             <button
               onClick={() => setSelectedTag(null)}
               className="px-3 py-1 rounded-full text-xs border font-medium transition-all"
               style={{
-                borderColor: selectedTag === null ? "#4F8EF7" : "var(--border)",
-                color: selectedTag === null ? "#4F8EF7" : "var(--muted)",
-                backgroundColor: selectedTag === null ? "#4F8EF720" : "transparent",
+                borderColor: selectedTag === null ? "var(--link)" : "var(--border)",
+                color: selectedTag === null ? "var(--link)" : "var(--muted)",
+                backgroundColor: selectedTag === null ? "#1d4ed815" : "transparent",
               }}
             >
               すべて（{ARTICLES.length}）
@@ -59,9 +59,9 @@ export default function ArticlesPage() {
                   onClick={() => setSelectedTag(active ? null : tag)}
                   className="px-3 py-1 rounded-full text-xs border font-medium transition-all"
                   style={{
-                    borderColor: active ? "#4F8EF7" : "var(--border)",
-                    color: active ? "#4F8EF7" : "var(--muted)",
-                    backgroundColor: active ? "#4F8EF720" : "transparent",
+                    borderColor: active ? "var(--link)" : "var(--border)",
+                    color: active ? "var(--link)" : "var(--muted)",
+                    backgroundColor: active ? "#1d4ed815" : "transparent",
                   }}
                 >
                   {tag}（{count}）
@@ -72,7 +72,7 @@ export default function ArticlesPage() {
         </div>
 
         {/* 記事リスト */}
-        <div className="space-y-4">
+        <div className="space-y-4 min-w-0">
           {filtered.length === 0 ? (
             <p className="text-sm text-center py-8" style={{ color: "var(--muted)" }}>
               該当する記事がありません
@@ -82,29 +82,29 @@ export default function ArticlesPage() {
               <Link
                 key={article.slug}
                 href={`/articles/${article.slug}`}
-                className="block rounded-xl border p-5 transition-colors hover:border-[#4F8EF7]"
+                className="block rounded-xl border p-5 transition-colors hover:border-[var(--link)] min-w-0"
                 style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
               >
-                <div className="flex gap-2 flex-wrap mb-2">
+                <div className="flex gap-2 flex-wrap mb-2 min-w-0">
                   {article.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="text-xs px-2 py-0.5 rounded-full border font-medium"
+                      className="text-xs px-2 py-0.5 rounded-full border font-medium whitespace-nowrap"
                       style={{
-                        borderColor: tag === selectedTag ? "#4F8EF7" : "var(--border)",
-                        color: tag === selectedTag ? "#4F8EF7" : "var(--text)",
-                        backgroundColor: tag === selectedTag ? "#4F8EF720" : "var(--bg)",
+                        borderColor: tag === selectedTag ? "var(--link)" : "var(--border)",
+                        color: tag === selectedTag ? "var(--link)" : "var(--text)",
+                        backgroundColor: tag === selectedTag ? "#1d4ed815" : "var(--bg)",
                       }}
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <h2 className="text-base font-bold mb-2 leading-snug">{article.title}</h2>
-                <p className="text-xs leading-relaxed mb-3" style={{ color: "var(--muted)" }}>
+                <h2 className="text-base font-bold mb-2 leading-snug break-words" style={{ overflowWrap: "break-word" }}>{article.title}</h2>
+                <p className="text-xs leading-relaxed mb-3 break-words" style={{ color: "var(--muted)", overflowWrap: "break-word" }}>
                   {article.description}
                 </p>
-                <div className="text-xs" style={{ color: "#4F8EF7" }}>
+                <div className="text-xs" style={{ color: "var(--link)" }}>
                   読了時間 約 {article.readingTime} 分 →
                 </div>
               </Link>

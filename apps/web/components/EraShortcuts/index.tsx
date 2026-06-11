@@ -1,7 +1,5 @@
 "use client";
 
-import { COLORS } from "@/lib/constants";
-
 const ERA_SHORTCUTS: { label: string; range: [number, number] }[] = [
   { label: "バブル崩壊",  range: [1990, 1998] },
   { label: "小泉改革",    range: [2002, 2008] },
@@ -26,9 +24,9 @@ export function EraShortcuts({ yearRange, onRangeChange }: Props) {
             onClick={() => onRangeChange(range)}
             className="px-3 py-1 rounded-full text-xs border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             style={{
-              borderColor:     isActive ? COLORS.PRIMARY : "var(--border)",
-              color:           isActive ? COLORS.PRIMARY : "var(--muted)",
-              backgroundColor: isActive ? COLORS.PRIMARY_BG : "transparent",
+              borderColor:     isActive ? "var(--link)" : "var(--border)",
+              color:           isActive ? "var(--link)" : "var(--muted)",
+              backgroundColor: isActive ? "#1d4ed815" : "transparent",
               fontWeight:      isActive ? 600 : 400,
             }}
           >
