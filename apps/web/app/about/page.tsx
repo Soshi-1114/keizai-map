@@ -63,6 +63,18 @@ const SOURCES = [
     series: "社会保障負担率 ％",
     method: "国民負担率統計",
   },
+  {
+    indicator: "【比較】G7平均 実質賃金",
+    source: "OECD Real Average Wages",
+    series: "G7加盟国平均 1990年=100",
+    method: "OECD.Stat",
+  },
+  {
+    indicator: "【比較】G7平均 CPI",
+    source: "OECD Inflation (HICP)",
+    series: "G7加盟国平均 1990年=100",
+    method: "OECD.Stat",
+  },
 ];
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {

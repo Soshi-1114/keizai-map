@@ -6,6 +6,7 @@ import type { IndicatorKey, EventCategory } from "@/lib/types";
 import { useIsMobile } from "@/lib/hooks";
 import { RAW_DATA, ADMINISTRATIONS, EVENTS, INDICATOR_CONFIGS, DATA_UPDATED_AT } from "@/lib/data";
 import { generateCSV, downloadCSV } from "@/lib/csv";
+import { getComparisonData } from "@/lib/comparison-data";
 import { Chart } from "./Chart";
 import { AdminBar } from "./AdminBar";
 import { RangeSlider } from "./RangeSlider";
@@ -127,6 +128,7 @@ export function MainView({ initialParams }: MainViewProps) {
 
   const [viewMode, setViewMode] = useState<ViewMode>("chart");
   const [showDataTable, setShowDataTable] = useState(false);
+  const [showComparison, setShowComparison] = useState(false);
   const [yearRange, setYearRange] = useState<[number, number]>(() =>
     parseRange(initialParams?.range ?? null)
   );
@@ -294,12 +296,29 @@ export function MainView({ initialParams }: MainViewProps) {
           {/* コンテンツ切替 */}
           {viewMode === "chart" ? (
             <>
+              {/* G7比較トグル */}
+              <div className="flex items-center gap-2 mb-3 flex-wrap">
+                <button
+                  onClick={() => setShowComparison(!showComparison)}
+                  className="px-3 py-1.5 rounded-full text-xs border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                  style={{
+                    borderColor: showComparison ? "#4F8EF7" : "var(--border)",
+                    color: showComparison ? "#4F8EF7" : "var(--muted)",
+                    backgroundColor: showComparison ? "#4F8EF7" + "15" : "transparent",
+                    fontWeight: showComparison ? 600 : 400,
+                  }}
+                >
+                  🌍 G7平均と比較
+                </button>
+              </div>
+
               <Chart
-                data={filteredData}
+                data={showComparison ? getComparisonData(filteredData) : filteredData}
                 events={EVENTS}
                 administrations={ADMINISTRATIONS}
                 activeIndicators={activeIndicators}
                 activeCategories={activeCategories}
+                showComparison={showComparison}
               />
               <div className={isMobile ? "pl-[38px] pr-[38px]" : "pl-[55px] pr-[55px]"}>
                 <AdminBar administrations={ADMINISTRATIONS} yearRange={yearRange} />

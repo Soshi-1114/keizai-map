@@ -22,6 +22,7 @@ interface Props {
   administrations: Administration[];
   activeIndicators: IndicatorKey[];
   activeCategories: string[];
+  showComparison?: boolean;
 }
 
 const TICK_STYLE = { fill: "var(--muted)", fontSize: 11 };
@@ -40,7 +41,7 @@ const STROKE_DASH: Record<IndicatorKey, string | undefined> = {
   insurance: undefined,  // 実線
 };
 
-export function Chart({ data, events, administrations, activeIndicators, activeCategories }: Props) {
+export function Chart({ data, events, administrations, activeIndicators, activeCategories, showComparison }: Props) {
   const isMobile = useIsMobile();
   const visibleEvents = events.filter(e => activeCategories.includes(e.category));
   const activeConfigs = INDICATOR_CONFIGS.filter(c => activeIndicators.includes(c.key));
@@ -182,6 +183,47 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             yAxisId={cfg.yAxis}
           />
         ))}
+
+        {/* G7平均比較ライン */}
+        {showComparison && activeIndicators.includes("wage") && (
+          <Line
+            type="monotone"
+            dataKey="g7wage"
+            name="G7平均（実質賃金）"
+            stroke="#4F8EF7"
+            strokeWidth={1.5}
+            strokeDasharray="3 3"
+            strokeOpacity={0.5}
+            dot={false}
+            yAxisId="left"
+          />
+        )}
+        {showComparison && activeIndicators.includes("cpi") && (
+          <Line
+            type="monotone"
+            dataKey="g7cpi"
+            name="G7平均（CPI）"
+            stroke="#D97706"
+            strokeWidth={1.5}
+            strokeDasharray="3 3"
+            strokeOpacity={0.5}
+            dot={false}
+            yAxisId="left"
+          />
+        )}
+        {showComparison && activeIndicators.includes("fx") && (
+          <Line
+            type="monotone"
+            dataKey="g7fx"
+            name="G7平均（為替基準指数）"
+            stroke="#4FD9A0"
+            strokeWidth={1.5}
+            strokeDasharray="3 3"
+            strokeOpacity={0.5}
+            dot={false}
+            yAxisId="right"
+          />
+        )}
       </ComposedChart>
     </ResponsiveContainer>
     </div>
