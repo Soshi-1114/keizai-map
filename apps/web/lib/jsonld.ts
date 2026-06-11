@@ -22,7 +22,7 @@ export function generateArticleJsonLd({
     headline: title,
     description: description,
     url: articleUrl,
-    image: `${baseUrl}/og`,
+    image: `${baseUrl}/og/article?slug=${slug}`,
     datePublished: publishedDate,
     dateModified: publishedDate,
     timeRequired: `PT${readingTime}M`,

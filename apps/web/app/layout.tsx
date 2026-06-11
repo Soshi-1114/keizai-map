@@ -7,6 +7,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://keizai-map.vercel.
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: "KeizaiMap — 数字で見る、日本の30年",
+  alternates: {
+    types: {
+      "application/rss+xml": `${BASE_URL}/feed.xml`,
+    },
+  },
   description:
     "賃金・物価・税収・為替の推移を政権帯とともに一画面で可視化。なぜ生活が苦しくなったのかを数字で見る経済データダッシュボード。",
   verification: {

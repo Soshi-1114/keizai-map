@@ -8,6 +8,9 @@ const SLUG = "nikkei-vs-wages";
 export const metadata: Metadata = {
   title: "日経平均は最高値なのに、なぜ生活は豊かにならないのか | KeizaiMap",
   description: "2024年、日経平均は1990年比で55%以上上昇している。しかし同じ期間の実質賃金は99.2と横ばいだ。株高の恩恵はなぜ家計に届かないのか。データで構造を読み解く。",
+  openGraph: {
+    images: [{ url: "/og/article?slug=nikkei-vs-wages" }],
+  },
 };
 
 export default function NikkeiVsWagesPage() {
@@ -27,6 +30,7 @@ export default function NikkeiVsWagesPage() {
       <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
       <ArticleLayout
+        slug={SLUG}
         title="日経平均は最高値なのに、なぜ生活は豊かにならないのか"
         description="2024年、日経平均は1990年比で55%以上上昇している。しかし同じ期間の実質賃金は99.2と横ばいだ。株高の恩恵はなぜ家計に届かないのか。データで構造を読み解く。"
         readingTime={5}

@@ -8,6 +8,9 @@ const SLUG = "declining-birthrate-economy";
 export const metadata: Metadata = {
   title: "少子化と経済の悪循環 ─ 出生数激減が家計と社会保障に与える影響 | KeizaiMap",
   description: "1990年に121万人いた出生数は2024年に73万人台へ激減。人口減少は労働力不足を招き、社会保険料の上昇と国債残高の膨張を加速させる。少子化が経済に与える連鎖をデータで追う。",
+  openGraph: {
+    images: [{ url: "/og/article?slug=declining-birthrate-economy" }],
+  },
 };
 
 export default function DecliningBirthrateEconomyPage() {
@@ -27,6 +30,7 @@ export default function DecliningBirthrateEconomyPage() {
       <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
       <ArticleLayout
+        slug={SLUG}
         title="少子化と経済の悪循環 ─ 出生数激減が家計と社会保障に与える影響"
         description="1990年に121万人いた出生数は2024年に73万人台へ激減。人口減少は労働力不足を招き、社会保険料の上昇と国債残高の膨張を加速させる。少子化が経済に与える連鎖をデータで追う。"
         readingTime={6}

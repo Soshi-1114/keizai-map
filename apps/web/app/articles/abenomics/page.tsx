@@ -8,6 +8,9 @@ const SLUG = "abenomics";
 export const metadata: Metadata = {
   title: "アベノミクスとは何か ─ 3本の矢と経済指標の変化 | KeizaiMap",
   description: "2012年末に始まったアベノミクスの「3本の矢」を解説。8年間で税収は43.9兆円から60.8兆円へ増加し、円安も大幅に進んだ。実質賃金への影響はどうだったか。",
+  openGraph: {
+    images: [{ url: "/og/article?slug=abenomics" }],
+  },
 };
 
 export default function AbenomicsPage() {
@@ -38,6 +41,7 @@ export default function AbenomicsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
       <ArticleLayout
+        slug={SLUG}
         title="アベノミクスとは何か ─ 3本の矢と経済指標の変化"
         description="2012年末に第二次安倍政権が掲げた経済政策「アベノミクス」。8年間の在任期間中に賃金・物価・税収・為替はどう変化したか、データで確認します。"
         readingTime={5}

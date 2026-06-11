@@ -8,6 +8,9 @@ const SLUG = "consumption-tax-wage-price";
 export const metadata: Metadata = {
   title: "消費税増税後の物価と賃金の変化【1997→2019】 | KeizaiMap",
   description: "消費税の4回の引き上げ（3→5→8→10%）で、物価はどう変わり、賃金はどう反応したのか。1997年の橋本増税と2019年の岸田増税を比較分析。",
+  openGraph: {
+    images: [{ url: "/og/article?slug=consumption-tax-wage-price" }],
+  },
 };
 
 export default function ConsumptionTaxWagePricePage() {
@@ -39,6 +42,7 @@ export default function ConsumptionTaxWagePricePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
       <ArticleLayout
+        slug={SLUG}
         title="消費税増税後の物価と賃金の変化【1997→2019】"
         description="消費税4回の引き上げで、物価はどう変わり、賃金はどう反応したのか。1997年と2019年を比較分析。"
         readingTime={6}

@@ -8,6 +8,9 @@ const SLUG = "lost-decades";
 export const metadata: Metadata = {
   title: "「失われた30年」─ 数字で見る日本経済の停滞 | KeizaiMap",
   description: "バブル崩壊（1991年）から現在まで、日本経済の何が「失われた」のか。実質賃金・物価・税収・為替の推移をデータで俯瞰し、長期停滞の構造を読み解く。",
+  openGraph: {
+    images: [{ url: "/og/article?slug=lost-decades" }],
+  },
 };
 
 export default function LostDecadesPage() {
@@ -38,6 +41,7 @@ export default function LostDecadesPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
       <ArticleLayout
+        slug={SLUG}
         title="「失われた30年」─ 数字で見る日本経済の停滞"
         description="バブル崩壊から現在まで、日本経済は何を失ったのか。実質賃金・物価・税収・為替の推移をデータで俯瞰します。"
         readingTime={5}

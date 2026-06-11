@@ -8,6 +8,9 @@ const SLUG = "yen-depreciation-real-wages";
 export const metadata: Metadata = {
   title: "円安と実質賃金の関係【2012→2024】| KeizaiMap",
   description: "円相場が79.8円から151.8円へ90%下落した12年間、実質賃金はどう変わったのか。円安が輸出企業を潤す一方で、家計の購買力をどう圧迫したかを分析。",
+  openGraph: {
+    images: [{ url: "/og/article?slug=yen-depreciation-real-wages" }],
+  },
 };
 
 export default function YenDepreciationRealWagesPage() {
@@ -39,6 +42,7 @@ export default function YenDepreciationRealWagesPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
       <ArticleLayout
+        slug={SLUG}
         title="円安と実質賃金の関係【2012→2024】"
         description="円相場が79.8円から151.8円へ90%下落した12年間、実質賃金はどう変わったのか。円安が輸出企業を潤す一方で、家計の購買力をどう圧迫したかを分析。"
         readingTime={6}

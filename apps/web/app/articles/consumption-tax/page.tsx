@@ -8,6 +8,9 @@ const SLUG = "consumption-tax";
 export const metadata: Metadata = {
   title: "消費税率引き上げの歴史と家計への影響 | KeizaiMap",
   description: "1989年の3%導入から2019年の10%まで、消費税率はどのように変化し、家計や経済にどんな影響を与えてきたか。消費者物価指数のデータとあわせて振り返る。",
+  openGraph: {
+    images: [{ url: "/og/article?slug=consumption-tax" }],
+  },
 };
 
 export default function ConsumptionTaxPage() {
@@ -38,6 +41,7 @@ export default function ConsumptionTaxPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
       <ArticleLayout
+        slug={SLUG}
         title="消費税率引き上げの歴史と家計への影響"
         description="1989年の3%導入から2019年の10%まで、消費税はどのように変化してきたのか。各増税のタイミングで物価や税収にどんな変化があったかをデータで確認します。"
         readingTime={4}

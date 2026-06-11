@@ -1,15 +1,22 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { ARTICLES } from "@/lib/articles";
 
 interface Props {
   title: string;
   description: string;
   readingTime: number;
   tags?: string[];
+  slug?: string;
   children: React.ReactNode;
 }
 
-export function ArticleLayout({ title, description, readingTime, tags, children }: Props) {
+export function ArticleLayout({ title, description, readingTime, tags, slug, children }: Props) {
+  const related = slug
+    ? ARTICLES.filter(
+        (a) => a.slug !== slug && tags?.some((t) => a.tags.includes(t))
+      ).slice(0, 3)
+    : [];
   return (
     <main
       className="min-h-screen py-8 px-4 w-full min-w-0"
@@ -74,8 +81,34 @@ export function ArticleLayout({ title, description, readingTime, tags, children 
           </Link>
         </div>
 
+        {/* 関連記事 */}
+        {related.length > 0 && (
+          <div className="mt-8 pt-6 border-t" style={{ borderColor: "var(--border)" }}>
+            <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
+              関連記事
+            </h2>
+            <div className="space-y-2">
+              {related.map((a) => (
+                <Link
+                  key={a.slug}
+                  href={`/articles/${a.slug}`}
+                  className="flex items-start gap-3 p-3 rounded-lg border transition-colors hover:border-[#4F8EF7]"
+                  style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+                >
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium leading-snug line-clamp-2">{a.title}</p>
+                    <p className="text-xs mt-1" style={{ color: "#4F8EF7" }}>
+                      読了時間 約 {a.readingTime} 分 →
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* 他の記事 */}
-        <div className="mt-8 pt-6 border-t" style={{ borderColor: "var(--border)" }}>
+        <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--border)" }}>
           <Link
             href="/articles"
             className="text-sm hover:underline"

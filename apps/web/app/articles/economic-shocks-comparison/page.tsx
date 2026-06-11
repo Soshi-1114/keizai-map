@@ -8,6 +8,9 @@ const SLUG = "economic-shocks-comparison";
 export const metadata: Metadata = {
   title: "リーマンショックとコロナ禍 ─ 2つの経済危機が日本人の生活に与えた傷跡 | KeizaiMap",
   description: "2008年のリーマンショックと2020年のコロナ禍。2つの危機で実質賃金・株価・為替・物価はどう動いたか。回復の速さ・深さをデータで比較する。",
+  openGraph: {
+    images: [{ url: "/og/article?slug=economic-shocks-comparison" }],
+  },
 };
 
 export default function EconomicShocksComparisonPage() {
@@ -27,6 +30,7 @@ export default function EconomicShocksComparisonPage() {
       <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
       <ArticleLayout
+        slug={SLUG}
         title="リーマンショックとコロナ禍 ─ 2つの経済危機が日本人の生活に与えた傷跡"
         description="2008年のリーマンショックと2020年のコロナ禍。2つの危機で実質賃金・株価・為替・物価はどう動いたか。回復の速さ・深さをデータで比較する。"
         readingTime={6}

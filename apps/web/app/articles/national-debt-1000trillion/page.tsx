@@ -8,6 +8,9 @@ const SLUG = "national-debt-1000trillion";
 export const metadata: Metadata = {
   title: "国債残高1,000兆円超 ─ 日本の財政赤字をデータで理解する | KeizaiMap",
   description: "1990年に180兆円だった国債残高は2024年に1,170兆円を超えた。税収の16倍に膨らんだ借金の実態と、その背景にある財政構造を数字で確認する。",
+  openGraph: {
+    images: [{ url: "/og/article?slug=national-debt-1000trillion" }],
+  },
 };
 
 export default function NationalDebt1000TrillionPage() {
@@ -27,6 +30,7 @@ export default function NationalDebt1000TrillionPage() {
       <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
       <ArticleLayout
+        slug={SLUG}
         title="国債残高1,000兆円超 ─ 日本の財政赤字をデータで理解する"
         description="1990年に180兆円だった国債残高は2024年に1,170兆円を超えた。税収の16倍に膨らんだ借金の実態と、その背景にある財政構造を数字で確認する。"
         readingTime={5}

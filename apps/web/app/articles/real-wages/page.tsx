@@ -8,6 +8,9 @@ const SLUG = "real-wages";
 export const metadata: Metadata = {
   title: "実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか | KeizaiMap",
   description: "実質賃金とは、物価変動を考慮した賃金です。給料が10%増えても物価が20%上がれば、実際に買える商品は減ってしまいます。日本の実質賃金の推移を確認します。",
+  openGraph: {
+    images: [{ url: "/og/article?slug=real-wages" }],
+  },
 };
 
 export default function RealWagesPage() {
@@ -38,6 +41,7 @@ export default function RealWagesPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
       <ArticleLayout
+        slug={SLUG}
         title="実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか"
         description="実質賃金とは、物価変動を考慮した賃金です。給料が増えても物価がそれ以上に上がれば、実際の購買力は低下します。日本人の生活水準を数字で確認しましょう。"
         readingTime={3}

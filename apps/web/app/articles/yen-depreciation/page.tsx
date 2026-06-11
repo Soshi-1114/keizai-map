@@ -8,6 +8,9 @@ const SLUG = "yen-depreciation";
 export const metadata: Metadata = {
   title: "円安が進む仕組みと日本経済への影響 | KeizaiMap",
   description: "2012年の1ドル=79.8円から2024年の151.8円まで、なぜ円安が進んだのか。日米金利差、日銀の金融政策との関係と、輸出企業・輸入消費者への影響を解説する。",
+  openGraph: {
+    images: [{ url: "/og/article?slug=yen-depreciation" }],
+  },
 };
 
 export default function YenDepreciationPage() {
@@ -38,6 +41,7 @@ export default function YenDepreciationPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
       <ArticleLayout
+        slug={SLUG}
         title="円安が進む仕組みと日本経済への影響"
         description="2012年に1ドル=79.8円だった円相場は、2024年には151.8円まで下落しました。なぜ円安が進んだのか、その仕組みと影響を解説します。"
         readingTime={4}

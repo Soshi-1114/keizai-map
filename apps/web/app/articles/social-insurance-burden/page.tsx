@@ -8,6 +8,9 @@ const SLUG = "social-insurance-burden";
 export const metadata: Metadata = {
   title: "手取りが増えない本当の理由 ─ 社会保険料30年の増加をデータで見る | KeizaiMap",
   description: "給与が上がっても手取りが増えない。その原因のひとつが社会保険料の上昇だ。1990年の10.8%から2024年の18.5%へ、34年で約8ポイント増加した社会保険料負担率をデータで読む。",
+  openGraph: {
+    images: [{ url: "/og/article?slug=social-insurance-burden" }],
+  },
 };
 
 export default function SocialInsuranceBurdenPage() {
@@ -27,6 +30,7 @@ export default function SocialInsuranceBurdenPage() {
       <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
       <ArticleLayout
+        slug={SLUG}
         title="手取りが増えない本当の理由 ─ 社会保険料30年の増加をデータで見る"
         description="給与が上がっても手取りが増えない。その原因のひとつが社会保険料の上昇だ。1990年の10.8%から2024年の18.5%へ増加した社会保険料負担率の実態をデータで読む。"
         readingTime={5}

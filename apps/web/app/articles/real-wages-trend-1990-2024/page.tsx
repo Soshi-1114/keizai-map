@@ -8,6 +8,9 @@ const SLUG = "real-wages-trend-1990-2024";
 export const metadata: Metadata = {
   title: "日本の実質賃金推移【1990〜2024】データ分析 | KeizaiMap",
   description: "34年間で0.8%低下した実質賃金の全像。1990年の100から2024年の99.2へ、10年ごとの変動と物価との乖離を数字で分析。",
+  openGraph: {
+    images: [{ url: "/og/article?slug=real-wages-trend-1990-2024" }],
+  },
 };
 
 export default function RealWagesTrendPage() {
@@ -39,6 +42,7 @@ export default function RealWagesTrendPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
       <ArticleLayout
+        slug={SLUG}
         title="日本の実質賃金推移【1990〜2024】データ分析"
         description="34年間で0.8%低下した実質賃金の全像。1990年を100とした場合、10年ごとの変動と物価との乖離を数字で追う。"
         readingTime={6}

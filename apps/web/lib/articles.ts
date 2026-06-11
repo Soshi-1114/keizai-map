@@ -90,6 +90,15 @@ export const ARTICLES: ArticleMeta[] = [
     tags: ["円安", "実質賃金", "家計"],
     presetQuery: "?indicators=fx,wage,cpi&range=2012,2024",
   },
+  {
+    slug: "housing-price",
+    title: "なぜ若者は家を買えないのか ─ 住宅価格と賃金の34年をデータで見る",
+    description:
+      "バブル崩壊で一度は下落した住宅価格は、アベノミクス以降に再上昇。一方で実質賃金は横ばいのまま。住宅価格指数と賃金・金利の動きを重ねてデータで読み解く。",
+    readingTime: 5,
+    tags: ["住宅価格", "不動産", "賃金"],
+    presetQuery: "?indicators=housing,wage,cpi&range=1990,2024",
+  },
   // ─ 新規記事
   {
     slug: "social-insurance-burden",

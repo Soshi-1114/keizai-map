@@ -8,6 +8,9 @@ const SLUG = "fiscal-collapse-truth";
 export const metadata: Metadata = {
   title: "財政破綻は本当に起きるのか ─ 国債・対外純資産・投資収益からデータで考える | KeizaiMap",
   description: "国債残高1,170兆円は危機なのか。日本は世界最大の対外純資産国であり、海外投資からの収益（第一次所得収支）は年間35兆円超。財政破綻論の根拠と反論をデータで整理する。",
+  openGraph: {
+    images: [{ url: "/og/article?slug=fiscal-collapse-truth" }],
+  },
 };
 
 export default function FiscalCollapseTruthPage() {
@@ -27,6 +30,7 @@ export default function FiscalCollapseTruthPage() {
       <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
       <ArticleLayout
+        slug={SLUG}
         title="財政破綻は本当に起きるのか ─ 国債・対外純資産・投資収益からデータで考える"
         description="国債残高1,170兆円は危機なのか。日本は世界最大の対外純資産国であり、海外投資からの収益（第一次所得収支）は年間35兆円超。財政破綻論の根拠と反論をデータで整理する。"
         readingTime={8}
