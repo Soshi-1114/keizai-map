@@ -154,4 +154,50 @@ export const ARTICLES: ArticleMeta[] = [
     tags: ["財政破綻", "国債", "対外純資産"],
     presetQuery: "?indicators=debt,tax&range=1990,2024",
   },
+  // ─ SEO 強化記事（独自性重視）
+  {
+    slug: "money-value-time-comparison",
+    title: "30年前の月収30万円は今いくら？─ 物価で換算する「お金の実質価値」",
+    description:
+      "1990年の30万円は2024年の何円相当か。消費者物価指数（CPI）を使って、過去の金額を現在価値に換算する方法を解説。月収・年収・貯金額を年代別に実質換算してみよう。",
+    readingTime: 5,
+    tags: ["物価", "インフレ", "実質価値"],
+    presetQuery: "?indicators=cpi,wage&range=1990,2024",
+  },
+  {
+    slug: "real-take-home-pay-30years",
+    title: "年収500万でも、30年前の年収300万に負けている？─ 実質手取りで見る30年",
+    description:
+      "名目の年収が増えても、社会保険料・消費税・物価上昇で実質手取りは目減りしている。年収300万・500万・800万の3パターンで「実質手取り」を1990年と2024年で比較する。",
+    readingTime: 7,
+    tags: ["年収", "実質手取り", "社会保険料"],
+    presetQuery: "?indicators=wage,cpi,tax,insurance&range=1990,2024",
+  },
+  {
+    slug: "yen-purchasing-power-decline",
+    title: "日本の通貨価値はどれだけ下がったか ─ ドル建てで見る30年",
+    description:
+      "円安と物価上昇のダブルパンチで、円の購買力は急減している。ドル建て換算した最低賃金・日経平均・GDPで日本経済を見直すと、別の風景が見えてくる。",
+    readingTime: 6,
+    tags: ["円安", "購買力", "ドル建て"],
+    presetQuery: "?indicators=fx,cpi,wage&range=1990,2024",
+  },
+  {
+    slug: "generation-economic-comparison",
+    title: "氷河期世代 vs Z世代 ─ 経済指標で見る「生まれた時代の不公平」",
+    description:
+      "1973年生・1993年生・2003年生の3世代が就職時に直面した経済環境を、賃金・株価・住宅価格・社会保険料・出生数で比較。世代論を感情ではなくデータで論じる。",
+    readingTime: 8,
+    tags: ["世代格差", "氷河期世代", "Z世代"],
+    presetQuery: "?indicators=wage,nikkei,housing,insurance,births&range=1990,2024",
+  },
+  {
+    slug: "next-decade-forecast",
+    title: "「失われた40年」になる前に ─ 2025〜2035年の日本経済を9つの指標で展望する",
+    description:
+      "過去30年のトレンドから今後10年の日本経済を展望。少子化・財政赤字・円安・賃上げの行方を、政府・IMF・OECDの長期見通しと過去データで照合する。",
+    readingTime: 9,
+    tags: ["経済予測", "長期展望", "2035年"],
+    presetQuery: "?indicators=wage,cpi,debt,births&range=2000,2024",
+  },
 ];
