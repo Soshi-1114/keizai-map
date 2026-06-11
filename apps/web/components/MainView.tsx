@@ -14,6 +14,7 @@ import { EventFilter } from "./EventFilter";
 import { InsightCards } from "./InsightCards";
 import { ThemeToggle } from "./ThemeToggle";
 import { ComparisonView } from "./ComparisonView";
+import { MobileIndicatorNav } from "./MobileIndicatorNav";
 
 const ALL_CATEGORIES: EventCategory[] = ["税制", "経済", "経済政策"];
 const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key);
@@ -129,6 +130,7 @@ export function MainView({ initialParams }: MainViewProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("chart");
   const [showDataTable, setShowDataTable] = useState(false);
   const [showComparison, setShowComparison] = useState(false);
+  const [mobileIndicatorIndex, setMobileIndicatorIndex] = useState(0);
   const [yearRange, setYearRange] = useState<[number, number]>(() =>
     parseRange(initialParams?.range ?? null)
   );
@@ -138,6 +140,8 @@ export function MainView({ initialParams }: MainViewProps) {
   const [activeCategories, setActiveCategories] = useState<EventCategory[]>(() =>
     parseCategories(initialParams?.events ?? null)
   );
+
+  const effectiveIndicators = isMobile ? [INDICATOR_CONFIGS[mobileIndicatorIndex].key] : activeIndicators;
 
   const filteredData = RAW_DATA.filter(d => d.year >= yearRange[0] && d.year <= yearRange[1]);
   const narrative = generateNarrative(filteredData);
@@ -199,36 +203,47 @@ export function MainView({ initialParams }: MainViewProps) {
           </div>
         </header>
 
-        {/* Indicator toggles */}
-        <section aria-labelledby="indicators-heading">
-          <h2 id="indicators-heading" className="sr-only">表示する指標を選択</h2>
-        <div className="flex gap-2 flex-wrap" role="group" aria-labelledby="indicators-heading">
-          {INDICATOR_CONFIGS.map(cfg => {
-            const active = activeIndicators.includes(cfg.key);
-            return (
-              <button
-                key={cfg.key}
-                onClick={() => toggleIndicator(cfg.key)}
-                className="px-3 py-1.5 md:py-1 rounded-full text-sm border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                style={{
-                  borderColor: active ? cfg.color : "var(--border)",
-                  color: active ? cfg.color : "var(--muted)",
-                  backgroundColor: active ? cfg.color + "15" : "transparent",
-                  opacity: 1,
-                  fontWeight: active ? 600 : 400,
-                }}
-              >
-                {cfg.label}
-              </button>
-            );
-          })}
-        </div>
-        </section>
+        {/* Indicator toggles - PC only */}
+        {!isMobile && (
+          <section aria-labelledby="indicators-heading">
+            <h2 id="indicators-heading" className="sr-only">表示する指標を選択</h2>
+          <div className="flex gap-2 flex-wrap" role="group" aria-labelledby="indicators-heading">
+            {INDICATOR_CONFIGS.map(cfg => {
+              const active = activeIndicators.includes(cfg.key);
+              return (
+                <button
+                  key={cfg.key}
+                  onClick={() => toggleIndicator(cfg.key)}
+                  className="px-3 py-1.5 md:py-1 rounded-full text-sm border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                  style={{
+                    borderColor: active ? cfg.color : "var(--border)",
+                    color: active ? cfg.color : "var(--muted)",
+                    backgroundColor: active ? cfg.color + "15" : "transparent",
+                    opacity: 1,
+                    fontWeight: active ? 600 : 400,
+                  }}
+                >
+                  {cfg.label}
+                </button>
+              );
+            })}
+          </div>
+          </section>
+        )}
+
+        {/* Mobile indicator nav */}
+        {isMobile && (
+          <MobileIndicatorNav
+            currentIndex={mobileIndicatorIndex}
+            onIndexChange={setMobileIndicatorIndex}
+          />
+        )}
 
         {/* ヒーロー統計バー：グラフを見る前に期間の変化を把握 */}
         {filteredData.length >= 2 && (() => {
           const s = filteredData[0];
           const e = filteredData[filteredData.length - 1];
+          const indicatorsToShow = isMobile ? [INDICATOR_CONFIGS[mobileIndicatorIndex]] : INDICATOR_CONFIGS;
           return (
             <div
               className="rounded-xl border px-4 py-3 flex flex-wrap items-center gap-x-5 gap-y-2"
@@ -237,7 +252,7 @@ export function MainView({ initialParams }: MainViewProps) {
               <span className="text-xs font-semibold shrink-0" style={{ color: "var(--muted)" }}>
                 {s.year}年 → {e.year}年
               </span>
-              {INDICATOR_CONFIGS.map(cfg => {
+              {indicatorsToShow.map(cfg => {
                 const sv = s[cfg.key] as number;
                 const ev = e[cfg.key] as number;
                 const pct = ((ev - sv) / sv) * 100;
@@ -316,7 +331,7 @@ export function MainView({ initialParams }: MainViewProps) {
                 data={showComparison ? getComparisonData(filteredData) : filteredData}
                 events={EVENTS}
                 administrations={ADMINISTRATIONS}
-                activeIndicators={activeIndicators}
+                activeIndicators={effectiveIndicators}
                 activeCategories={activeCategories}
                 showComparison={showComparison}
               />
