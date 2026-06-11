@@ -126,6 +126,8 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
             <Link href="/about" className="hover:underline" style={{ color: "var(--muted)" }}>データソース</Link>
             &nbsp;|&nbsp;
             <Link href="/privacy" className="hover:underline" style={{ color: "var(--muted)" }}>プライバシーポリシー</Link>
+            &nbsp;|&nbsp;
+            <Link href="/contact" className="hover:underline" style={{ color: "var(--muted)" }}>お問い合わせ</Link>
           </p>
         </div>
       </div>

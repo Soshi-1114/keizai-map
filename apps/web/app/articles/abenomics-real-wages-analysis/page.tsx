@@ -7,7 +7,7 @@ const SLUG = "abenomics-real-wages-analysis";
 
 export const metadata: Metadata = {
   title: "アベノミクスで実質賃金は上がったのか？ | KeizaiMap",
-  description: "2012〜2020年、実質賃金は0.9%低下。株価と円相場は上昇する中、なぜ実質賃金だけが下落したのか。8年間のデータで政策効果を検証。",
+  description: "2012〜2020年のアベノミクス8年間で実質賃金は0.9%低下。株価は上昇し円安が進む中、なぜ実質賃金だけが下落したのか。消費税増税・非正規雇用増加・物価上昇の影響をデータで検証。",
   openGraph: {
     images: [{ url: "/og/article?slug=abenomics-real-wages-analysis" }],
   },

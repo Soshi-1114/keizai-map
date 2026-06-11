@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
+import Link from "next/link";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
 const SLUG = "lost-decades";
@@ -194,6 +195,26 @@ export default function LostDecadesPage() {
           KeizaiMapで各時期のデータを比較することで、
           政策の実効性を自分たちの目で判断することができます。
         </p>
+        <p>
+          関連して読みたい記事：
+        </p>
+        <ul className="list-disc pl-5 space-y-1 my-2">
+          <li>
+            <Link href="/articles/nikkei-vs-wages" className="underline" style={{ color: "var(--link)" }}>
+              日経平均は最高値なのに、なぜ生活は豊かにならないのか
+            </Link>
+          </li>
+          <li>
+            <Link href="/articles/abenomics" className="underline" style={{ color: "var(--link)" }}>
+              アベノミクスとは何か ─ 3本の矢と経済指標の変化
+            </Link>
+          </li>
+          <li>
+            <Link href="/articles/next-decade-forecast" className="underline" style={{ color: "var(--link)" }}>
+              「失われた40年」になる前に ─ 2025〜2035年の日本経済展望
+            </Link>
+          </li>
+        </ul>
       </Section>
     </ArticleLayout>
     </>

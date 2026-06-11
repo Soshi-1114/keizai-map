@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
+import Link from "next/link";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
 const SLUG = "social-insurance-burden";
@@ -126,6 +127,26 @@ export default function SocialInsuranceBurdenPage() {
             KeizaiMapでは社会保険料負担率の推移を実質賃金・税収とともに確認できる。
             手取りを取り巻く構造を、データで継続的に観察してほしい。
           </p>
+          <p>
+            手取りに関連する記事：
+          </p>
+          <ul className="list-disc pl-5 space-y-1 my-2">
+            <li>
+              <Link href="/articles/real-take-home-pay-30years" className="underline" style={{ color: "var(--link)" }}>
+                年収500万でも30年前の年収300万に負けている？─ 実質手取りで見る30年
+              </Link>
+            </li>
+            <li>
+              <Link href="/articles/declining-birthrate-economy" className="underline" style={{ color: "var(--link)" }}>
+                少子化と経済の悪循環 ─ 出生数激減が社会保障に与える影響
+              </Link>
+            </li>
+            <li>
+              <Link href="/articles/real-wages" className="underline" style={{ color: "var(--link)" }}>
+                実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか
+              </Link>
+            </li>
+          </ul>
         </Section>
       </ArticleLayout>
     </>

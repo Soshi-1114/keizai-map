@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
+import Link from "next/link";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
 const SLUG = "abenomics";
@@ -130,6 +131,26 @@ export default function AbenomicsPage() {
           KeizaiMapでは特定の政策への評価を行わず、データをそのまま提示しています。
           政権比較モードで他の政権期間と比較し、ご自身で判断することができます。
         </p>
+        <p>
+          詳しく分析したい方は以下の記事もご覧ください：
+        </p>
+        <ul className="list-disc pl-5 space-y-1 my-2">
+          <li>
+            <Link href="/articles/abenomics-real-wages-analysis" className="underline" style={{ color: "var(--link)" }}>
+              アベノミクスで実質賃金は上がったのか？─ 8年間のデータで政策効果を検証
+            </Link>
+          </li>
+          <li>
+            <Link href="/articles/yen-depreciation" className="underline" style={{ color: "var(--link)" }}>
+              円安が進む仕組みと日本経済への影響
+            </Link>
+          </li>
+          <li>
+            <Link href="/articles/nikkei-vs-wages" className="underline" style={{ color: "var(--link)" }}>
+              日経平均は最高値なのに、なぜ生活は豊かにならないのか
+            </Link>
+          </li>
+        </ul>
       </Section>
     </ArticleLayout>
     </>
