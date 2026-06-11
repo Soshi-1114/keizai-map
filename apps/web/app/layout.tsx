@@ -20,6 +20,12 @@ export const metadata: Metadata = {
   verification: {
     google: "uylZUDo5JlY7OWcqFZwpnbS1dR5_J_9rWQCKwuwW9to",
   },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "KeizaiMap",
+  },
   openGraph: {
     title: "KeizaiMap — 数字で見る、日本の30年",
     description:
@@ -46,6 +52,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" suppressHydrationWarning>
+      <head>
+        <meta name="theme-color" content="#0f172a" />
+        <meta name="mobile-web-app-capable" content="yes" />
+      </head>
       <body className="antialiased">
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
