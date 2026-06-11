@@ -109,13 +109,19 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
 
         {/* 他の記事 */}
         <div className="mt-4 pt-4 border-t" style={{ borderColor: "var(--border)" }}>
-          <Link
-            href="/articles"
-            className="text-sm hover:underline"
-            style={{ color: "#4F8EF7" }}
-          >
+          <Link href="/articles" className="text-sm hover:underline" style={{ color: "#4F8EF7" }}>
             ← 解説記事一覧に戻る
           </Link>
+        </div>
+
+        {/* フッター */}
+        <div className="mt-6 pt-4 border-t text-xs space-y-1 text-center" style={{ borderColor: "var(--border)", color: "var(--muted)" }}>
+          <p>数値はすべて公開統計に基づきます。投資判断への利用は自己責任でお願いします。</p>
+          <p>
+            <Link href="/about" className="hover:underline" style={{ color: "var(--muted)" }}>データソース</Link>
+            &nbsp;|&nbsp;
+            <Link href="/privacy" className="hover:underline" style={{ color: "var(--muted)" }}>プライバシーポリシー</Link>
+          </p>
         </div>
       </div>
     </main>

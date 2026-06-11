@@ -730,6 +730,15 @@ export function MainView({ initialParams }: MainViewProps) {
           {DATA_UPDATED_AT && (
             <p>最終更新: {formatUpdatedAt(DATA_UPDATED_AT)}</p>
           )}
+          <p>
+            <Link href="/about" className="hover:underline" style={{ color: "var(--muted)" }}>
+              データソースについて
+            </Link>
+            &nbsp;|&nbsp;
+            <Link href="/privacy" className="hover:underline" style={{ color: "var(--muted)" }}>
+              プライバシーポリシー
+            </Link>
+          </p>
         </footer>
       </div>
     </main>
