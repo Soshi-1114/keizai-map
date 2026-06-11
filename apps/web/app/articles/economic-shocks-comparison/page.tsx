@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -118,6 +119,13 @@ export default function EconomicShocksComparisonPage() {
             KeizaiMapの「ショック比較」モードでは、この2つの危機に加えてバブル崩壊も含めた
             3つのショックを同一グラフで比較できる。それぞれの深さ・回復の形を自分で確認してほしい。
           </p>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/lost-decades" className="underline" style={{ color: "var(--link)" }}>「失われた30年」─ 数字で見る日本経済の停滞</Link></li>
+            <li><Link href="/articles/real-wages" className="underline" style={{ color: "var(--link)" }}>実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか</Link></li>
+            <li><Link href="/articles/nikkei-vs-wages" className="underline" style={{ color: "var(--link)" }}>日経平均は最高値なのに、なぜ生活は豊かにならないのか</Link></li>
+          </ul>
         </Section>
       </ArticleLayout>
     </>

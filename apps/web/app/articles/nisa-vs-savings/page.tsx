@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -159,6 +160,13 @@ export default function NisaVsSavingsPage() {
           <p>
             KeizaiMap で日経平均と CPI を重ねて表示すると、預金が物価に追いつかない構造が一目で分かる。
           </p>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/nikkei-vs-wages" className="underline" style={{ color: "var(--link)" }}>日経平均は最高値なのに、なぜ生活は豊かにならないのか</Link></li>
+            <li><Link href="/articles/real-wages-trend-1990-2024" className="underline" style={{ color: "var(--link)" }}>日本の実質賃金推移【1990〜2024】データ分析</Link></li>
+            <li><Link href="/articles/retirement-2000man-revisited" className="underline" style={{ color: "var(--link)" }}>老後2,000万円問題は今いくら必要？─ 物価で再計算</Link></li>
+          </ul>
         </Section>
       </ArticleLayout>
     </>

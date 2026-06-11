@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -136,6 +137,13 @@ export default function YenDepreciationPage() {
           為替は金利差だけでなく、貿易収支・資本フロー・市場心理など多くの要因で動くため、
           今後の動向は予断を許しません。
         </p>
+      </Section>
+      <Section heading="関連記事">
+        <ul className="list-disc pl-5 space-y-1">
+          <li><Link href="/articles/yen-depreciation-real-wages" className="underline" style={{ color: "var(--link)" }}>円安と実質賃金の関係【2012→2024】</Link></li>
+          <li><Link href="/articles/inflation-cycles-japan" className="underline" style={{ color: "var(--link)" }}>物価高はいつまで続く？─ 過去30年の4つのインフレ局面を分析</Link></li>
+          <li><Link href="/articles/abenomics" className="underline" style={{ color: "var(--link)" }}>アベノミクスとは何か ─ 3本の矢と経済指標の変化</Link></li>
+        </ul>
       </Section>
     </ArticleLayout>
     </>

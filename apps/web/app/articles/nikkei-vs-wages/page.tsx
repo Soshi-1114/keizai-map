@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "nikkei-vs-wages";
 
@@ -23,12 +24,27 @@ export default function NikkeiVsWagesPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+  {
+    "question": "なぜ株価が上がっても賃金は上がらないのですか？",
+    "answer": "主な理由は、株式を保有しているのは富裕層に偏っており、企業利益の増加が配当や自社株買いに使われ労働者への賃上げに回りにくい構造があるためです。アベノミクス期（2012〜2020）で税収は38.5%増、日経平均は約2倍になりましたが、実質賃金は0.9%低下しました。"
+  },
+  {
+    "question": "日経平均と実質賃金はどう違う推移をしましたか？",
+    "answer": "1990年を100とすると、2024年の日経平均は155.4と約55%上昇しています。一方、実質賃金は99.2と横ばいです。34年間で株価は大幅に上昇しましたが、労働者の購買力はほぼ変わっていません。"
+  },
+  {
+    "question": "株高の恩恵を受けるにはどうすればよいですか？",
+    "answer": "新NISA（年間投資枠360万円、非課税保有限度額1,800万円）を活用した長期分散投資が有効です。KeizaiMapのデータでは1990年から34年間の日経平均は1.55倍ですが、S&P500は14倍以上になっています。長期・積立・分散を組み合わせることで、株高の恩恵を受けやすくなります。"
+  }
+]);
 
   return (
     <>
       <Script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <Script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="日経平均は最高値なのに、なぜ生活は豊かにならないのか"
@@ -118,6 +134,13 @@ export default function NikkeiVsWagesPage() {
             KeizaiMapで株価・賃金・物価の推移を並べて確認しながら、
             「数字の上の豊かさ」と「生活実感」のギャップを自分で検証してほしい。
           </p>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/real-wages" className="underline" style={{ color: "var(--link)" }}>実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか</Link></li>
+            <li><Link href="/articles/income-inequality-japan" className="underline" style={{ color: "var(--link)" }}>格差は本当に広がっているのか？─ ジニ係数と所得分布で見る30年</Link></li>
+            <li><Link href="/articles/nisa-vs-savings" className="underline" style={{ color: "var(--link)" }}>新NISA vs 貯金 ─ データで考える「30年寝かせるならどっち」</Link></li>
+          </ul>
         </Section>
       </ArticleLayout>
     </>

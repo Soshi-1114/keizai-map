@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -124,6 +125,13 @@ export default function NationalDebt1000TrillionPage() {
             財政の実態をデータで確認した上で、財政破綻論の是非を考えてほしい。
             （詳しくは「財政破綻は本当に起きるのか」の記事も参照）
           </p>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/fiscal-collapse-truth" className="underline" style={{ color: "var(--link)" }}>財政破綻は本当に起きるのか ─ 国債・対外純資産からデータで考える</Link></li>
+            <li><Link href="/articles/national-debt-per-citizen" className="underline" style={{ color: "var(--link)" }}>「国民一人当たり1,000万円の借金」は本当か？</Link></li>
+            <li><Link href="/articles/declining-birthrate-economy" className="underline" style={{ color: "var(--link)" }}>少子化と経済の悪循環 ─ 出生数激減が家計と社会保障に与える影響</Link></li>
+          </ul>
         </Section>
       </ArticleLayout>
     </>

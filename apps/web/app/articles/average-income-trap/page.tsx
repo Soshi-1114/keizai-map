@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -167,6 +168,13 @@ export default function AverageIncomeTrapPage() {
             次に「平均年収」のニュースを目にしたら、ぜひ中央値も探してみてほしい。
             日本の真の所得分布が見えてくる。
           </p>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/income-inequality-japan" className="underline" style={{ color: "var(--link)" }}>格差は本当に広がっているのか？─ ジニ係数と所得分布で見る30年</Link></li>
+            <li><Link href="/articles/real-take-home-pay-30years" className="underline" style={{ color: "var(--link)" }}>年収500万でも30年前の年収300万に負けている？─ 実質手取りで見る30年</Link></li>
+            <li><Link href="/articles/generation-economic-comparison" className="underline" style={{ color: "var(--link)" }}>氷河期世代 vs Z世代 ─ 経済指標で見る「生まれた時代の不公平」</Link></li>
+          </ul>
         </Section>
       </ArticleLayout>
     </>

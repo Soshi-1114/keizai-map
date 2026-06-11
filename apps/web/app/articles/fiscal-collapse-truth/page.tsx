@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "fiscal-collapse-truth";
 
@@ -23,12 +24,27 @@ export default function FiscalCollapseTruthPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+  {
+    "question": "日本は財政破綻しますか？",
+    "answer": "「即座の破綻」は考えにくいというのが多くのエコノミストの見方です。理由は①国債の90%が国内保有、②対外純資産488兆円（世界1位）、③海外投資収益が年間35兆円超であるためです。ただし、国債残高1,170兆円・GDP比250%という水準は持続可能かどうかという構造問題は残ります。"
+  },
+  {
+    "question": "財政破綻論の根拠は何ですか？",
+    "answer": "主な根拠は3つです。①国債残高がGDP比250%と先進国最悪水準、②少子高齢化による社会保障費の増大（毎年1兆円超の自然増）、③利上げ局面での利払い費急増リスク（金利1%上昇で利払い費が10兆円増加）です。"
+  },
+  {
+    "question": "日本が財政破綻しにくい理由は何ですか？",
+    "answer": "①国債の約90%が国内保有のため海外投資家の「逃避」リスクが小さい、②日本は世界最大の対外純資産国（488兆円）で外貨建て借金が少ない、③海外投資からの所得収支が年間35兆円超ある、という3点が主な理由です。"
+  }
+]);
 
   return (
     <>
       <Script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <Script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="財政破綻は本当に起きるのか ─ 国債・対外純資産・投資収益からデータで考える"
@@ -211,6 +227,13 @@ export default function FiscalCollapseTruthPage() {
             そして第一次所得収支や対外純資産は財務省・日銀の公開統計で確認できる。
             データを自分の目で見て、判断する習慣をつけてほしい。
           </p>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/national-debt-1000trillion" className="underline" style={{ color: "var(--link)" }}>国債残高1,000兆円超 ─ 日本の財政赤字をデータで理解する</Link></li>
+            <li><Link href="/articles/national-debt-per-citizen" className="underline" style={{ color: "var(--link)" }}>「国民一人当たり1,000万円の借金」は本当か？</Link></li>
+            <li><Link href="/articles/next-decade-forecast" className="underline" style={{ color: "var(--link)" }}>「失われた40年」になる前に ─ 2025〜2035年の日本経済展望</Link></li>
+          </ul>
         </Section>
       </ArticleLayout>
     </>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -215,6 +216,13 @@ export default function YenDepreciationRealWagesPage() {
           <li>実質賃金は1.8%しか上昇せず、物価上昇に追い付かず</li>
           <li>企業利益の増加が労働者に還流しないメカニズム</li>
           <li>「強い企業」と「弱い家計」の格差拡大こそがアベノミクスの遺産</li>
+        </ul>
+      </Section>
+      <Section heading="関連記事">
+        <ul className="list-disc pl-5 space-y-1">
+          <li><Link href="/articles/yen-depreciation" className="underline" style={{ color: "var(--link)" }}>円安が進む仕組みと日本経済への影響</Link></li>
+          <li><Link href="/articles/real-wages" className="underline" style={{ color: "var(--link)" }}>実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか</Link></li>
+          <li><Link href="/articles/yen-purchasing-power-decline" className="underline" style={{ color: "var(--link)" }}>日本の通貨価値はどれだけ下がったか ─ ドル建てで見る30年</Link></li>
         </ul>
       </Section>
     </ArticleLayout>

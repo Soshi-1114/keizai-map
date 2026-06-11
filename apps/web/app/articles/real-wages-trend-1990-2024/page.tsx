@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -157,6 +158,13 @@ export default function RealWagesTrendPage() {
           <li>アベノミクスで株高・円安が進むも、実質賃金は停滞</li>
           <li>2020年代の物価上昇により、家計の購買力はさらに圧迫</li>
           <li>名目値ではなく、実質値（物価調整済み）で経済を判断することの重要性</li>
+        </ul>
+      </Section>
+      <Section heading="関連記事">
+        <ul className="list-disc pl-5 space-y-1">
+          <li><Link href="/articles/real-wages" className="underline" style={{ color: "var(--link)" }}>実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか</Link></li>
+          <li><Link href="/articles/abenomics-real-wages-analysis" className="underline" style={{ color: "var(--link)" }}>アベノミクスで実質賃金は上がったのか？</Link></li>
+          <li><Link href="/articles/shunto-2025-real-impact" className="underline" style={{ color: "var(--link)" }}>2025年 春闘・賃上げの実態 ─ 過去30年で最高水準だが家計に届くか</Link></li>
         </ul>
       </Section>
     </ArticleLayout>

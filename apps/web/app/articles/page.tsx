@@ -14,7 +14,19 @@ export default function ArticlesPage() {
     ? ARTICLES.filter((a) => a.tags.includes(selectedTag))
     : ARTICLES;
 
+  const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://keizai-map.vercel.app";
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "KeizaiMap", item: BASE_URL },
+      { "@type": "ListItem", position: 2, name: "解説記事", item: `${BASE_URL}/articles` },
+    ],
+  };
+
   return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
     <main
       className="min-h-screen py-8 px-4 overflow-x-hidden"
       style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
@@ -113,5 +125,6 @@ export default function ArticlesPage() {
         </div>
       </div>
     </main>
+    </>
   );
 }

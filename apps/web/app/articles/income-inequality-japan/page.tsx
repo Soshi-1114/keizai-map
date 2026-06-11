@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -187,6 +188,13 @@ export default function IncomeInequalityPage() {
             <li>相対的貧困率は15.4%、OECD平均を大きく上回る</li>
             <li>ひとり親世帯の貧困率44.5%は深刻</li>
             <li>日本は欧州諸国より格差が大きく、米国に近い水準</li>
+          </ul>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/average-income-trap" className="underline" style={{ color: "var(--link)" }}>「平均年収」の罠 ─ メディアが報じない統計の落とし穴</Link></li>
+            <li><Link href="/articles/generation-economic-comparison" className="underline" style={{ color: "var(--link)" }}>氷河期世代 vs Z世代 ─ 経済指標で見る「生まれた時代の不公平」</Link></li>
+            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料30年の増加</Link></li>
           </ul>
         </Section>
       </ArticleLayout>

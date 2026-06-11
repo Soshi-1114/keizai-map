@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -170,6 +171,13 @@ export default function AbenomicsRealWagesPage() {
           <li>消費税増税と円安による物価上昇が、賃上げを上回った</li>
           <li>企業の利益増加が労働者に還流しない構造的問題</li>
           <li>「政策の成功」と「家計の困窮」は同時に存在した</li>
+        </ul>
+      </Section>
+      <Section heading="関連記事">
+        <ul className="list-disc pl-5 space-y-1">
+          <li><Link href="/articles/abenomics" className="underline" style={{ color: "var(--link)" }}>アベノミクスとは何か ─ 3本の矢と経済指標の変化</Link></li>
+          <li><Link href="/articles/consumption-tax-wage-price" className="underline" style={{ color: "var(--link)" }}>消費税増税後の物価と賃金の変化【1997→2019】</Link></li>
+          <li><Link href="/articles/real-wages-trend-1990-2024" className="underline" style={{ color: "var(--link)" }}>日本の実質賃金推移【1990〜2024】データ分析</Link></li>
         </ul>
       </Section>
     </ArticleLayout>

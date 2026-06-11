@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "consumption-tax";
 
@@ -23,6 +24,24 @@ export default function ConsumptionTaxPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+  {
+    "question": "消費税とは何ですか？",
+    "answer": "消費税は商品やサービスの購入時にかかる間接税です。日本では1989年に3%で導入され、1997年に5%、2014年に8%、2019年に10%（飲食料品等は8%の軽減税率）へと段階的に引き上げられてきました。"
+  },
+  {
+    "question": "消費税はいつから始まりましたか？",
+    "answer": "日本の消費税は1989年（平成元年）4月1日に税率3%で導入されました。その後1997年に5%、2014年に8%、2019年に10%（軽減税率8%）へと引き上げられています。"
+  },
+  {
+    "question": "消費税の増税後、家計はどう変わりましたか？",
+    "answer": "消費税増税の都度、消費者物価指数（CPI）は上昇する一方で実質賃金は低下する傾向が見られます。特に1997年の3%→5%増税前後は、日本の長期停滞の転機の一つとされています。2024年のデータでは1990年を100としたCPIが119.9まで上昇した一方、実質賃金は99.2と横ばいです。"
+  },
+  {
+    "question": "消費税収はどのくらいありますか？",
+    "answer": "2024年度の一般会計税収は72.1兆円で、そのうち消費税収は約23兆円程度（税収全体の約3割）を占めます。消費税は景気変動の影響を受けにくい安定財源として、社会保障財源の柱となっています。"
+  }
+]);
   return (
     <>
       <Script
@@ -40,6 +59,7 @@ export default function ConsumptionTaxPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
+      <Script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="消費税率引き上げの歴史と家計への影響"
@@ -150,6 +170,13 @@ export default function ConsumptionTaxPage() {
           一方、税負担の逆進性（低所得者ほど負担割合が高い）という問題は、
           軽減税率の導入でも完全には解消されていない点が指摘されています。
         </p>
+      </Section>
+      <Section heading="関連記事">
+        <ul className="list-disc pl-5 space-y-1">
+          <li><Link href="/articles/consumption-tax-wage-price" className="underline" style={{ color: "var(--link)" }}>消費税増税後の物価と賃金の変化【1997→2019】</Link></li>
+          <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料30年の増加</Link></li>
+          <li><Link href="/articles/real-wages" className="underline" style={{ color: "var(--link)" }}>実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか</Link></li>
+        </ul>
       </Section>
     </ArticleLayout>
     </>

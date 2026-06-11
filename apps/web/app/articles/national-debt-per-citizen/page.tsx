@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "national-debt-per-citizen";
 
@@ -25,12 +26,27 @@ export default function NationalDebtPerCitizenPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+  {
+    "question": "「国民一人当たり約1,000万円の借金」は本当ですか？",
+    "answer": "この表現は誤解を招きます。国債（1,170兆円）を人口（約1.25億人）で単純に割った数字ですが、国債は政府の負債であり国民が個人として返済する義務はありません。また、国債の約90%は国内投資家が保有しており、対外債務とは性質が異なります。"
+  },
+  {
+    "question": "日本の国債は誰が保有していますか？",
+    "answer": "日本国債の保有者の約50%以上は日本銀行、残りの多くは国内の銀行・保険会社・年金基金です。海外投資家の保有比率は約10〜15%程度と低く、ギリシャなどの財政危機とは構造が異なります。"
+  },
+  {
+    "question": "国債残高1,170兆円の正しい見方は？",
+    "answer": "絶対額よりもGDP比・税収比・金利動向・プライマリーバランスの4つで見ることが重要です。日本の政府債務のGDP比は約250%で先進国最高水準ですが、対外純資産が488兆円（世界1位）あり、海外への純借金ではありません。"
+  }
+]);
 
   return (
     <>
       <Script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <Script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="「国民一人当たり1,000万円の借金」は本当か？─ 国債残高の正しい読み方"
@@ -145,6 +161,13 @@ export default function NationalDebtPerCitizenPage() {
             <li>個人金融資産2,200兆円の53%が国債残高に相当</li>
             <li>対外純資産は488兆円（世界1位）</li>
             <li>絶対額より、PB・金利・社会保障費の動向を見ることが重要</li>
+          </ul>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/national-debt-1000trillion" className="underline" style={{ color: "var(--link)" }}>国債残高1,000兆円超 ─ 日本の財政赤字をデータで理解する</Link></li>
+            <li><Link href="/articles/fiscal-collapse-truth" className="underline" style={{ color: "var(--link)" }}>財政破綻は本当に起きるのか ─ 国債・対外純資産からデータで考える</Link></li>
+            <li><Link href="/articles/next-decade-forecast" className="underline" style={{ color: "var(--link)" }}>「失われた40年」になる前に ─ 2025〜2035年の日本経済展望</Link></li>
           </ul>
         </Section>
       </ArticleLayout>

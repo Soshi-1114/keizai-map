@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -61,7 +62,7 @@ export default function UniversityCostInflationPage() {
           <p>
             国立大学の標準授業料は<strong>1990年から2005年まで毎年のように引き上げられ</strong>、
             53.6万円に到達した後は20年近く据え置かれている。
-            「親世代の34万円」から「子世代の53.6万円」へ、約1.58倍に増えたことになる。
+            「親世代の33.9万円」から「子世代の53.6万円」へ、約1.58倍に増えたことになる。
           </p>
         </Section>
 
@@ -183,6 +184,13 @@ export default function UniversityCostInflationPage() {
             KeizaiMap で CPI と実質賃金を重ねて表示すれば、
             「親世代と子世代の生活コスト感」の違いが見えてくる。
           </p>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/real-take-home-pay-30years" className="underline" style={{ color: "var(--link)" }}>年収500万でも30年前の年収300万に負けている？─ 実質手取りで見る30年</Link></li>
+            <li><Link href="/articles/declining-birthrate-economy" className="underline" style={{ color: "var(--link)" }}>少子化と経済の悪循環 ─ 出生数激減が家計と社会保障に与える影響</Link></li>
+            <li><Link href="/articles/money-value-time-comparison" className="underline" style={{ color: "var(--link)" }}>30年前の月収30万円は今いくら？─ お金の実質価値</Link></li>
+          </ul>
         </Section>
       </ArticleLayout>
     </>
