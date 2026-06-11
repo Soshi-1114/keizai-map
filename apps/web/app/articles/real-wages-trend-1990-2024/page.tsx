@@ -7,7 +7,7 @@ const SLUG = "real-wages-trend-1990-2024";
 
 export const metadata: Metadata = {
   title: "日本の実質賃金推移【1990〜2024】データ分析 | KeizaiMap",
-  description: "34年間で0.8%低下した実質賃金の全像。1990年の100から2024年の99.2へ、10年ごとの変動と物価との乖離を数字で分析。",
+  description: "バブル期の1990年を100とした実質賃金指数は34年後の2024年に99.2と0.8%低下。デフレ・リーマンショック・消費税増税・円安インフレの4つの局面で賃金がどう変化したかを時系列で分析。",
   openGraph: {
     images: [{ url: "/og/article?slug=real-wages-trend-1990-2024" }],
   },

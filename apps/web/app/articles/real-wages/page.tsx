@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import Link from "next/link";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "real-wages";
 
@@ -23,6 +24,25 @@ export default function RealWagesPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "実質賃金とは何ですか？",
+      answer: "実質賃金とは、物価変動を考慮した賃金のことです。給料が10%増えても物価が20%上がれば、実際に買える商品やサービスは減ります。「名目賃金 − 物価上昇分」で購買力を測る指標です。",
+    },
+    {
+      question: "名目賃金と実質賃金の違いは何ですか？",
+      answer: "名目賃金は給与明細に記載されている金額そのものです。実質賃金はそのお金でどれだけ物を買えるかを示します。給料が増えていても物価がそれ以上に上昇していれば、実質賃金は下落します。",
+    },
+    {
+      question: "日本の実質賃金はどう推移しましたか？",
+      answer: "1990年を100とした場合、2024年の日本の実質賃金は99.2です。34年間でほぼ横ばいながら微減しており、同期間に物価（CPI）が約20%上昇したことと合わせると、実質的な購買力は低下しています。",
+    },
+    {
+      question: "なぜ日本の実質賃金は上がらないのですか？",
+      answer: "消費税増税（1989年〜2019年）・社会保険料負担率の上昇（1990年の10.8%→2024年の18.5%）・円安による輸入物価の上昇など、複合的な要因が実質賃金の停滞に影響しています。",
+    },
+  ]);
+
   return (
     <>
       <Script
@@ -39,6 +59,11 @@ export default function RealWagesPage() {
         id="org-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <Script
+        id="faq-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <ArticleLayout
         slug={SLUG}
@@ -118,6 +143,32 @@ export default function RealWagesPage() {
         </p>
       </Section>
 
+      <Section heading="実質賃金が下がる3つの要因">
+        <p>
+          実質賃金の停滞には複数の要因が重なっています。
+        </p>
+        <ul className="list-disc pl-5 space-y-1 my-3">
+          <li>
+            <Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>
+              社会保険料の上昇（1990年の10.8%→2024年の18.5%）
+            </Link>
+            ─ 額面給与が増えても手取りが増えない主因のひとつ
+          </li>
+          <li>
+            <Link href="/articles/consumption-tax" className="underline" style={{ color: "var(--link)" }}>
+              消費税の段階的引き上げ（3%→5%→8%→10%）
+            </Link>
+            ─ 可処分所得を実質的に減らす効果がある
+          </li>
+          <li>
+            <Link href="/articles/yen-depreciation-real-wages" className="underline" style={{ color: "var(--link)" }}>
+              円安による輸入物価の上昇
+            </Link>
+            ─ 食料・エネルギー価格が上がり実質購買力が低下
+          </li>
+        </ul>
+      </Section>
+
       <Section heading="まとめ">
         <p>
           実質賃金は生活水準を測る重要な指標です。
@@ -126,6 +177,9 @@ export default function RealWagesPage() {
           景気や賃上げのニュースを見る際は、名目賃金ではなく実質賃金にも注目しましょう。
           KeizaiMapで日本経済の現実を数字で見つめることが、
           今後の経済動向を理解する第一歩となります。
+        </p>
+        <p>
+          → <Link href="/articles/real-wages-trend-1990-2024" className="underline" style={{ color: "var(--link)" }}>日本の実質賃金推移【1990〜2024】を詳細データで確認する</Link>
         </p>
       </Section>
     </ArticleLayout>

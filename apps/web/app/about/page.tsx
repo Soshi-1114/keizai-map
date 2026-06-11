@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import Script from "next/script";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { generatePageBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
 export const metadata: Metadata = {
   title: "KeizaiMapについて — データソース・サービス概要",
@@ -38,8 +40,19 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://keizai-map.vercel.app";
+
 export default function AboutPage() {
+  const breadcrumbJsonLd = generatePageBreadcrumbJsonLd([
+    { name: "KeizaiMap", url: BASE_URL },
+    { name: "KeizaiMapについて", url: `${BASE_URL}/about` },
+  ]);
+  const organizationJsonLd = generateOrganizationJsonLd();
+
   return (
+    <>
+      <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <Script id="organization-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
     <main className="min-h-screen p-6 overflow-x-hidden" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
       <div className="mx-auto space-y-0 min-w-0" style={{ maxWidth: 720 }}>
 
@@ -233,9 +246,16 @@ export default function AboutPage() {
         <Section title="誤り報告・お問い合わせ窓口">
           <p className="text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
             数値の誤り・出典の誤り・表記揺れなど、お気づきの点があればぜひご連絡ください。
-            GitHub Issue で受け付けています。お知らせいただいた内容は<strong>原則48時間以内</strong>に確認・対応します。
+            お知らせいただいた内容は<strong>原則48時間以内</strong>に確認・対応します。
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <Link
+              href="/contact"
+              className="inline-flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium border transition-opacity hover:opacity-80"
+              style={{ borderColor: "var(--border)", color: "var(--text)", backgroundColor: "var(--card)" }}
+            >
+              ✉ お問い合わせページ
+            </Link>
             <a
               href="https://github.com/Soshi-1114/keizai-map/issues/new?title=%5B%E8%AA%A4%E3%82%8A%E5%A0%B1%E5%91%8A%5D&labels=data-error"
               target="_blank"
@@ -267,5 +287,6 @@ export default function AboutPage() {
         <div className="pt-6" />
       </div>
     </main>
+    </>
   );
 }
