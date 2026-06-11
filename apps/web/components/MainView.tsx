@@ -7,6 +7,8 @@ import { useIsMobile } from "@/lib/hooks";
 import { RAW_DATA, ADMINISTRATIONS, EVENTS, INDICATOR_CONFIGS, DATA_UPDATED_AT } from "@/lib/data";
 import { generateCSV, downloadCSV } from "@/lib/csv";
 import { getComparisonData } from "@/lib/comparison-data";
+import { DATA_YEARS } from "@/lib/constants";
+import { generateNarrative, parseRange, parseIndicators, parseCategories, formatUpdatedAt } from "@/lib/utils";
 import { Chart } from "./Chart";
 import { AdminBar } from "./AdminBar";
 import { RangeSlider } from "./RangeSlider";
@@ -15,97 +17,14 @@ import { InsightCards } from "./InsightCards";
 import { ThemeToggle } from "./ThemeToggle";
 import { ComparisonView } from "./ComparisonView";
 import { MobileIndicatorNav } from "./MobileIndicatorNav";
+import { EraShortcuts } from "./EraShortcuts";
+import { MobileFiltersSheet } from "./MobileFiltersSheet";
+import { DataTable } from "./DataTable";
 
 const ALL_CATEGORIES: EventCategory[] = ["税制", "経済", "経済政策"];
-const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key);
-const MIN_YEAR = 1990;
-const MAX_YEAR = 2024;
-
-// 注目の期間ショートカット（すべて隔年データに合わせた偶数年）
-const ERA_SHORTCUTS: { label: string; range: [number, number] }[] = [
-  { label: "バブル崩壊",    range: [1990, 1998] },
-  { label: "小泉改革",      range: [2002, 2008] },
-  { label: "アベノミクス",   range: [2012, 2020] },
-  { label: "コロナ禍",      range: [2018, 2022] },
-  { label: "円安加速",      range: [2020, 2024] },
-];
-
-function formatUpdatedAt(ym: string): string {
-  const [y, m] = ym.split("-");
-  if (!y || !m) return ym;
-  return `${y}年${parseInt(m, 10)}月`;
-}
-
-/** 選択期間のデータをもとに自動解説文を生成 */
-import type { DataPoint } from "@/lib/types";
-function generateNarrative(data: DataPoint[]): string {
-  if (data.length < 2) return "";
-  const s = data[0];
-  const e = data[data.length - 1];
-  const duration = e.year - s.year;
-
-  const pct = (end: number, start: number) => ((end - start) / start) * 100;
-  const wagePct = pct(e.wage, s.wage);
-  const cpiPct  = pct(e.cpi,  s.cpi);
-  const taxPct  = pct(e.tax,  s.tax);
-  const fxPct   = pct(e.fx,   s.fx);
-
-  const wageStr = wagePct >  2 ? `${wagePct.toFixed(1)}%上昇`
-                : wagePct < -2 ? `${Math.abs(wagePct).toFixed(1)}%下落`
-                : "ほぼ横ばい";
-  const cpiStr  = cpiPct >  3 ? `${cpiPct.toFixed(1)}%上昇`
-                : cpiPct < -2 ? `${Math.abs(cpiPct).toFixed(1)}%低下`
-                : "安定";
-
-  const parts: string[] = [];
-
-  if (wagePct < 0 && cpiPct > 5) {
-    parts.push(
-      `${duration}年間で実質賃金は${wageStr}ですが、物価は${cpiStr}しました。実質的な購買力は低下しています。`,
-    );
-  } else if (wagePct > 5 && cpiPct < 3) {
-    parts.push(
-      `${duration}年間で実質賃金は${wageStr}し、物価上昇を上回る所得増加となっています。`,
-    );
-  } else {
-    parts.push(`${duration}年間で実質賃金は${wageStr}、物価は${cpiStr}の期間です。`);
-  }
-
-  if (Math.abs(taxPct) > 20) {
-    const dir = taxPct > 0 ? "増加" : "減少";
-    parts.push(
-      `税収は${Math.abs(taxPct).toFixed(0)}%${dir}（${s.tax.toFixed(1)}→${e.tax.toFixed(1)}兆円）。`,
-    );
-  }
-
-  if (Math.abs(fxPct) > 15) {
-    const dir = fxPct > 0 ? "円安が進行" : "円高が進行";
-    parts.push(
-      `ドル円は${Math.abs(fxPct).toFixed(0)}%変動し${dir}（${s.fx.toFixed(0)}→${e.fx.toFixed(0)}円）。`,
-    );
-  }
-
-  return parts.join("　");
-}
-
-function parseRange(param: string | null): [number, number] {
-  if (!param) return [MIN_YEAR, MAX_YEAR];
-  const [s, e] = param.split(",").map(Number);
-  if (s >= MIN_YEAR && e <= MAX_YEAR && s < e) return [s, e];
-  return [MIN_YEAR, MAX_YEAR];
-}
-
-function parseIndicators(param: string | null): IndicatorKey[] {
-  if (!param) return ALL_INDICATOR_KEYS;
-  const keys = param.split(",").filter(k => ALL_INDICATOR_KEYS.includes(k as IndicatorKey)) as IndicatorKey[];
-  return keys.length > 0 ? keys : ALL_INDICATOR_KEYS;
-}
-
-function parseCategories(param: string | null): EventCategory[] {
-  if (!param) return [...ALL_CATEGORIES];
-  const cats = param.split(",").filter(c => ALL_CATEGORIES.includes(c as EventCategory)) as EventCategory[];
-  return cats.length > 0 ? cats : [...ALL_CATEGORIES];
-}
+const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key) as import("@/lib/types").IndicatorKey[];
+const MIN_YEAR = DATA_YEARS.MIN;
+const MAX_YEAR = DATA_YEARS.MAX;
 
 type ViewMode = "chart" | "admin" | "shock" | "event";
 
@@ -136,7 +55,7 @@ export function MainView({ initialParams }: MainViewProps) {
     parseRange(initialParams?.range ?? null)
   );
   const [activeIndicators, setActiveIndicators] = useState<IndicatorKey[]>(() =>
-    parseIndicators(initialParams?.indicators ?? null)
+    parseIndicators(initialParams?.indicators ?? null, ALL_INDICATOR_KEYS)
   );
   const [activeCategories, setActiveCategories] = useState<EventCategory[]>(() =>
     parseCategories(initialParams?.events ?? null)
@@ -297,161 +216,33 @@ export function MainView({ initialParams }: MainViewProps) {
           </button>
         )}
 
-        {/* フィルターセクション - グラフの前（PC）またはボトムシート（モバイル） */}
+        {/* フィルターセクション（PC） */}
         {!isMobile && (
           <div className="rounded-xl border p-4 space-y-4" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
-            {/* 注目の期間ショートカット */}
             <div>
               <h2 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>注目の期間</h2>
-              <div className="flex gap-2 flex-wrap">
-                {ERA_SHORTCUTS.map(({ label, range }) => {
-                  const isActive = yearRange[0] === range[0] && yearRange[1] === range[1];
-                  return (
-                    <button
-                      key={label}
-                      onClick={() => setYearRange(range)}
-                      className="px-3 py-1 rounded-full text-xs border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                      style={{
-                        borderColor: isActive ? "#4F8EF7" : "var(--border)",
-                        color: isActive ? "#4F8EF7" : "var(--muted)",
-                        backgroundColor: isActive ? "#4F8EF720" : "transparent",
-                        fontWeight: isActive ? 600 : 400,
-                      }}
-                    >
-                      {label}
-                    </button>
-                  );
-                })}
-              </div>
+              <EraShortcuts yearRange={yearRange} onRangeChange={setYearRange} />
             </div>
-
-            {/* 表示期間スライダー */}
             <section aria-labelledby="range-heading">
               <h2 id="range-heading" className="text-xs font-medium mb-3" style={{ color: "var(--muted)" }}>表示期間</h2>
-              <RangeSlider
-                min={MIN_YEAR}
-                max={MAX_YEAR}
-                value={yearRange}
-                onChange={setYearRange}
-                step={2}
-                aria-label={`表示期間: ${yearRange[0]}年から${yearRange[1]}年まで`}
-              />
+              <RangeSlider min={MIN_YEAR} max={MAX_YEAR} value={yearRange} onChange={setYearRange} step={2} aria-label={`表示期間: ${yearRange[0]}年から${yearRange[1]}年まで`} />
             </section>
-
-            {/* イベントフィルター */}
             <section aria-labelledby="event-heading">
               <h2 id="event-heading" className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>経済イベントフィルター</h2>
-              <EventFilter
-                categories={ALL_CATEGORIES}
-                activeCategories={activeCategories}
-                onToggle={toggleCategory}
-              />
+              <EventFilter categories={ALL_CATEGORIES} activeCategories={activeCategories} onToggle={toggleCategory} />
             </section>
           </div>
         )}
 
-        {/* ボトムシート（モバイルのみ） */}
+        {/* ボトムシート（モバイル） */}
         {isMobile && showFiltersSheet && (
-          <>
-            {/* Backdrop */}
-            <div
-              className="fixed inset-0 z-40"
-              style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-              onClick={() => setShowFiltersSheet(false)}
-            />
-
-            {/* Bottom Sheet */}
-            <div
-              className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl p-6 space-y-4 max-h-[80vh] overflow-y-auto"
-              style={{
-                backgroundColor: "var(--card)",
-                borderTop: "1px solid var(--border)",
-                animation: "slideUp 0.3s ease-out",
-              }}
-            >
-              {/* ハンドル */}
-              <div className="flex justify-center mb-2">
-                <div
-                  className="h-1 w-12 rounded-full"
-                  style={{ backgroundColor: "var(--border)" }}
-                />
-              </div>
-
-              {/* 注目の期間ショートカット */}
-              <div>
-                <h2 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>注目の期間</h2>
-                <div className="flex gap-2 flex-wrap">
-                  {ERA_SHORTCUTS.map(({ label, range }) => {
-                    const isActive = yearRange[0] === range[0] && yearRange[1] === range[1];
-                    return (
-                      <button
-                        key={label}
-                        onClick={() => setYearRange(range)}
-                        className="px-3 py-1 rounded-full text-xs border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                        style={{
-                          borderColor: isActive ? "#4F8EF7" : "var(--border)",
-                          color: isActive ? "#4F8EF7" : "var(--muted)",
-                          backgroundColor: isActive ? "#4F8EF720" : "transparent",
-                          fontWeight: isActive ? 600 : 400,
-                        }}
-                      >
-                        {label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* 表示期間スライダー */}
-              <section aria-labelledby="range-heading-sheet">
-                <h2 id="range-heading-sheet" className="text-xs font-medium mb-3" style={{ color: "var(--muted)" }}>表示期間</h2>
-                <RangeSlider
-                  min={MIN_YEAR}
-                  max={MAX_YEAR}
-                  value={yearRange}
-                  onChange={setYearRange}
-                  step={2}
-                  aria-label={`表示期間: ${yearRange[0]}年から${yearRange[1]}年まで`}
-                />
-              </section>
-
-              {/* イベントフィルター */}
-              <section aria-labelledby="event-heading-sheet">
-                <h2 id="event-heading-sheet" className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>経済イベントフィルター</h2>
-                <EventFilter
-                  categories={ALL_CATEGORIES}
-                  activeCategories={activeCategories}
-                  onToggle={toggleCategory}
-                />
-              </section>
-
-              {/* 閉じるボタン */}
-              <div className="pt-4 border-t" style={{ borderColor: "var(--border)" }}>
-                <button
-                  onClick={() => setShowFiltersSheet(false)}
-                  className="w-full px-4 py-2 rounded-lg text-sm font-medium transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                  style={{
-                    backgroundColor: "#4F8EF7",
-                    color: "#fff",
-                  }}
-                >
-                  閉じる
-                </button>
-              </div>
-            </div>
-
-            {/* CSS アニメーション */}
-            <style>{`
-              @keyframes slideUp {
-                from {
-                  transform: translateY(100%);
-                }
-                to {
-                  transform: translateY(0);
-                }
-              }
-            `}</style>
-          </>
+          <MobileFiltersSheet
+            yearRange={yearRange}
+            activeCategories={activeCategories}
+            onYearRangeChange={setYearRange}
+            onCategoryToggle={toggleCategory}
+            onClose={() => setShowFiltersSheet(false)}
+          />
         )}
 
         {/* Chart + AdminBar / 比較モード */}
@@ -595,94 +386,7 @@ export function MainView({ initialParams }: MainViewProps) {
 
                 {/* データテーブル（アクセシビリティ用代替ビュー） */}
                 {showDataTable && (
-                  <div style={{ marginTop: "1.5rem", overflow: "auto" }}>
-                    <table
-                      aria-label="経済指標データ"
-                      style={{
-                        width: "100%",
-                        borderCollapse: "collapse",
-                        fontSize: "0.875rem",
-                      }}
-                    >
-                      <thead>
-                        <tr style={{ borderBottom: "2px solid var(--border)" }}>
-                          <th
-                            scope="col"
-                            style={{
-                              padding: "0.75rem",
-                              textAlign: "left",
-                              fontWeight: 600,
-                              color: "var(--text)",
-                            }}
-                          >
-                            年度
-                          </th>
-                          {INDICATOR_CONFIGS.filter(c =>
-                            activeIndicators.includes(c.key)
-                          ).map(cfg => (
-                            <th
-                              key={cfg.key}
-                              scope="col"
-                              style={{
-                                padding: "0.75rem",
-                                textAlign: "right",
-                                fontWeight: 600,
-                                color: cfg.color,
-                              }}
-                            >
-                              {cfg.label}
-                            </th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {filteredData.map((point, idx) => (
-                          <tr
-                            key={point.year}
-                            style={{
-                              borderBottom: "1px solid var(--border)",
-                              backgroundColor:
-                                idx % 2 === 0 ? "transparent" : "var(--card)",
-                            }}
-                          >
-                            <th
-                              scope="row"
-                              style={{
-                                padding: "0.75rem",
-                                textAlign: "left",
-                                fontWeight: 500,
-                                color: "var(--text)",
-                              }}
-                            >
-                              {point.year}
-                            </th>
-                            {INDICATOR_CONFIGS.filter(c =>
-                              activeIndicators.includes(c.key)
-                            ).map(cfg => {
-                              const value = point[cfg.key];
-                              return (
-                                <td
-                                  key={cfg.key}
-                                  style={{
-                                    padding: "0.75rem",
-                                    textAlign: "right",
-                                    color: "var(--text)",
-                                    fontFamily: "monospace",
-                                  }}
-                                >
-                                  {value !== undefined
-                                    ? typeof value === "number"
-                                      ? value.toFixed(1)
-                                      : value
-                                    : "—"}
-                                </td>
-                              );
-                            })}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                  <DataTable data={filteredData} activeIndicators={activeIndicators} />
                 )}
               </div>
             </>
