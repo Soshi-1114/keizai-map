@@ -63,7 +63,7 @@ export function MobileFiltersSheet({
             max={DATA_YEARS.MAX}
             value={yearRange}
             onChange={onYearRangeChange}
-            step={2}
+            step={1}
             aria-label={`表示期間: ${yearRange[0]}年から${yearRange[1]}年まで`}
           />
         </section>

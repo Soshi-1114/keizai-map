@@ -53,8 +53,8 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
 
   // モバイルでは4年おきに間引く
   const xTicks = isMobile
-    ? data.filter(d => d.year % 8 === 0 || d.year === minYear || d.year === maxYear).map(d => d.year)
-    : data.map(d => d.year);
+    ? data.filter(d => d.year % 10 === 0 || d.year === minYear || d.year === maxYear).map(d => d.year)
+    : data.filter(d => d.year % 5 === 0 || d.year === minYear || d.year === maxYear).map(d => d.year);
 
   const yAxisWidth = isMobile ? 38 : 55;
   const chartHeight = isMobile ? 260 : 360;

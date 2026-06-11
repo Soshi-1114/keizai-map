@@ -9,6 +9,7 @@ import { generateCSV, downloadCSV } from "@/lib/csv";
 import { getComparisonData } from "@/lib/comparison-data";
 import { DATA_YEARS } from "@/lib/constants";
 import { generateNarrative, parseRange, parseIndicators, parseCategories, formatUpdatedAt } from "@/lib/utils";
+import { addRecent } from "@/lib/bookmarks";
 import { Chart } from "./Chart";
 import { AdminBar } from "./AdminBar";
 import { RangeSlider } from "./RangeSlider";
@@ -20,6 +21,7 @@ import { MobileIndicatorNav } from "./MobileIndicatorNav";
 import { EraShortcuts } from "./EraShortcuts";
 import { MobileFiltersSheet } from "./MobileFiltersSheet";
 import { DataTable } from "./DataTable";
+import { BookmarkPanel } from "./BookmarkPanel";
 
 const ALL_CATEGORIES: EventCategory[] = ["税制", "経済", "経済政策"];
 const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key) as import("@/lib/types").IndicatorKey[];
@@ -66,17 +68,22 @@ export function MainView({ initialParams }: MainViewProps) {
   const filteredData = RAW_DATA.filter(d => d.year >= yearRange[0] && d.year <= yearRange[1]);
   const narrative = generateNarrative(filteredData);
 
-  // URL 更新（スライダー連打による SecurityError を防ぐため 300ms デバウンス）
+  // URL 更新 + 履歴自動保存（スライダー連打による SecurityError を防ぐため 300ms デバウンス）
   const urlTimer = useRef<ReturnType<typeof setTimeout>>();
   useEffect(() => {
     clearTimeout(urlTimer.current);
     urlTimer.current = setTimeout(() => {
+      const indicatorsStr = activeIndicators.join(",");
+      const rangeStr      = yearRange.join(",");
+      const eventsStr     = activeCategories.join(",");
       const params = new URLSearchParams({
-        indicators: activeIndicators.join(","),
-        range: yearRange.join(","),
-        events: activeCategories.join(","),
+        indicators: indicatorsStr,
+        range: rangeStr,
+        events: eventsStr,
       });
       window.history.replaceState(null, "", `/?${params.toString()}`);
+      // 履歴に保存（localStorage）
+      addRecent(indicatorsStr, rangeStr, eventsStr);
     }, 300);
     return () => clearTimeout(urlTimer.current);
   }, [activeIndicators, yearRange, activeCategories]);
@@ -225,7 +232,7 @@ export function MainView({ initialParams }: MainViewProps) {
             </div>
             <section aria-labelledby="range-heading">
               <h2 id="range-heading" className="text-xs font-medium mb-3" style={{ color: "var(--muted)" }}>表示期間</h2>
-              <RangeSlider min={MIN_YEAR} max={MAX_YEAR} value={yearRange} onChange={setYearRange} step={2} aria-label={`表示期間: ${yearRange[0]}年から${yearRange[1]}年まで`} />
+              <RangeSlider min={MIN_YEAR} max={MAX_YEAR} value={yearRange} onChange={setYearRange} step={1} aria-label={`表示期間: ${yearRange[0]}年から${yearRange[1]}年まで`} />
             </section>
             <section aria-labelledby="event-heading">
               <h2 id="event-heading" className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>経済イベントフィルター</h2>
@@ -287,9 +294,9 @@ export function MainView({ initialParams }: MainViewProps) {
           {/* コンテンツ切替 */}
           {viewMode === "chart" ? (
             <>
-              {/* G7比較トグル - データがある場合のみ表示 */}
-              {(effectiveIndicators.includes("wage") || effectiveIndicators.includes("cpi") || effectiveIndicators.includes("fx")) && (
-                <div className="flex items-center gap-2 mb-3 flex-wrap">
+              {/* G7比較トグル + ブックマーク */}
+              <div className="flex items-center gap-2 mb-3 flex-wrap">
+                {(effectiveIndicators.includes("wage") || effectiveIndicators.includes("cpi") || effectiveIndicators.includes("fx")) && (
                   <button
                     onClick={() => setShowComparison(!showComparison)}
                     className="px-3 py-1.5 rounded-full text-xs border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
@@ -302,8 +309,13 @@ export function MainView({ initialParams }: MainViewProps) {
                   >
                     🌍 G7平均と比較
                   </button>
-                </div>
-              )}
+                )}
+                <BookmarkPanel
+                  indicators={activeIndicators.join(",")}
+                  range={yearRange.join(",")}
+                  events={activeCategories.join(",")}
+                />
+              </div>
 
               <Chart
                 data={showComparison ? getComparisonData(filteredData) : filteredData}
