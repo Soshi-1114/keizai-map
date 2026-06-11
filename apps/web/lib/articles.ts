@@ -200,4 +200,86 @@ export const ARTICLES: ArticleMeta[] = [
     tags: ["経済予測", "長期展望", "2035年"],
     presetQuery: "?indicators=wage,cpi,debt,births&range=2000,2024",
   },
+  // ─ SEO 強化記事 第2弾
+  {
+    slug: "average-income-trap",
+    title: "「平均年収」の罠 ─ メディアが報じない統計の落とし穴",
+    description:
+      "「日本の平均年収は458万円」と言われるが、それを実際に稼いでいる人は意外と少ない。平均値・中央値・最頻値の違いをデータで解説し、本当の日本の所得分布を明らかにする。",
+    readingTime: 6,
+    tags: ["平均年収", "所得分布", "統計"],
+    presetQuery: "?indicators=wage,cpi&range=1990,2024",
+  },
+  {
+    slug: "shunto-2025-real-impact",
+    title: "2025年 春闘・賃上げの実態 ─ 過去30年で最高水準だが家計に届くか",
+    description:
+      "2025年春闘の平均賃上げ率は5%超。33年ぶりの高水準だが、物価上昇と社会保険料増加でどれだけ手取りに反映されるのか。過去30年の賃上げ率と実質賃金の関係をデータで検証する。",
+    readingTime: 6,
+    tags: ["春闘", "賃上げ", "実質賃金"],
+    presetQuery: "?indicators=wage,cpi,insurance&range=2010,2024",
+  },
+  {
+    slug: "nisa-vs-savings",
+    title: "新NISA vs 貯金 ─ データで考える「30年寝かせるならどっち」",
+    description:
+      "1990年に100万円を銀行預金とS&P500それぞれに置いた場合、2024年にいくらになっているか。日本の超低金利と米国株の長期トレンドを実データで比較し、新NISA時代の選択を考える。",
+    readingTime: 7,
+    tags: ["NISA", "投資", "貯金"],
+    presetQuery: "?indicators=nikkei,cpi&range=1990,2024",
+  },
+  {
+    slug: "national-debt-per-citizen",
+    title: "「国民一人当たり1,000万円の借金」は本当か？─ 国債残高の正しい読み方",
+    description:
+      "「日本は国民一人当たり約1,000万円の借金を抱えている」というメディア報道は本当か。単純割り算の誤解、対GDP比・対金融資産比など、国債残高を正しく読み解く視点をデータで解説する。",
+    readingTime: 6,
+    tags: ["国債", "財政赤字", "金融資産"],
+    presetQuery: "?indicators=debt,tax&range=1990,2024",
+  },
+  {
+    slug: "inflation-cycles-japan",
+    title: "物価高はいつまで続く？─ 過去30年の4つのインフレ局面を分析",
+    description:
+      "1990年バブル崩壊・1997年消費税増税・2008年資源高・2022年円安インフレ。日本経済が直面した4つのインフレ局面を比較し、今回の物価高の終わりを過去データから予測する。",
+    readingTime: 7,
+    tags: ["物価高", "インフレ", "予測"],
+    presetQuery: "?indicators=cpi,fx,wage&range=1990,2024&events=経済,税制",
+  },
+  {
+    slug: "university-cost-inflation",
+    title: "大学費用30年前と今 ─ 親世代と子世代の教育費インフレ実態",
+    description:
+      "1990年の国立大学授業料は年34万円、2024年は53.6万円。私立大学はさらに上昇率が高い。CPI補正・賃金との対比で「教育費は本当に重くなったのか」をデータで検証する。",
+    readingTime: 6,
+    tags: ["教育費", "大学", "家計"],
+    presetQuery: "?indicators=cpi,wage&range=1990,2024",
+  },
+  {
+    slug: "retirement-2000man-revisited",
+    title: "老後2,000万円問題は今いくら必要？─ 物価で再計算してみた",
+    description:
+      "2019年に話題となった「老後2,000万円問題」。報告書から5年経った2024年、物価上昇と社会保険料増加を反映すると、必要額はいくらまで膨らんでいるのか。データで再試算する。",
+    readingTime: 7,
+    tags: ["老後資金", "年金", "老後2000万円"],
+    presetQuery: "?indicators=cpi,insurance,wage&range=2019,2024",
+  },
+  {
+    slug: "income-inequality-japan",
+    title: "格差は本当に広がっているのか？─ ジニ係数と所得分布で見る30年",
+    description:
+      "「日本は格差社会化している」とよく言われる。本当か。ジニ係数（当初/再分配）・相対的貧困率・所得分布の変化を30年スパンで検証し、格差の実態と政策効果をデータで解説する。",
+    readingTime: 7,
+    tags: ["格差", "ジニ係数", "貧困"],
+    presetQuery: "?indicators=wage,tax,insurance&range=1990,2024",
+  },
+  {
+    slug: "mortgage-rate-simulation",
+    title: "日銀利上げで住宅ローンはどうなる？─ 金利推移と家計シミュレーション",
+    description:
+      "2024年3月、日銀はマイナス金利を解除。1990年代初頭の8%台から2022年の0.4%まで下がった住宅ローン金利は、ここから上昇に転じる可能性が高い。借入額別の月返済額シミュレーションを提示する。",
+    readingTime: 7,
+    tags: ["住宅ローン", "金利", "日銀"],
+    presetQuery: "?indicators=housing,wage,cpi&range=1990,2024",
+  },
 ];
