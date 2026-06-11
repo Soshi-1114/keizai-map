@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description:
     "賃金・物価・税収・為替の推移を政権帯とともに一画面で可視化。なぜ生活が苦しくなったのかを数字で見る経済データダッシュボード。",
   verification: {
-    google: "0cDRP1qdDoSZYSWi45bITwrS0RFZdwV8UF5ZoWGVF_w",
+    google: "uylZUDo5JlY7OWcqFZwpnbS1dR5_J_9rWQCKwuwW9to",
   },
   openGraph: {
     title: "KeizaiMap — 数字で見る、日本の30年",
