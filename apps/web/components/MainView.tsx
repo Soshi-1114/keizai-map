@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
 import { useIsMobile } from "@/lib/hooks";
 import { RAW_DATA, ADMINISTRATIONS, EVENTS, INDICATOR_CONFIGS, DATA_UPDATED_AT } from "@/lib/data";
@@ -115,20 +114,27 @@ const VIEW_MODES: { key: ViewMode; label: string }[] = [
   { key: "event", label: "イベント詳細" },
 ];
 
-export function MainView() {
+interface MainViewProps {
+  initialParams?: {
+    range?: string;
+    indicators?: string;
+    events?: string;
+  };
+}
+
+export function MainView({ initialParams }: MainViewProps) {
   const isMobile = useIsMobile();
-  const searchParams = useSearchParams();
 
   const [viewMode, setViewMode] = useState<ViewMode>("chart");
   const [showDataTable, setShowDataTable] = useState(false);
   const [yearRange, setYearRange] = useState<[number, number]>(() =>
-    parseRange(searchParams.get("range"))
+    parseRange(initialParams?.range ?? null)
   );
   const [activeIndicators, setActiveIndicators] = useState<IndicatorKey[]>(() =>
-    parseIndicators(searchParams.get("indicators"))
+    parseIndicators(initialParams?.indicators ?? null)
   );
   const [activeCategories, setActiveCategories] = useState<EventCategory[]>(() =>
-    parseCategories(searchParams.get("events"))
+    parseCategories(initialParams?.events ?? null)
   );
 
   const filteredData = RAW_DATA.filter(d => d.year >= yearRange[0] && d.year <= yearRange[1]);
