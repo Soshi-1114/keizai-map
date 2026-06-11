@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -62,6 +63,28 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
     ? { top: 8, right: 0, left: 0, bottom: 5 }
     : { top: 36, right: 0, left: 0, bottom: 5 };
 
+  // モバイル：タップしたイベント表示用
+  const [tappedEvent, setTappedEvent] = useState<EconomicEvent | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(entries => {
+      setContainerWidth(entries[0].contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // 年をピクセルX座標に変換（グラフの実座標系に合わせる）
+  function yearToPixelX(year: number): number {
+    const plotWidth = containerWidth - yAxisWidth * 2;
+    const ratio = (year - minYear) / Math.max(maxYear - minYear, 1);
+    return yAxisWidth + ratio * plotWidth;
+  }
+
   // 近接イベントのラベルを2レーンに振り分けて重なりを防ぐ（デスクトップのみ）
   const LANE_GAP_YEARS = 3;
   const laneMap = new Map<string, number>();
@@ -84,8 +107,66 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
     : `経済指標の ${minYear}年から${maxYear}年までの推移`;
 
   return (
-    <div role="img" aria-labelledby="chart-title" className="w-full">
+    <div ref={containerRef} role="img" aria-labelledby="chart-title" className="w-full" style={{ position: "relative" }}>
       <h2 id="chart-title" className="sr-only">{chartDescription}</h2>
+
+      {/* モバイル：タップされたイベントのラベルバッジ */}
+      {isMobile && tappedEvent && (
+        <div
+          style={{
+            position: "absolute",
+            top: 4,
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: "var(--card)",
+            border: `1px solid ${tappedEvent.color}`,
+            borderRadius: 20,
+            padding: "3px 12px",
+            fontSize: 11,
+            color: tappedEvent.color,
+            fontWeight: 700,
+            zIndex: 20,
+            whiteSpace: "nowrap",
+            pointerEvents: "none",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+          }}
+        >
+          {tappedEvent.year}年　{tappedEvent.label}
+        </div>
+      )}
+
+      {/* モバイル：各イベント縦線の透明タップ領域 */}
+      {isMobile && containerWidth > 0 && visibleEvents.map(ev => {
+        const x = yearToPixelX(ev.year);
+        return (
+          <button
+            key={`tap-${ev.year}-${ev.label}`}
+            aria-label={`${ev.year}年 ${ev.label}`}
+            onClick={() => setTappedEvent(prev => prev?.year === ev.year && prev?.label === ev.label ? null : ev)}
+            style={{
+              position: "absolute",
+              top: 8,
+              bottom: 28,
+              left: x - 14,
+              width: 28,
+              zIndex: 10,
+              backgroundColor: "transparent",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+            }}
+          />
+        );
+      })}
+
+      {/* モバイル：グラフ外タップでラベルを閉じる */}
+      {isMobile && tappedEvent && (
+        <div
+          style={{ position: "absolute", inset: 0, zIndex: 9 }}
+          onClick={() => setTappedEvent(null)}
+        />
+      )}
+
       <ResponsiveContainer width="100%" height={chartHeight}>
       <ComposedChart data={data} margin={chartMargin}>
         {/* Administration background bands */}
