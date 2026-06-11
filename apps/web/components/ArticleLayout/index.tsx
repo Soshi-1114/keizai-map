@@ -119,6 +119,51 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
           </Link>
         </div>
 
+        {/* データ出典 */}
+        <div className="mt-6 pt-6 border-t" style={{ borderColor: "var(--border)" }}>
+          <h2 className="text-xs font-semibold mb-3" style={{ color: "var(--muted)" }}>
+            データ出典・免責
+          </h2>
+          <div
+            className="rounded-xl p-4 text-xs leading-relaxed space-y-2"
+            style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", color: "var(--muted)" }}
+          >
+            <p>
+              本記事の数値は <strong>2024年時点</strong> の公開統計に基づきます。
+              最新値は <Link href="/" className="underline hover:opacity-80" style={{ color: "var(--link)" }}>KeizaiMap ダッシュボード</Link> で確認できます（自動指標は毎月1日更新）。
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1 pt-1">
+              {[
+                { label: "実質賃金・出生数・社会保険料", org: "厚生労働省", href: "https://www.mhlw.go.jp/toukei_hakusho/toukei/" },
+                { label: "消費者物価指数（CPI）", org: "総務省統計局", href: "https://www.stat.go.jp/data/cpi/" },
+                { label: "税収・国債残高", org: "財務省", href: "https://www.mof.go.jp/tax_policy/summary/condition/a02.htm" },
+                { label: "USD/JPY 為替レート", org: "日本銀行", href: "https://www.stat-search.boj.or.jp/" },
+                { label: "住宅価格指数", org: "国土交通省", href: "https://www.mlit.go.jp/totikensangyo/totikensangyo_fr4_000043.html" },
+                { label: "G7 実質賃金・物価比較", org: "OECD", href: "https://stats.oecd.org/" },
+              ].map(({ label, org, href }) => (
+                <div key={label} className="flex items-baseline gap-1">
+                  <span className="shrink-0" style={{ color: "var(--muted)" }}>・</span>
+                  <span>{label}：</span>
+                  <a href={href} target="_blank" rel="noopener noreferrer" className="underline hover:opacity-80" style={{ color: "var(--link)" }}>
+                    {org}
+                  </a>
+                </div>
+              ))}
+            </div>
+            <p className="pt-1">
+              データ集計ロジックは
+              <a href="https://github.com/Soshi-1114/keizai-map" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-80 mx-1" style={{ color: "var(--link)" }}>
+                GitHub
+              </a>
+              で公開しています。誤りを発見した場合は
+              <Link href="/contact" className="underline hover:opacity-80 mx-1" style={{ color: "var(--link)" }}>
+                お問い合わせ
+              </Link>
+              ください。
+            </p>
+          </div>
+        </div>
+
         {/* フッター */}
         <div className="mt-6 pt-4 border-t text-xs space-y-1 text-center" style={{ borderColor: "var(--border)", color: "var(--muted)" }}>
           <p>数値はすべて公開統計に基づきます。投資判断への利用は自己責任でお願いします。</p>

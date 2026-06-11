@@ -1,0 +1,47 @@
+{
+  "name": "KeizaiMap — 数字で見る、日本の30年",
+  "short_name": "KeizaiMap",
+  "description": "賃金・物価・税収・為替の推移を政権帯とともに一画面で可視化。なぜ生活が苦しくなったのかを数字で見る経済データダッシュボード。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "lang": "ja",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "KeizaiMap ダッシュボード"
+    }
+  ],
+  "categories": ["finance", "education"],
+  "shortcuts": [
+    {
+      "name": "ダッシュボード",
+      "url": "/",
+      "description": "経済指標ダッシュボード"
+    },
+    {
+      "name": "解説記事",
+      "url": "/articles",
+      "description": "日本経済の解説記事"
+    }
+  ]
+}

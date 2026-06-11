@@ -217,6 +217,56 @@ export default function AboutPage() {
           </div>
         </Section>
 
+        {/* 更新ログ */}
+        <Section title="データ更新ログ">
+          <p className="text-sm leading-relaxed" style={{ color: "var(--muted)" }}>
+            データの更新・修正履歴を記録しています。透明性確保のため、主要な変更はこちらに掲載します。
+          </p>
+          <div className="space-y-2 mt-2">
+            {[
+              { date: "2026年06月", label: "自動取得", desc: "CPI・出生数・税収（72.1兆円）・USD/JPY（151.8円）・国債残高（1,170.3兆円）を更新（2024年確定値）" },
+              { date: "2026年06月", label: "記事追加", desc: "SEO強化記事 第2弾9本追加（21本→30本）。内部リンク・FAQPage構造化データを全記事に整備" },
+              { date: "2026年05月", label: "記事追加", desc: "SEO強化記事5本追加（16本→21本）" },
+              { date: "2026年05月", label: "機能改善", desc: "パンくずリスト・BreadcrumbList JSON-LD を全ページに追加。/contact ページ新設" },
+              { date: "2026年04月", label: "自動取得", desc: "自動更新パイプライン（GitHub Actions）が稼働開始。CPI・税収・USD/JPY・国債残高・出生数の月次自動取得を開始" },
+              { date: "2026年03月", label: "初回公開", desc: "KeizaiMap v1.0 公開。実質賃金・CPI・税収・USD/JPY・日経平均・住宅価格・国債残高・出生数・社会保険料の9指標を搭載" },
+            ].map(({ date, label, desc }) => (
+              <div
+                key={date + label}
+                className="flex gap-3 rounded-lg px-3 py-2.5"
+                style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}
+              >
+                <div className="shrink-0 text-xs tabular-nums pt-0.5" style={{ color: "var(--muted)", minWidth: 72 }}>{date}</div>
+                <div className="flex-1 min-w-0">
+                  <span
+                    className="inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded mr-2"
+                    style={{
+                      backgroundColor: label === "自動取得" ? "#16653420" : label === "記事追加" ? "#1d4ed820" : "#92400e20",
+                      color: label === "自動取得" ? "#166534" : label === "記事追加" ? "#1d4ed8" : "#92400e",
+                    }}
+                  >
+                    {label}
+                  </span>
+                  <span className="text-xs" style={{ color: "var(--text)" }}>{desc}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs mt-2" style={{ color: "var(--muted)" }}>
+            詳細な変更履歴は
+            <a
+              href="https://github.com/Soshi-1114/keizai-map/commits/master"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:opacity-80 mx-1"
+              style={{ color: "var(--link)" }}
+            >
+              GitHub コミット履歴
+            </a>
+            で確認できます。
+          </p>
+        </Section>
+
         {/* 政治的中立性 */}
         <Section title="データの解釈について">
           <div
