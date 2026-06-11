@@ -76,8 +76,15 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
     }
   }
 
+  // アクセシビリティ用の説明テキストを生成
+  const chartDescription = activeConfigs.length > 0
+    ? `${activeConfigs.map(c => c.label).join(', ')} の ${minYear}年から${maxYear}年までの推移`
+    : `経済指標の ${minYear}年から${maxYear}年までの推移`;
+
   return (
-    <ResponsiveContainer width="100%" height={chartHeight}>
+    <div role="img" aria-labelledby="chart-title" className="w-full">
+      <h2 id="chart-title" className="sr-only">{chartDescription}</h2>
+      <ResponsiveContainer width="100%" height={chartHeight}>
       <ComposedChart data={data} margin={chartMargin}>
         {/* Administration background bands */}
         {administrations
@@ -177,5 +184,6 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
         ))}
       </ComposedChart>
     </ResponsiveContainer>
+    </div>
   );
 }

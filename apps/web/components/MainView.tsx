@@ -120,6 +120,7 @@ export function MainView() {
   const searchParams = useSearchParams();
 
   const [viewMode, setViewMode] = useState<ViewMode>("chart");
+  const [showDataTable, setShowDataTable] = useState(false);
   const [yearRange, setYearRange] = useState<[number, number]>(() =>
     parseRange(searchParams.get("range"))
   );
@@ -191,14 +192,16 @@ export function MainView() {
         </header>
 
         {/* Indicator toggles */}
-        <div className="flex gap-2 flex-wrap">
+        <section aria-labelledby="indicators-heading">
+          <h2 id="indicators-heading" className="sr-only">表示する指標を選択</h2>
+        <div className="flex gap-2 flex-wrap" role="group" aria-labelledby="indicators-heading">
           {INDICATOR_CONFIGS.map(cfg => {
             const active = activeIndicators.includes(cfg.key);
             return (
               <button
                 key={cfg.key}
                 onClick={() => toggleIndicator(cfg.key)}
-                className="px-3 py-1.5 md:py-1 rounded-full text-sm border transition-all font-medium"
+                className="px-3 py-1.5 md:py-1 rounded-full text-sm border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                 style={{
                   borderColor: active ? cfg.color : "var(--border)",
                   color: active ? cfg.color : "var(--muted)",
@@ -212,6 +215,7 @@ export function MainView() {
             );
           })}
         </div>
+        </section>
 
         {/* ヒーロー統計バー：グラフを見る前に期間の変化を把握 */}
         {filteredData.length >= 2 && (() => {
@@ -309,6 +313,14 @@ export function MainView() {
                       fontSize: "0.875rem",
                       fontWeight: 500,
                       transition: "all 200ms",
+                      outline: "none",
+                    }}
+                    onFocus={(e) => {
+                      e.currentTarget.style.outline = "2px solid #2563eb";
+                      e.currentTarget.style.outlineOffset = "2px";
+                    }}
+                    onBlur={(e) => {
+                      e.currentTarget.style.outline = "none";
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.backgroundColor = "var(--bg)";
@@ -323,7 +335,127 @@ export function MainView() {
                   >
                     📥 CSVでエクスポート
                   </button>
+                  <button
+                    onClick={() => setShowDataTable(!showDataTable)}
+                    style={{
+                      padding: "0.5rem 1rem",
+                      borderRadius: "0.375rem",
+                      border: "1px solid var(--border)",
+                      backgroundColor: showDataTable ? "#4F8EF7" : "var(--card)",
+                      color: showDataTable ? "#fff" : "var(--text)",
+                      cursor: "pointer",
+                      fontSize: "0.875rem",
+                      fontWeight: 500,
+                      transition: "all 200ms",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!showDataTable) {
+                        e.currentTarget.style.backgroundColor = "var(--bg)";
+                        e.currentTarget.style.borderColor = "#4F8EF7";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!showDataTable) {
+                        e.currentTarget.style.backgroundColor = "var(--card)";
+                        e.currentTarget.style.borderColor = "var(--border)";
+                      }
+                    }}
+                  >
+                    📊 データを表で見る
+                  </button>
                 </div>
+
+                {/* データテーブル（アクセシビリティ用代替ビュー） */}
+                {showDataTable && (
+                  <div style={{ marginTop: "1.5rem", overflow: "auto" }}>
+                    <table
+                      aria-label="経済指標データ"
+                      style={{
+                        width: "100%",
+                        borderCollapse: "collapse",
+                        fontSize: "0.875rem",
+                      }}
+                    >
+                      <thead>
+                        <tr style={{ borderBottom: "2px solid var(--border)" }}>
+                          <th
+                            scope="col"
+                            style={{
+                              padding: "0.75rem",
+                              textAlign: "left",
+                              fontWeight: 600,
+                              color: "var(--text)",
+                            }}
+                          >
+                            年度
+                          </th>
+                          {INDICATOR_CONFIGS.filter(c =>
+                            activeIndicators.includes(c.key)
+                          ).map(cfg => (
+                            <th
+                              key={cfg.key}
+                              scope="col"
+                              style={{
+                                padding: "0.75rem",
+                                textAlign: "right",
+                                fontWeight: 600,
+                                color: cfg.color,
+                              }}
+                            >
+                              {cfg.label}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredData.map((point, idx) => (
+                          <tr
+                            key={point.year}
+                            style={{
+                              borderBottom: "1px solid var(--border)",
+                              backgroundColor:
+                                idx % 2 === 0 ? "transparent" : "var(--card)",
+                            }}
+                          >
+                            <th
+                              scope="row"
+                              style={{
+                                padding: "0.75rem",
+                                textAlign: "left",
+                                fontWeight: 500,
+                                color: "var(--text)",
+                              }}
+                            >
+                              {point.year}
+                            </th>
+                            {INDICATOR_CONFIGS.filter(c =>
+                              activeIndicators.includes(c.key)
+                            ).map(cfg => {
+                              const value = point[cfg.key];
+                              return (
+                                <td
+                                  key={cfg.key}
+                                  style={{
+                                    padding: "0.75rem",
+                                    textAlign: "right",
+                                    color: "var(--text)",
+                                    fontFamily: "monospace",
+                                  }}
+                                >
+                                  {value !== undefined
+                                    ? typeof value === "number"
+                                      ? value.toFixed(1)
+                                      : value
+                                    : "—"}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             </>
           ) : (
@@ -357,7 +489,7 @@ export function MainView() {
                   <button
                     key={label}
                     onClick={() => setYearRange(range)}
-                    className="px-3 py-1 rounded-full text-xs border transition-all"
+                    className="px-3 py-1 rounded-full text-xs border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                     style={{
                       borderColor: isActive ? "#4F8EF7" : "var(--border)",
                       color: isActive ? "#4F8EF7" : "var(--muted)",
@@ -373,20 +505,27 @@ export function MainView() {
           </div>
 
           {/* 表示期間スライダー */}
-          <div>
-            <h2 className="text-xs font-medium mb-3" style={{ color: "var(--muted)" }}>表示期間</h2>
-            <RangeSlider min={MIN_YEAR} max={MAX_YEAR} value={yearRange} onChange={setYearRange} step={2} />
-          </div>
+          <section aria-labelledby="range-heading">
+            <h2 id="range-heading" className="text-xs font-medium mb-3" style={{ color: "var(--muted)" }}>表示期間</h2>
+            <RangeSlider
+              min={MIN_YEAR}
+              max={MAX_YEAR}
+              value={yearRange}
+              onChange={setYearRange}
+              step={2}
+              aria-label={`表示期間: ${yearRange[0]}年から${yearRange[1]}年まで`}
+            />
+          </section>
 
           {/* イベントフィルター */}
-          <div>
-            <h2 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>経済イベントフィルター</h2>
+          <section aria-labelledby="event-heading">
+            <h2 id="event-heading" className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>経済イベントフィルター</h2>
             <EventFilter
               categories={ALL_CATEGORIES}
               activeCategories={activeCategories}
               onToggle={toggleCategory}
             />
-          </div>
+          </section>
         </div>
 
         {/* Footer */}
