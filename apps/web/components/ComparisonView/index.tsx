@@ -83,7 +83,7 @@ function AdminChart({ activeIndicators }: { activeIndicators: IndicatorKey[] }) 
     const e = atOrBefore(admin.end);
     if (!s || !e || s.year === e.year) return null;
     return {
-      name:      admin.name,
+      name:      `${admin.name}\n(${admin.party})`,
       startYear: s.year,
       endYear:   e.year,
       party:     admin.party,
@@ -119,16 +119,17 @@ function AdminChart({ activeIndicators }: { activeIndicators: IndicatorKey[] }) 
           <YAxis
             type="category"
             dataKey="name"
-            width={110}
+            width={140}
             tick={{ fill: "var(--text)", fontSize: 11 }}
             tickLine={false}
+            interval={0}
           />
           <Tooltip
             {...TT}
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             labelFormatter={(_: unknown, payload: any[]) => {
               const d = payload?.[0]?.payload;
-              return d ? `${d.name}（${d.startYear}→${d.endYear}年）` : "";
+              return d ? `${d.name.replace(/\n/g, " ")}（${d.startYear}→${d.endYear}年）` : "";
             }}
             formatter={(v: number, name: string) => [
               `${v > 0 ? "+" : ""}${v.toFixed(1)}%`,
