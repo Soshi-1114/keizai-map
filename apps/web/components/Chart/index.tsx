@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -63,26 +62,75 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
     ? { top: 8, right: 0, left: 0, bottom: 5 }
     : { top: 36, right: 0, left: 0, bottom: 5 };
 
-  // モバイル：タップしたイベント表示用
-  const [tappedEvent, setTappedEvent] = useState<EconomicEvent | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = useState(0);
+  // カスタム Tooltip：指標値 + 近傍イベント情報を統合表示
+  function EventTooltip({ active, payload, label }: {
+    active?: boolean;
+    payload?: Array<{ name: string; value: number; color: string; dataKey: string }>;
+    label?: number;
+  }) {
+    if (!active || !payload?.length || label == null) return null;
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(entries => {
-      setContainerWidth(entries[0].contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+    // タップした年の ±1 年以内にあるイベントを取得（近い順）
+    const nearEvents = visibleEvents
+      .filter(e => Math.abs(e.year - label) <= 1)
+      .sort((a, b) => Math.abs(a.year - label) - Math.abs(b.year - label));
 
-  // 年をピクセルX座標に変換（グラフの実座標系に合わせる）
-  function yearToPixelX(year: number): number {
-    const plotWidth = containerWidth - yAxisWidth * 2;
-    const ratio = (year - minYear) / Math.max(maxYear - minYear, 1);
-    return yAxisWidth + ratio * plotWidth;
+    // null/undefined 値と G7 系列を除いた実データ
+    const dataItems = payload.filter(p => p.value != null && !String(p.dataKey).startsWith("g7"));
+
+    return (
+      <div style={{
+        backgroundColor: "var(--card)",
+        border: "1px solid var(--border)",
+        borderRadius: 8,
+        padding: "8px 12px",
+        fontSize: 12,
+        maxWidth: 220,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
+      }}>
+        {/* 年ヘッダー */}
+        <div style={{ color: "var(--text)", fontWeight: "bold", marginBottom: nearEvents.length ? 6 : 4 }}>
+          {label}年
+        </div>
+
+        {/* 近傍イベント */}
+        {nearEvents.length > 0 && (
+          <div style={{
+            marginBottom: 6,
+            paddingBottom: 6,
+            borderBottom: "1px solid var(--border)",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}>
+            {nearEvents.map(ev => (
+              <div key={`${ev.year}-${ev.label}`} style={{ color: ev.color, fontWeight: 600, fontSize: 11 }}>
+                📌 {ev.year !== label ? `${ev.year}年 ` : ""}{ev.label}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* 指標値 */}
+        {dataItems.map(entry => {
+          const cfg = INDICATOR_CONFIGS.find(c => c.label === entry.name);
+          return (
+            <div key={entry.dataKey} style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: 16,
+              color: entry.color,
+              lineHeight: "1.6",
+            }}>
+              <span>{entry.name}</span>
+              <span style={{ fontVariantNumeric: "tabular-nums", fontWeight: 600 }}>
+                {entry.value.toFixed(1)}{cfg?.unit ?? ""}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    );
   }
 
   // 近接イベントのラベルを2レーンに振り分けて重なりを防ぐ（デスクトップのみ）
@@ -107,66 +155,8 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
     : `経済指標の ${minYear}年から${maxYear}年までの推移`;
 
   return (
-    <div ref={containerRef} role="img" aria-labelledby="chart-title" className="w-full" style={{ position: "relative" }}>
+    <div role="img" aria-labelledby="chart-title" className="w-full">
       <h2 id="chart-title" className="sr-only">{chartDescription}</h2>
-
-      {/* モバイル：タップされたイベントのラベルバッジ */}
-      {isMobile && tappedEvent && (
-        <div
-          style={{
-            position: "absolute",
-            top: 4,
-            left: "50%",
-            transform: "translateX(-50%)",
-            backgroundColor: "var(--card)",
-            border: `1px solid ${tappedEvent.color}`,
-            borderRadius: 20,
-            padding: "3px 12px",
-            fontSize: 11,
-            color: tappedEvent.color,
-            fontWeight: 700,
-            zIndex: 20,
-            whiteSpace: "nowrap",
-            pointerEvents: "none",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-          }}
-        >
-          {tappedEvent.year}年　{tappedEvent.label}
-        </div>
-      )}
-
-      {/* モバイル：各イベント縦線の透明タップ領域 */}
-      {isMobile && containerWidth > 0 && visibleEvents.map(ev => {
-        const x = yearToPixelX(ev.year);
-        return (
-          <button
-            key={`tap-${ev.year}-${ev.label}`}
-            aria-label={`${ev.year}年 ${ev.label}`}
-            onClick={() => setTappedEvent(prev => prev?.year === ev.year && prev?.label === ev.label ? null : ev)}
-            style={{
-              position: "absolute",
-              top: 8,
-              bottom: 28,
-              left: x - 14,
-              width: 28,
-              zIndex: 10,
-              backgroundColor: "transparent",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
-            }}
-          />
-        );
-      })}
-
-      {/* モバイル：グラフ外タップでラベルを閉じる */}
-      {isMobile && tappedEvent && (
-        <div
-          style={{ position: "absolute", inset: 0, zIndex: 9 }}
-          onClick={() => setTappedEvent(null)}
-        />
-      )}
-
       <ResponsiveContainer width="100%" height={chartHeight}>
       <ComposedChart data={data} margin={chartMargin}>
         {/* Administration background bands */}
@@ -218,15 +208,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
           label={isMobile ? undefined : { value: "税収（兆円）/ 為替（円）", angle: 90, position: "insideRight", fill: "var(--muted)", fontSize: 10, dx: 10 }}
         />
 
-        <Tooltip
-          contentStyle={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", borderRadius: "8px", fontSize: 12 }}
-          labelStyle={{ color: "var(--text)", fontWeight: "bold", marginBottom: 4 }}
-          labelFormatter={(label) => `${label}年`}
-          formatter={(value: number, name: string) => {
-            const cfg = INDICATOR_CONFIGS.find(c => c.label === name);
-            return [`${value.toFixed(1)}${cfg?.unit ?? ""}`, name];
-          }}
-        />
+        <Tooltip content={<EventTooltip />} />
 
         <Legend
           wrapperStyle={{ paddingTop: 8 }}
