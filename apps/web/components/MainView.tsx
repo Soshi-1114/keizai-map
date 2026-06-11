@@ -198,12 +198,13 @@ export function MainView() {
               <button
                 key={cfg.key}
                 onClick={() => toggleIndicator(cfg.key)}
-                className="px-3 py-1.5 md:py-1 rounded-full text-sm border transition-all"
+                className="px-3 py-1.5 md:py-1 rounded-full text-sm border transition-all font-medium"
                 style={{
-                  borderColor: cfg.color,
+                  borderColor: active ? cfg.color : "var(--border)",
                   color: active ? cfg.color : "var(--muted)",
-                  backgroundColor: active ? cfg.color + "20" : "transparent",
-                  opacity: active ? 1 : 0.45,
+                  backgroundColor: active ? cfg.color + "15" : "transparent",
+                  opacity: 1,
+                  fontWeight: active ? 600 : 400,
                 }}
               >
                 {cfg.label}
@@ -348,7 +349,7 @@ export function MainView() {
         <div className="rounded-xl border p-4 space-y-5" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
           {/* 注目の期間ショートカット */}
           <div>
-            <h3 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>注目の期間</h3>
+            <h2 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>注目の期間</h2>
             <div className="flex gap-2 flex-wrap">
               {ERA_SHORTCUTS.map(({ label, range }) => {
                 const isActive = yearRange[0] === range[0] && yearRange[1] === range[1];
@@ -373,13 +374,13 @@ export function MainView() {
 
           {/* 表示期間スライダー */}
           <div>
-            <h3 className="text-xs font-medium mb-3" style={{ color: "var(--muted)" }}>表示期間</h3>
+            <h2 className="text-xs font-medium mb-3" style={{ color: "var(--muted)" }}>表示期間</h2>
             <RangeSlider min={MIN_YEAR} max={MAX_YEAR} value={yearRange} onChange={setYearRange} step={2} />
           </div>
 
           {/* イベントフィルター */}
           <div>
-            <h3 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>経済イベントフィルター</h3>
+            <h2 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>経済イベントフィルター</h2>
             <EventFilter
               categories={ALL_CATEGORIES}
               activeCategories={activeCategories}

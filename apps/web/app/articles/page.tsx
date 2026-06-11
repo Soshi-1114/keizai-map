@@ -44,8 +44,12 @@ export default function ArticlesPage() {
                 {article.tags.map(tag => (
                   <span
                     key={tag}
-                    className="text-xs px-2 py-0.5 rounded-full border"
-                    style={{ borderColor: "var(--border)", color: "var(--muted)" }}
+                    className="text-xs px-2 py-0.5 rounded-full border font-medium"
+                    style={{
+                      borderColor: "var(--border)",
+                      color: "var(--text)",
+                      backgroundColor: "var(--bg)",
+                    }}
                   >
                     {tag}
                   </span>

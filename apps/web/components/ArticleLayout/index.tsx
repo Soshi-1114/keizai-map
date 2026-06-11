@@ -12,7 +12,7 @@ interface Props {
 export function ArticleLayout({ title, description, readingTime, tags, children }: Props) {
   return (
     <main
-      className="min-h-screen py-8 px-4"
+      className="min-h-screen py-8 px-4 w-full min-w-0"
       style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
     >
       <div className="mx-auto" style={{ maxWidth: 720 }}>
@@ -45,7 +45,7 @@ export function ArticleLayout({ title, description, readingTime, tags, children 
               ))}
             </div>
           )}
-          <h1 className="text-2xl font-bold leading-snug mb-3">{title}</h1>
+          <h1 className="text-2xl font-bold leading-snug mb-3 break-words overflow-wrap-anywhere" style={{ overflowWrap: "break-word" }}>{title}</h1>
           <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--muted)" }}>
             {description}
           </p>
