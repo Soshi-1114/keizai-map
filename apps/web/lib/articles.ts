@@ -90,4 +90,59 @@ export const ARTICLES: ArticleMeta[] = [
     tags: ["円安", "実質賃金", "家計"],
     presetQuery: "?indicators=fx,wage,cpi&range=2012,2024",
   },
+  // ─ 新規記事
+  {
+    slug: "social-insurance-burden",
+    title: "手取りが増えない本当の理由 ─ 社会保険料30年の増加をデータで見る",
+    description:
+      "給与が上がっても手取りが増えない。その原因のひとつが社会保険料の上昇だ。1990年の10.8%から2024年の18.5%へ、34年で約8ポイント増加した社会保険料負担率の実態をデータで読む。",
+    readingTime: 5,
+    tags: ["社会保険料", "手取り", "可処分所得"],
+    presetQuery: "?indicators=wage,tax,insurance&range=1990,2024",
+  },
+  {
+    slug: "declining-birthrate-economy",
+    title: "少子化と経済の悪循環 ─ 出生数激減が家計と社会保障に与える影響",
+    description:
+      "1990年に121万人いた出生数は2024年に73万人台へ激減。人口減少は労働力不足を招き、社会保険料の上昇と国債残高の膨張を加速させる。少子化が経済に与える連鎖をデータで追う。",
+    readingTime: 6,
+    tags: ["少子化", "出生数", "社会保障"],
+    presetQuery: "?indicators=births,insurance,debt&range=1990,2024",
+  },
+  {
+    slug: "nikkei-vs-wages",
+    title: "日経平均は最高値なのに、なぜ生活は豊かにならないのか",
+    description:
+      "2024年、日経平均は1990年比で55%以上上昇している。しかし同じ期間の実質賃金は99.2と横ばいだ。株高の恩恵はなぜ家計に届かないのか。データで構造を読み解く。",
+    readingTime: 5,
+    tags: ["日経平均", "株高", "格差"],
+    presetQuery: "?indicators=nikkei,wage,cpi&range=1990,2024",
+  },
+  {
+    slug: "national-debt-1000trillion",
+    title: "国債残高1,000兆円超 ─ 日本の財政赤字をデータで理解する",
+    description:
+      "1990年に180兆円だった国債残高は2024年に1,170兆円を超えた。税収の16倍に膨らんだ借金の実態と、その背景にある財政構造を数字で確認する。",
+    readingTime: 5,
+    tags: ["国債", "財政赤字", "財政問題"],
+    presetQuery: "?indicators=debt,tax&range=1990,2024",
+  },
+  {
+    slug: "economic-shocks-comparison",
+    title: "リーマンショックとコロナ禍 ─ 2つの経済危機が日本人の生活に与えた傷跡",
+    description:
+      "2008年のリーマンショックと2020年のコロナ禍。2つの危機で実質賃金・株価・為替・物価はどう動いたか。回復の速さ・深さをデータで比較する。",
+    readingTime: 6,
+    tags: ["リーマンショック", "コロナ禍", "経済危機"],
+    presetQuery: "?indicators=wage,nikkei,fx,cpi&range=2006,2024&events=経済",
+  },
+  {
+    slug: "fiscal-collapse-truth",
+    title: "財政破綻は本当に起きるのか ─ 国債・対外純資産・投資収益からデータで考える",
+    description:
+      "国債残高1,170兆円は危機なのか。日本は世界最大の対外純資産国であり、海外投資からの収益（第一次所得収支）は年間35兆円超。財政破綻論の根拠と反論をデータで整理する。",
+    readingTime: 8,
+    tags: ["財政破綻", "国債", "対外純資産"],
+    presetQuery: "?indicators=debt,tax&range=1990,2024",
+  },
 ];
