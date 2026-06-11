@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { LiveDataBox } from "@/components/LiveDataBox";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
@@ -154,6 +155,13 @@ export default function MoneyValueTimeComparisonPage() {
             <li>1990年の30万円 ≒ 2024年の36万円</li>
             <li>2020年→2024年だけで物価は約7%上昇している</li>
             <li>「名目値」だけで時代を比べると、実態を見誤る</li>
+          </ul>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/real-wages-trend-1990-2024" className="underline" style={{ color: "var(--link)" }}>日本の実質賃金推移【1990〜2024】データ分析</Link></li>
+            <li><Link href="/articles/yen-purchasing-power-decline" className="underline" style={{ color: "var(--link)" }}>日本の通貨価値はどれだけ下がったか ─ ドル建てで見る30年</Link></li>
+            <li><Link href="/articles/real-take-home-pay-30years" className="underline" style={{ color: "var(--link)" }}>年収500万でも30年前の年収300万に負けている？─ 実質手取りで見る30年</Link></li>
           </ul>
         </Section>
       </ArticleLayout>

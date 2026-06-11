@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -193,6 +194,13 @@ export default function MortgageRateSimulationPage() {
             <li>金利1.5%まで上がると月返済額は1.8〜2万円増</li>
             <li>変動 vs 固定の選択は「金利上昇に耐えられるか」が判断軸</li>
             <li>繰上返済・借換え・固定化など、複数の選択肢を検討すべき</li>
+          </ul>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/housing-price" className="underline" style={{ color: "var(--link)" }}>なぜ若者は家を買えないのか ─ 住宅価格と賃金の34年</Link></li>
+            <li><Link href="/articles/yen-depreciation" className="underline" style={{ color: "var(--link)" }}>円安が進む仕組みと日本経済への影響</Link></li>
+            <li><Link href="/articles/nisa-vs-savings" className="underline" style={{ color: "var(--link)" }}>新NISA vs 貯金 ─ データで考える「30年寝かせるならどっち」</Link></li>
           </ul>
         </Section>
       </ArticleLayout>

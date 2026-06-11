@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -241,6 +242,13 @@ export default function RealTakeHomePay30YearsPage() {
           <p>
             KeizaiMap で社会保険料・物価・賃金の推移を重ねて表示すると、この圧迫構造を一目で確認できる。
           </p>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料30年の増加</Link></li>
+            <li><Link href="/articles/consumption-tax" className="underline" style={{ color: "var(--link)" }}>消費税率引き上げの歴史と家計への影響</Link></li>
+            <li><Link href="/articles/real-wages" className="underline" style={{ color: "var(--link)" }}>実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか</Link></li>
+          </ul>
         </Section>
       </ArticleLayout>
     </>

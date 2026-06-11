@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -221,6 +222,13 @@ export default function GenerationEconomicComparisonPage() {
             <li>ミレニアル世代：賃金は最低だが住宅は底値で取得できた</li>
             <li>Z世代：就職と投資は最も恵まれているが、住宅と保険料は重い</li>
             <li>世代論は「総合スコア」ではなく「指標別」で見るべき</li>
+          </ul>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/housing-price" className="underline" style={{ color: "var(--link)" }}>なぜ若者は家を買えないのか ─ 住宅価格と賃金の34年</Link></li>
+            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料30年の増加</Link></li>
+            <li><Link href="/articles/real-wages-trend-1990-2024" className="underline" style={{ color: "var(--link)" }}>日本の実質賃金推移【1990〜2024】データ分析</Link></li>
           </ul>
         </Section>
       </ArticleLayout>

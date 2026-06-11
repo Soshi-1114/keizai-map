@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -239,6 +240,13 @@ export default function NextDecadeForecastPage() {
           <p>
             KeizaiMap で各指標の30年トレンドを確認し、自分なりの「次の10年」シナリオを描いてほしい。
           </p>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/lost-decades" className="underline" style={{ color: "var(--link)" }}>「失われた30年」─ 数字で見る日本経済の停滞</Link></li>
+            <li><Link href="/articles/declining-birthrate-economy" className="underline" style={{ color: "var(--link)" }}>少子化と経済の悪循環 ─ 出生数激減が家計と社会保障に与える影響</Link></li>
+            <li><Link href="/articles/fiscal-collapse-truth" className="underline" style={{ color: "var(--link)" }}>財政破綻は本当に起きるのか ─ 国債・対外純資産からデータで考える</Link></li>
+          </ul>
         </Section>
       </ArticleLayout>
     </>

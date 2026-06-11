@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -175,6 +176,13 @@ export default function Retirement2000ManPage() {
             <li>2060年時点では名目4,000万円だが、実質は2,400万円相当</li>
             <li>運用利回りで月積立額は3倍以上変わる</li>
             <li>持ち家・健康・長寿の個人差で大きく変動するため自分用試算が重要</li>
+          </ul>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/nisa-vs-savings" className="underline" style={{ color: "var(--link)" }}>新NISA vs 貯金 ─ データで考える「30年寝かせるならどっち」</Link></li>
+            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料30年の増加</Link></li>
+            <li><Link href="/articles/real-take-home-pay-30years" className="underline" style={{ color: "var(--link)" }}>年収500万でも30年前の年収300万に負けている？─ 実質手取りで見る30年</Link></li>
           </ul>
         </Section>
       </ArticleLayout>

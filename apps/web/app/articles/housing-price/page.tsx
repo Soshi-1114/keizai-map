@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { LiveDataBox } from "@/components/LiveDataBox";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
@@ -128,6 +129,13 @@ export default function HousingPricePage() {
             金利上昇が住宅価格を引き下げる効果と、賃金上昇のどちらが先行するかにかかっている。
             KeizaiMapで実質賃金・住宅価格指数の推移を並べて、変化を継続的に観察してほしい。
           </p>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/mortgage-rate-simulation" className="underline" style={{ color: "var(--link)" }}>日銀利上げで住宅ローンはどうなる？─ 金利推移と家計シミュレーション</Link></li>
+            <li><Link href="/articles/yen-depreciation" className="underline" style={{ color: "var(--link)" }}>円安が進む仕組みと日本経済への影響</Link></li>
+            <li><Link href="/articles/real-wages" className="underline" style={{ color: "var(--link)" }}>実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか</Link></li>
+          </ul>
         </Section>
       </ArticleLayout>
     </>

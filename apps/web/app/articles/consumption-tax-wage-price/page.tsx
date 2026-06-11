@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -191,6 +192,13 @@ export default function ConsumptionTaxWagePricePage() {
           <li>2019年の岸田増税でも、軽減税率にもかかわらず実質賃金は低下</li>
           <li>「社会保障財源」という名目は、実質的には労働者の購買力削減に帰着</li>
           <li>政策の繰り返しから学べることは：所得税や法人税での増税を検討すべき</li>
+        </ul>
+      </Section>
+      <Section heading="関連記事">
+        <ul className="list-disc pl-5 space-y-1">
+          <li><Link href="/articles/consumption-tax" className="underline" style={{ color: "var(--link)" }}>消費税率引き上げの歴史と家計への影響</Link></li>
+          <li><Link href="/articles/real-wages" className="underline" style={{ color: "var(--link)" }}>実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか</Link></li>
+          <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料30年の増加</Link></li>
         </ul>
       </Section>
     </ArticleLayout>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 
@@ -135,6 +136,13 @@ export default function DecliningBirthrateEconomyPage() {
             KeizaiMapでは出生数の年次推移をリアルタイムで確認できる。
             政策の効果が数字に現れるかどうかを、継続的に観察することが重要だ。
           </p>
+        </Section>
+        <Section heading="関連記事">
+          <ul className="list-disc pl-5 space-y-1">
+            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料30年の増加</Link></li>
+            <li><Link href="/articles/national-debt-1000trillion" className="underline" style={{ color: "var(--link)" }}>国債残高1,000兆円超 ─ 日本の財政赤字をデータで理解する</Link></li>
+            <li><Link href="/articles/generation-economic-comparison" className="underline" style={{ color: "var(--link)" }}>氷河期世代 vs Z世代 ─ 経済指標で見る「生まれた時代の不公平」</Link></li>
+          </ul>
         </Section>
       </ArticleLayout>
     </>
