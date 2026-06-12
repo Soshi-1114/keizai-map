@@ -7,6 +7,12 @@ interface Props {
   max: number;
   value: [number, number];
   onChange: (value: [number, number]) => void;
+  /**
+   * 確定時 (pointerup / キー操作後) に呼ばれるコールバック。
+   * URL同期やドラッグ中に走らせたくない副作用に使う。
+   * ドラッグ中も走る onChange と区別。
+   */
+  onCommit?: (value: [number, number]) => void;
   step?: number;
   /** SP判定。親で1回 useIsMobile を呼びprops配布 */
   isMobile: boolean;
@@ -15,7 +21,7 @@ interface Props {
 
 type Handle = "lo" | "hi";
 
-function RangeSliderImpl({ min, max, value, onChange, step = 1, isMobile, ...rest }: Props) {
+function RangeSliderImpl({ min, max, value, onChange, onCommit, step = 1, isMobile, ...rest }: Props) {
   const ariaLabel = rest["aria-label"];
   const [lo, hi] = value;
   const range = max - min;
@@ -75,8 +81,12 @@ function RangeSliderImpl({ min, max, value, onChange, step = 1, isMobile, ...res
   );
 
   const handlePointerUp = useCallback(() => {
-    dragging.current = null;
-  }, []);
+    if (dragging.current) {
+      dragging.current = null;
+      // 確定: ドラッグ終了。URL同期等のため onCommit を発火
+      onCommit?.([lo, hi]);
+    }
+  }, [lo, hi, onCommit]);
 
   /** キーボードでハンドルを操作（←→: ±step、PgUp/Dn: ±10年、Home/End: 端） */
   const makeKeyHandler = (which: Handle) => (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -109,6 +119,11 @@ function RangeSliderImpl({ min, max, value, onChange, step = 1, isMobile, ...res
     }
     e.preventDefault();
     setHandle(which, next);
+    // キー操作は1ストロークで「確定」扱い (連打中も都度commit、debounceは useUrlSync 側に任せる)
+    const after: [number, number] = which === "lo"
+      ? [Math.max(min, Math.min(next, hi - step)), hi]
+      : [lo, Math.min(max, Math.max(next, lo + step))];
+    onCommit?.(after);
   };
 
   const handleStyle = (which: Handle, pct: number): React.CSSProperties => ({

@@ -16,6 +16,7 @@ interface Props {
   yearRange: [number, number];
   activeCategories: EventCategory[];
   onYearRangeChange: (range: [number, number]) => void;
+  onYearRangeCommit?: (range: [number, number]) => void;
   onCategoryToggle: (cat: EventCategory) => void;
   onClose: () => void;
 }
@@ -24,6 +25,7 @@ export function MobileFiltersSheet({
   yearRange,
   activeCategories,
   onYearRangeChange,
+  onYearRangeCommit,
   onCategoryToggle,
   onClose,
 }: Props) {
@@ -148,7 +150,14 @@ export function MobileFiltersSheet({
         {/* 注目の期間 */}
         <div>
           <h2 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>注目の期間</h2>
-          <EraShortcuts yearRange={yearRange} onRangeChange={onYearRangeChange} />
+          <EraShortcuts
+            yearRange={yearRange}
+            onRangeChange={range => {
+              // EraShortcuts は即時確定
+              onYearRangeChange(range);
+              onYearRangeCommit?.(range);
+            }}
+          />
         </div>
 
         {/* 表示期間スライダー */}
@@ -161,6 +170,7 @@ export function MobileFiltersSheet({
             max={DATA_YEARS.MAX}
             value={yearRange}
             onChange={onYearRangeChange}
+            onCommit={onYearRangeCommit}
             step={1}
             isMobile
             aria-label={`表示期間: ${yearRange[0]}年から${yearRange[1]}年まで`}

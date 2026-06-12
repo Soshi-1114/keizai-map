@@ -62,6 +62,13 @@ export function MainView({ initialParams }: MainViewProps) {
   const [yearRange, setYearRange] = useState<[number, number]>(() =>
     parseRange(initialParams?.range ?? null),
   );
+  // ドラッグ中の中間値 (yearRange) と分離した「確定済み」値。
+  // URL同期は committedYearRange を使い、ドラッグ中の URL 書き換え連発を防ぐ。
+  // EraShortcuts や MobileFiltersSheet の閉じる時など、明示的な確定操作で同時更新する
+  // (詳細は FilterSection/MobileFiltersSheet 内の handleEraChange を参照)。
+  const [committedYearRange, setCommittedYearRange] = useState<[number, number]>(() =>
+    parseRange(initialParams?.range ?? null),
+  );
   const [activeIndicators, setActiveIndicators] = useState<IndicatorKey[]>(() =>
     parseIndicators(initialParams?.indicators ?? null, ALL_INDICATOR_KEYS),
   );
@@ -84,7 +91,8 @@ export function MainView({ initialParams }: MainViewProps) {
   }, [activeIndicators, primaryIndicator]);
 
   const { filteredData, narrative } = useFilteredData(yearRange);
-  useUrlSync(activeIndicators, yearRange, activeCategories);
+  // URL同期は確定済みrangeで行う。ドラッグ中の中間値はURLに反映しない。
+  useUrlSync(activeIndicators, committedYearRange, activeCategories);
 
   const toggleIndicator = (key: IndicatorKey) =>
     setActiveIndicators(prev =>
@@ -147,6 +155,7 @@ export function MainView({ initialParams }: MainViewProps) {
             yearRange={yearRange}
             activeCategories={activeCategories}
             onYearRangeChange={setYearRange}
+            onYearRangeCommit={setCommittedYearRange}
             onCategoryToggle={toggleCategory}
             isMobile={isMobile}
           />
@@ -158,6 +167,7 @@ export function MainView({ initialParams }: MainViewProps) {
             yearRange={yearRange}
             activeCategories={activeCategories}
             onYearRangeChange={setYearRange}
+            onYearRangeCommit={setCommittedYearRange}
             onCategoryToggle={toggleCategory}
             onClose={() => setShowFiltersSheet(false)}
           />

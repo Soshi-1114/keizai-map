@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import type { DataPoint, IndicatorKey } from "@/lib/types";
-import { INDICATOR_CONFIGS } from "@/lib/data";
+import { INDICATOR_CONFIGS, INDICATOR_LAST_YEAR } from "@/lib/data";
 
 interface Props {
   data: DataPoint[];
@@ -56,6 +56,8 @@ function InsightCardsImpl({ data, activeIndicators, focusedKey }: Props) {
 
         const unit = unitShortOf(cfg.key);
 
+        const lastDataYear = INDICATOR_LAST_YEAR[cfg.key];
+
         if (sameYear) {
           return (
             <div
@@ -75,6 +77,9 @@ function InsightCardsImpl({ data, activeIndicators, focusedKey }: Props) {
               </div>
               <div className="mt-3 text-tiny" style={{ color: "var(--muted)" }}>
                 {start.year}年 単年値
+              </div>
+              <div className="mt-1 text-tiny tabular-nums" style={{ color: "var(--muted)" }}>
+                データ最終: {lastDataYear}年
               </div>
             </div>
           );
@@ -106,6 +111,9 @@ function InsightCardsImpl({ data, activeIndicators, focusedKey }: Props) {
               </div>
               <div className="text-tiny tabular-nums" style={{ color: "var(--muted)" }}>
                 {startVal.toFixed(1)}{unit} → {endVal.toFixed(1)}{unit}
+              </div>
+              <div className="text-tiny tabular-nums" style={{ color: "var(--muted)" }}>
+                データ最終: {lastDataYear}年
               </div>
             </div>
           </div>
