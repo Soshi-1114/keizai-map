@@ -198,20 +198,11 @@ export function MainView({ initialParams }: MainViewProps) {
           {!isMobile && <ShareButton variant="inline" />}
         </div>
 
-        {/* モード横断ツールバー（ブックマーク・CSV・データ表）— どのビューモードでも操作可 */}
-        <ChartToolbar
-          variant={isMobile ? "mobile" : "pc"}
-          activeIndicators={activeIndicators}
-          activeCategories={activeCategories}
-          yearRange={yearRange}
-          showDataTable={showDataTable}
-          onToggleDataTable={() => setShowDataTable(v => !v)}
-          dataTableContainerId={dataTableContainerId}
-        />
-
         {/* Chart / ComparisonView コンテナ
             SP: 横余白を最小化 + 画面端まで広げる (-mx-2) ことで描画幅 +24px
-            ARIA: role="tabpanel" で ViewModeTabs と紐付け */}
+            ARIA: role="tabpanel" で ViewModeTabs と紐付け
+            タブ切替の結果（グラフ）を1スクロール以内で見せるため、
+            ブックマーク/CSV/データ表 のツールバーはチャートカードの後ろへ移動。 */}
         <div
           id="chart-container"
           className="rounded-xl border p-2 md:p-4 -mx-2 md:mx-0 scroll-mt-4"
@@ -242,6 +233,17 @@ export function MainView({ initialParams }: MainViewProps) {
             />
           )}
         </div>
+
+        {/* モード横断ツールバー（ブックマーク・CSV・データ表）— 二次機能としてチャート後方に配置 */}
+        <ChartToolbar
+          variant={isMobile ? "mobile" : "pc"}
+          activeIndicators={activeIndicators}
+          activeCategories={activeCategories}
+          yearRange={yearRange}
+          showDataTable={showDataTable}
+          onToggleDataTable={() => setShowDataTable(v => !v)}
+          dataTableContainerId={dataTableContainerId}
+        />
 
         {/* データテーブル（モード横断のアクセシビリティ用代替ビュー） */}
         {showDataTable && (
