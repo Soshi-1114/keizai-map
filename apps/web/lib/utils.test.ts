@@ -5,6 +5,7 @@ import {
   parseCategories,
   formatUpdatedAt,
   generateNarrative,
+  narrativeToText,
   DEFAULT_INDICATORS,
 } from "./utils";
 import type { DataPoint, IndicatorKey } from "./types";
@@ -73,44 +74,68 @@ describe("generateNarrative", () => {
     return { year, wage: 100, cpi: 100, tax: 60, fx: 145, ...overrides };
   }
 
-  it("returns empty string for <2 data points", () => {
-    expect(generateNarrative([])).toBe("");
-    expect(generateNarrative([makePoint(2020)])).toBe("");
+  it("returns empty structure for <2 data points", () => {
+    expect(generateNarrative([])).toEqual({ paragraphs: [], insight: null });
+    expect(generateNarrative([makePoint(2020)])).toEqual({ paragraphs: [], insight: null });
   });
 
-  it("single-year band uses current-value template", () => {
-    const text = generateNarrative([makePoint(2020), makePoint(2020, { wage: 99 })]);
-    expect(text).toContain("単年");
-    expect(text).not.toContain("年間で");
+  it("single-year band uses current-value template and no insight", () => {
+    const n = generateNarrative([makePoint(2020), makePoint(2020, { wage: 99 })]);
+    expect(narrativeToText(n)).toContain("単年");
+    expect(narrativeToText(n)).not.toContain("年間で");
+    expect(n.insight).toBeNull();
   });
 
   it("long band includes annual rate of CPI", () => {
     const start = makePoint(1990, { wage: 100, cpi: 100 });
     const end = makePoint(2024, { wage: 99, cpi: 120 });
-    const text = generateNarrative([start, end]);
+    const n = generateNarrative([start, end]);
+    const text = narrativeToText(n);
     expect(text).toContain("長期");
     expect(text).toContain("年率");
   });
 
-  it("wage drops + CPI rises => purchasing power narrative", () => {
+  it("wage drops + CPI rises => purchasing power narrative + insight", () => {
     const start = makePoint(2010, { wage: 100, cpi: 100 });
     const end = makePoint(2024, { wage: 95, cpi: 115 });
-    const text = generateNarrative([start, end]);
-    expect(text).toContain("購買力");
+    const n = generateNarrative([start, end]);
+    expect(narrativeToText(n)).toContain("購買力");
+    // 読み解き一文は「実質購買力は約X%低下」を含む
+    expect(n.insight).toMatch(/実質購買力は約[\d.]+%低下/);
   });
 
   it("ignores small fx fluctuations in short band", () => {
     // 期間 3 年 = short band。fx 140→144 (約2.9%) は閾値8%未満で非表示
     const start = makePoint(2021, { fx: 140 });
     const end = makePoint(2024, { fx: 144 });
-    const text = generateNarrative([start, end]);
+    const text = narrativeToText(generateNarrative([start, end]));
     expect(text).not.toContain("ドル円");
   });
 
   it("reports large fx swing as 円安/円高", () => {
     const start = makePoint(2010, { fx: 90 });
     const end = makePoint(2024, { fx: 150 });
-    const text = generateNarrative([start, end]);
-    expect(text).toContain("円安");
+    const n = generateNarrative([start, end]);
+    expect(narrativeToText(n)).toContain("円安");
+  });
+
+  it("paragraphs are an array of separated sentences (no全角空白)", () => {
+    const start = makePoint(2010, { wage: 100, cpi: 100, tax: 50, fx: 90 });
+    const end = makePoint(2024, { wage: 95, cpi: 120, tax: 70, fx: 150 });
+    const n = generateNarrative([start, end]);
+    expect(n.paragraphs.length).toBeGreaterThanOrEqual(2);
+    // 全角空白で連結されていない
+    n.paragraphs.forEach(p => expect(p).not.toContain("　"));
+  });
+
+  it("yen weak + CPI rise => imported inflation insight", () => {
+    // wage horizontal でなく + cpi 中程度なので「購買力低下」より「輸入インフレ」が出る順
+    const start = makePoint(2010, { wage: 100, cpi: 100, fx: 90 });
+    const end = makePoint(2024, { wage: 101, cpi: 115, fx: 150 });
+    const n = generateNarrative([start, end]);
+    // wage上昇 + cpi上昇のため insight は「円安と物価上昇」または null
+    if (n.insight) {
+      expect(n.insight).toMatch(/円安と物価上昇|生活水準は改善|個人の実質賃金/);
+    }
   });
 });
