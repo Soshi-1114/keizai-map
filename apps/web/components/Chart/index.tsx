@@ -102,9 +102,10 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
 
   const yAxisWidth = isMobile ? 42 : 60;
   const chartHeight = isMobile ? 260 : 360;
+  // PC は 3 レーン分のラベル高さを確保（lane2 dy=-32 ＋ 余白）
   const chartMargin = isMobile
     ? { top: 8, right: 8, left: 0, bottom: 5 }
-    : { top: 36, right: 12, left: 0, bottom: 5 };
+    : { top: 52, right: 12, left: 0, bottom: 5 };
 
   // カスタム Tooltip：指数値 + 元単位値 + 近傍イベント情報を統合表示
   function EventTooltip({ active, payload, label }: {
@@ -180,21 +181,32 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
     );
   }
 
-  // 近接イベントのラベルを2レーンに振り分け（デスクトップのみ）
+  // 近接イベントのラベルを 3 レーンに振り分け（デスクトップのみ）
+  // 各レーンの「最後に使った年」を追跡し、LANE_GAP_YEARS 以上空いている
+  // レーンの中で最若いインデックスを選ぶ greedy 配置。
   const LANE_GAP_YEARS = 3;
+  const TOTAL_LANES = 3;
   const laneMap = new Map<string, number>();
   if (!isMobile) {
     const sorted = [...visibleEvents].sort((a, b) => a.year - b.year);
-    let prevYear = -999;
-    let prevLane = 1;
+    const laneLastYear = new Array<number>(TOTAL_LANES).fill(-Infinity);
     for (const ev of sorted) {
-      const key = `${ev.year}-${ev.label}`;
-      const lane = ev.year - prevYear < LANE_GAP_YEARS ? (prevLane === 0 ? 1 : 0) : 0;
-      laneMap.set(key, lane);
-      prevYear = ev.year;
-      prevLane = lane;
+      let chosen = 0;
+      for (let i = 0; i < TOTAL_LANES; i++) {
+        if (ev.year - laneLastYear[i] >= LANE_GAP_YEARS) {
+          chosen = i;
+          break;
+        }
+        // 全レーンが詰まっているときは最も古いレーンを上書き
+        if (laneLastYear[i] < laneLastYear[chosen]) chosen = i;
+      }
+      laneMap.set(`${ev.year}-${ev.label}`, chosen);
+      laneLastYear[chosen] = ev.year;
     }
   }
+
+  // レーンごとの dy（縦位置オフセット）。上から段階的にずらす。
+  const LANE_DY: Record<number, number> = { 0: -4, 1: -18, 2: -32 };
 
   const chartDescription = activeConfigs.length > 0
     ? `${activeConfigs.map(c => c.label).join(', ')} の ${minYear}年から${maxYear}年までの推移（1990=100指数）`
@@ -259,7 +271,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             strokeOpacity={0.7}
             label={isMobile ? undefined : (() => {
               const lane = laneMap.get(`${ev.year}-${ev.label}`) ?? 0;
-              return { value: ev.label, position: "top", fill: ev.color, fontSize: 9, dy: lane === 0 ? -4 : -18 };
+              return { value: ev.label, position: "top", fill: ev.color, fontSize: 9, dy: LANE_DY[lane] ?? -4 };
             })()}
           />
         ))}
