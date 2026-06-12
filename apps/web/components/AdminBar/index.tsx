@@ -105,14 +105,23 @@ export function AdminBar({ administrations, yearRange }: Props) {
               </span>
             )}
 
-            {/* モバイル：政党名を常に表示 */}
+            {/* モバイル：政権名を優先表示。狭いバンドは頭文字1字でも見える化 */}
             {isMobile && width > 6 && (
               <span
                 className="text-micro font-bold px-0.5 w-full text-center overflow-hidden truncate"
                 style={{ color: admin.color }}
                 aria-hidden
               >
-                {admin.party}
+                {admin.name}
+              </span>
+            )}
+            {isMobile && width <= 6 && width > 2 && (
+              <span
+                className="text-micro font-bold px-0.5 w-full text-center overflow-hidden"
+                style={{ color: admin.color }}
+                aria-hidden
+              >
+                {admin.name.slice(0, 1)}
               </span>
             )}
 

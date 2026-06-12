@@ -163,10 +163,11 @@ export function MainView({ initialParams }: MainViewProps) {
           {!isMobile && <ShareButton variant="inline" />}
         </div>
 
-        {/* Chart / ComparisonView コンテナ */}
+        {/* Chart / ComparisonView コンテナ
+            SP: 横余白を最小化 + 画面端まで広げる (-mx-2) ことで描画幅 +24px */}
         <div
           id="chart-container"
-          className="rounded-xl border p-4 scroll-mt-4"
+          className="rounded-xl border p-2 md:p-4 -mx-2 md:mx-0 scroll-mt-4"
           style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
         >
 
