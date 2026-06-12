@@ -8,6 +8,7 @@ export async function GET() {
       <title><![CDATA[${a.title}]]></title>
       <link>${BASE_URL}/articles/${a.slug}</link>
       <description><![CDATA[${a.description}]]></description>
+      <pubDate>${new Date(a.publishedAt).toUTCString()}</pubDate>
       <guid isPermaLink="true">${BASE_URL}/articles/${a.slug}</guid>
     </item>`
   ).join("\n");

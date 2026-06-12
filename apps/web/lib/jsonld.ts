@@ -1,4 +1,5 @@
 import { BASE_URL } from "@/lib/constants";
+import { ARTICLES } from "@/lib/articles";
 
 export function generateArticleJsonLd({
   title,
@@ -6,17 +7,16 @@ export function generateArticleJsonLd({
   slug,
   readingTime,
   tags,
-  publishedDate = new Date().toISOString(),
 }: {
   title: string;
   description: string;
   slug: string;
   readingTime: number;
   tags?: string[];
-  publishedDate?: string;
 }) {
   const baseUrl = BASE_URL;
   const articleUrl = `${baseUrl}/articles/${slug}`;
+  const meta = ARTICLES.find((a) => a.slug === slug);
 
   return {
     "@context": "https://schema.org",
@@ -25,9 +25,12 @@ export function generateArticleJsonLd({
     description: description,
     url: articleUrl,
     image: `${baseUrl}/og/article?slug=${slug}`,
-    datePublished: publishedDate,
-    dateModified: publishedDate,
+    ...(meta && {
+      datePublished: meta.publishedAt,
+      dateModified: meta.updatedAt,
+    }),
     timeRequired: `PT${readingTime}M`,
+    inLanguage: "ja",
     author: {
       "@type": "Organization",
       name: "KeizaiMap",
@@ -38,13 +41,12 @@ export function generateArticleJsonLd({
       name: "KeizaiMap",
       logo: {
         "@type": "ImageObject",
-        url: `${baseUrl}/og`,
+        url: `${baseUrl}/icon-512`,
       },
     },
-    mainEntity: {
-      "@type": "Article",
-      headline: title,
-      description: description,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": articleUrl,
     },
     ...(tags && tags.length > 0 && { keywords: tags.join(", ") }),
   };
@@ -52,6 +54,7 @@ export function generateArticleJsonLd({
 
 export function generateBreadcrumbJsonLd(slug: string) {
   const baseUrl = BASE_URL;
+  const articleTitle = ARTICLES.find((a) => a.slug === slug)?.title ?? slug;
 
   return {
     "@context": "https://schema.org",
@@ -72,7 +75,7 @@ export function generateBreadcrumbJsonLd(slug: string) {
       {
         "@type": "ListItem",
         position: 3,
-        name: slug,
+        name: articleTitle,
         item: `${baseUrl}/articles/${slug}`,
       },
     ],

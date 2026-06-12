@@ -3,36 +3,37 @@ import { ARTICLES } from "@/lib/articles";
 import { BASE_URL } from "@/lib/constants";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+  // 記事の最新更新日を / と /articles の lastModified に使う
+  const latestUpdate = ARTICLES.reduce(
+    (max, a) => (a.updatedAt > max ? a.updatedAt : max),
+    ARTICLES[0].updatedAt
+  );
 
   const mainRoutes: MetadataRoute.Sitemap = [
     {
       url: BASE_URL,
-      lastModified: now,
+      lastModified: new Date(latestUpdate),
       changeFrequency: "weekly",
       priority: 1,
     },
     {
       url: `${BASE_URL}/articles`,
-      lastModified: now,
+      lastModified: new Date(latestUpdate),
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${BASE_URL}/about`,
-      lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/contact`,
-      lastModified: now,
       changeFrequency: "yearly",
       priority: 0.6,
     },
     {
       url: `${BASE_URL}/privacy`,
-      lastModified: now,
       changeFrequency: "yearly",
       priority: 0.5,
     },
@@ -40,7 +41,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const articleRoutes: MetadataRoute.Sitemap = ARTICLES.map((article) => ({
     url: `${BASE_URL}/articles/${article.slug}`,
-    lastModified: now,
+    lastModified: new Date(article.updatedAt),
     changeFrequency: "monthly" as const,
     priority: 0.8,
   }));

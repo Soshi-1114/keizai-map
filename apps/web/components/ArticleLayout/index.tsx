@@ -11,6 +11,11 @@ interface Props {
   children: React.ReactNode;
 }
 
+function formatDate(iso: string) {
+  const [y, m, d] = iso.split("-");
+  return `${y}年${Number(m)}月${Number(d)}日`;
+}
+
 export function ArticleLayout({ title, description, readingTime, tags, slug, children }: Props) {
   const article = slug ? ARTICLES.find((a) => a.slug === slug) : undefined;
   const ctaHref = article?.presetQuery ? `/${article.presetQuery}` : "/";
@@ -19,6 +24,7 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
         (a) => a.slug !== slug && tags?.some((t) => a.tags.includes(t))
       ).slice(0, 3)
     : [];
+  const meta = slug ? ARTICLES.find((a) => a.slug === slug) : undefined;
   return (
     <main
       id="main"
@@ -64,8 +70,20 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
           <p className="text-sm leading-relaxed mb-4 break-words min-w-0" style={{ color: "var(--muted)", overflowWrap: "anywhere" }}>
             {description}
           </p>
-          <div className="text-xs" style={{ color: "var(--muted)" }}>
-            読了時間 約 {readingTime} 分
+          <div className="text-xs flex flex-wrap gap-x-3 gap-y-1" style={{ color: "var(--muted)" }}>
+            {meta && (
+              <>
+                <span>
+                  公開: <time dateTime={meta.publishedAt}>{formatDate(meta.publishedAt)}</time>
+                </span>
+                {meta.updatedAt !== meta.publishedAt && (
+                  <span>
+                    更新: <time dateTime={meta.updatedAt}>{formatDate(meta.updatedAt)}</time>
+                  </span>
+                )}
+              </>
+            )}
+            <span>読了時間 約 {readingTime} 分</span>
           </div>
         </header>
 
