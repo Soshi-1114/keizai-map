@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: "KeizaiMap — 数字で見る、日本の30年",
   alternates: {
+    canonical: "/",
     types: {
       "application/rss+xml": `${BASE_URL}/feed.xml`,
     },

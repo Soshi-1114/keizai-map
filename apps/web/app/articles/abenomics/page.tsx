@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import Link from "next/link";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
@@ -7,6 +6,7 @@ import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJs
 const SLUG = "abenomics";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/articles/abenomics" },
   title: "アベノミクスとは何か ─ 3本の矢と経済指標の変化 | KeizaiMap",
   description: "2012年末に始まったアベノミクスの「3本の矢」を解説。8年間で税収は43.9兆円から60.8兆円へ増加し、円安も大幅に進んだ。実質賃金への影響はどうだったか。",
   openGraph: {
@@ -26,17 +26,17 @@ export default function AbenomicsPage() {
   const organizationJsonLd = generateOrganizationJsonLd();
   return (
     <>
-      <Script
+      <script
         id="article-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
-      <Script
+      <script
         id="breadcrumb-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <Script
+      <script
         id="org-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

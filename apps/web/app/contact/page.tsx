@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import Script from "next/script";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { generatePageBreadcrumbJsonLd } from "@/lib/jsonld";
 import { BASE_URL } from "@/lib/constants";
@@ -9,6 +8,7 @@ export const metadata: Metadata = {
   title: "お問い合わせ — KeizaiMap",
   description:
     "KeizaiMapへのお問い合わせページ。データの誤り・機能改善のご提案・その他のご連絡はこちらからどうぞ。原則48時間以内に確認・回答します。",
+  alternates: { canonical: "/contact" },
 };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -28,7 +28,7 @@ export default function ContactPage() {
 
   return (
     <>
-      <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
     <main id="main" className="min-h-screen p-6 overflow-x-hidden" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
       <div className="mx-auto space-y-0 min-w-0" style={{ maxWidth: 720 }}>
 

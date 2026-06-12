@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
@@ -7,6 +6,7 @@ import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJs
 const SLUG = "yen-depreciation-real-wages";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/articles/yen-depreciation-real-wages" },
   title: "円安と実質賃金の関係【2012→2024】| KeizaiMap",
   description: "円相場が79.8円から151.8円へ90%下落した12年間、実質賃金はどう変わったのか。円安が輸出企業を潤す一方で、家計の購買力をどう圧迫したかを分析。",
   openGraph: {
@@ -27,17 +27,17 @@ export default function YenDepreciationRealWagesPage() {
 
   return (
     <>
-      <Script
+      <script
         id="article-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
-      <Script
+      <script
         id="breadcrumb-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <Script
+      <script
         id="org-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

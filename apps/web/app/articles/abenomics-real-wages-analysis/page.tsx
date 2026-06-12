@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
@@ -7,6 +6,7 @@ import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJs
 const SLUG = "abenomics-real-wages-analysis";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/articles/abenomics-real-wages-analysis" },
   title: "アベノミクスで実質賃金は上がったのか？ | KeizaiMap",
   description: "2012〜2020年のアベノミクス8年間で実質賃金は0.9%低下。株価は上昇し円安が進む中、なぜ実質賃金だけが下落したのか。消費税増税・非正規雇用増加・物価上昇の影響をデータで検証。",
   openGraph: {
@@ -27,17 +27,17 @@ export default function AbenomicsRealWagesPage() {
 
   return (
     <>
-      <Script
+      <script
         id="article-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
-      <Script
+      <script
         id="breadcrumb-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <Script
+      <script
         id="org-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

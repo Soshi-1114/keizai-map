@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import Script from "next/script";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { generatePageBreadcrumbJsonLd } from "@/lib/jsonld";
 import { BASE_URL } from "@/lib/constants";
@@ -9,6 +8,7 @@ export const metadata: Metadata = {
   title: "プライバシーポリシー — KeizaiMap",
   description:
     "KeizaiMapのプライバシーポリシー。Cookie・アクセス解析（Google Analytics）・広告配信・アフィリエイトリンクに関する取り扱いを説明します。",
+  alternates: { canonical: "/privacy" },
 };
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -29,7 +29,7 @@ export default function PrivacyPage() {
 
   return (
     <>
-      <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
     <main id="main" className="min-h-screen p-6" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
       <div className="mx-auto space-y-0" style={{ maxWidth: 720 }}>
 

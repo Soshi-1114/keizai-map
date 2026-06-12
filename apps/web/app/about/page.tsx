@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import Script from "next/script";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { generatePageBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
 import { BASE_URL } from "@/lib/constants";
@@ -9,6 +8,7 @@ export const metadata: Metadata = {
   title: "KeizaiMapについて — データソース・サービス概要",
   description:
     "KeizaiMapのサービス概要・データ出典・政治的中立性に関する宣言。賃金・物価・税収・為替データの出典と取得方法を掲載。",
+  alternates: { canonical: "/about" },
 };
 
 type AutoStatus = "auto" | "manual";
@@ -50,8 +50,8 @@ export default function AboutPage() {
 
   return (
     <>
-      <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-      <Script id="organization-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
     <main id="main" className="min-h-screen p-6 overflow-x-hidden" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
       <div className="mx-auto space-y-0 min-w-0" style={{ maxWidth: 720 }}>
 
