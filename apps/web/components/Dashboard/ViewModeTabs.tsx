@@ -40,10 +40,11 @@ export function ViewModeTabs({ viewMode, onChange, isMobile }: Props) {
             aria-label={`${label} — ${description}`}
             title={description}
             onClick={() => onChange(key)}
-            className={`py-1.5 rounded-md transition-all text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${
-              isMobile ? "flex-1" : "px-3"
+            className={`rounded-md transition-all text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${
+              isMobile ? "flex-1" : "px-3 py-1.5"
             }`}
             style={{
+              minHeight: isMobile ? 44 : undefined,
               backgroundColor: active ? "var(--card)" : "transparent",
               color: active ? "var(--text)" : "var(--muted)",
               fontWeight: active ? 600 : 400,

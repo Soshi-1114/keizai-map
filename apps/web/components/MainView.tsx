@@ -113,34 +113,28 @@ export function MainView({ initialParams }: MainViewProps) {
           onSetAll={setActiveIndicators}
         />
 
-        {/* フィルターボタン（モバイル） */}
+        {/* フィルターボタン（モバイル）— 上下2段組で主アクションを明示 */}
         {isMobile && (
           <button
             onClick={() => setShowFiltersSheet(true)}
-            className="w-full flex items-center justify-between px-4 rounded-xl border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             style={{
-              minHeight: 48,
+              minHeight: 56,
               borderColor: "var(--border)",
               backgroundColor: "var(--card)",
             }}
             aria-haspopup="dialog"
             aria-expanded={showFiltersSheet}
           >
-            <div className="flex items-center gap-2">
-              <span style={{ fontSize: 16 }} aria-hidden>⚙️</span>
-              <span className="text-sm font-medium" style={{ color: "var(--text)" }}>
+            <span className="flex flex-col items-start">
+              <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>
                 フィルター
               </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span
-                className="text-xs px-2 py-0.5 rounded-full"
-                style={{ backgroundColor: "var(--bg)", color: "var(--muted)" }}
-              >
-                {yearRange[0]}–{yearRange[1]}年
+              <span className="text-xs tabular-nums" style={{ color: "var(--muted)" }}>
+                表示期間: {yearRange[0]}–{yearRange[1]}年
               </span>
-              <span style={{ color: "var(--muted)", fontSize: 16 }} aria-hidden>›</span>
-            </div>
+            </span>
+            <span style={{ color: "var(--muted)", fontSize: 18 }} aria-hidden>›</span>
           </button>
         )}
 
@@ -165,14 +159,15 @@ export function MainView({ initialParams }: MainViewProps) {
           />
         )}
 
-        {/* ビューモードを上位レベルに昇格 + 現在モードの説明 */}
-        <div className={`flex items-center gap-2 ${isMobile ? "flex-col" : ""}`}>
+        {/* ビューモードを上位レベルに昇格 + 現在モードの説明（SP/PC両方で表示） */}
+        <div className={`flex items-center gap-2 ${isMobile ? "flex-col items-stretch" : ""}`}>
           <ViewModeTabs viewMode={viewMode} onChange={setViewMode} isMobile={isMobile} />
-          {!isMobile && (
-            <p className="text-xs" style={{ color: "var(--muted)" }}>
-              {VIEW_MODE_DESCRIPTIONS[viewMode]}
-            </p>
-          )}
+          <p
+            className={`text-xs ${isMobile ? "text-center" : ""}`}
+            style={{ color: "var(--muted)" }}
+          >
+            {VIEW_MODE_DESCRIPTIONS[viewMode]}
+          </p>
           {!isMobile && <div className="flex-1" />}
           {!isMobile && <ShareButton variant="inline" />}
         </div>

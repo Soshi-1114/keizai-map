@@ -113,8 +113,8 @@ function IndicatorChipSelector({
               aria-disabled={disabled}
               className="rounded-full text-xs transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
               style={{
-                minHeight: 36,
-                padding: "0 10px",
+                minHeight: 44,
+                padding: "0 12px",
                 border: `1px solid ${active && !disabled ? cfg.color : "var(--border)"}`,
                 color: disabled
                   ? "var(--muted)"

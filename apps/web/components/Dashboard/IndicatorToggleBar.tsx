@@ -85,8 +85,8 @@ export function IndicatorToggleBar({ activeIndicators, onToggle, onSetAll, varia
         aria-pressed={active}
         className="rounded-full text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         style={{
-          minHeight: 36,
-          padding: "0 10px",
+          minHeight: 44,
+          padding: "0 12px",
           border: `1px solid ${active ? cfg.color : "var(--border)"}`,
           color: active ? cfg.darkColor : "var(--muted)",
           backgroundColor: active ? cfg.color + "15" : "transparent",
@@ -122,7 +122,7 @@ export function IndicatorToggleBar({ activeIndicators, onToggle, onSetAll, varia
         <summary
           className="text-xs cursor-pointer inline-flex items-center gap-1 rounded-full px-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           style={{
-            minHeight: 32,
+            minHeight: 44,
             color: "var(--muted)",
             border: "1px dashed var(--border)",
             listStyle: "none",
