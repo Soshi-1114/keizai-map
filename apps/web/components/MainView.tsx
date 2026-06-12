@@ -223,25 +223,45 @@ export function MainView({ initialParams }: MainViewProps) {
           </div>
         )}
 
+        {/* 自動解説（チャート直下に昇格）— 段落ごとに <p>、insight は強調枠 */}
+        {narrative.paragraphs.length > 0 && (
+          <div
+            className="rounded-xl border px-5 py-4 space-y-2"
+            style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+            aria-labelledby="narrative-heading"
+          >
+            <p
+              id="narrative-heading"
+              className="text-xs font-medium"
+              style={{ color: "var(--link)" }}
+            >
+              この期間のポイント
+            </p>
+            {narrative.paragraphs.map((p, i) => (
+              <p
+                key={i}
+                className="text-sm leading-relaxed"
+                style={{ color: "var(--text)" }}
+              >
+                {p}
+              </p>
+            ))}
+            {narrative.insight && (
+              <p
+                className="text-sm leading-relaxed font-semibold mt-3 pl-3 border-l-2"
+                style={{ color: "var(--link)", borderColor: "var(--link)" }}
+              >
+                {narrative.insight}
+              </p>
+            )}
+          </div>
+        )}
+
         <InsightCards
           data={filteredData}
           yearRange={yearRange}
           activeIndicators={activeIndicators}
         />
-
-        {narrative && (
-          <div
-            className="rounded-xl border px-5 py-4"
-            style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
-          >
-            <p className="text-xs font-medium mb-1.5" style={{ color: "var(--link)" }}>
-              この期間のポイント
-            </p>
-            <p className="text-sm leading-relaxed" style={{ color: "var(--text)" }}>
-              {narrative}
-            </p>
-          </div>
-        )}
 
         <RelatedArticles activeIndicators={activeIndicators} yearRange={yearRange} />
 

@@ -3,13 +3,13 @@
 import { useEffect, useMemo, useRef } from "react";
 import type { DataPoint, EventCategory, IndicatorKey } from "./types";
 import { RAW_DATA } from "./data";
-import { generateNarrative } from "./utils";
+import { generateNarrative, type Narrative } from "./utils";
 import { addRecent } from "./bookmarks";
 
 /** 年度範囲でフィルタしたデータと自動解説を返す */
 export function useFilteredData(yearRange: [number, number]): {
   filteredData: DataPoint[];
-  narrative: string;
+  narrative: Narrative;
 } {
   const [start, end] = yearRange;
   const filteredData = useMemo(
