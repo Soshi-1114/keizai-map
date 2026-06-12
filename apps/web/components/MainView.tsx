@@ -59,23 +59,35 @@ export function MainView({ initialParams }: MainViewProps) {
   const filteredData = RAW_DATA.filter(d => d.year >= yearRange[0] && d.year <= yearRange[1]);
   const narrative = generateNarrative(filteredData);
 
-  // URL 同期（操作中ずっと走るが、history は replaceState なので軽量）
+  // URL 同期: 短いデバウンス(300ms)で軽量に書き換え
+  // 履歴登録 (addRecent) は操作完了後の長めの静止 (1500ms) のみ実行し、
+  // スライダー連続操作で履歴 5 枠が潰れないようにする
   const urlTimer = useRef<ReturnType<typeof setTimeout>>();
+  const recentTimer = useRef<ReturnType<typeof setTimeout>>();
   useEffect(() => {
+    const indicatorsStr = activeIndicators.join(",");
+    const rangeStr = yearRange.join(",");
+    const eventsStr = activeCategories.join(",");
+    const params = new URLSearchParams({
+      indicators: indicatorsStr,
+      range: rangeStr,
+      events: eventsStr,
+    });
+
     clearTimeout(urlTimer.current);
     urlTimer.current = setTimeout(() => {
-      const indicatorsStr = activeIndicators.join(",");
-      const rangeStr = yearRange.join(",");
-      const eventsStr = activeCategories.join(",");
-      const params = new URLSearchParams({
-        indicators: indicatorsStr,
-        range: rangeStr,
-        events: eventsStr,
-      });
       window.history.replaceState(null, "", `/?${params.toString()}`);
-      addRecent(indicatorsStr, rangeStr, eventsStr);
     }, 300);
-    return () => clearTimeout(urlTimer.current);
+
+    clearTimeout(recentTimer.current);
+    recentTimer.current = setTimeout(() => {
+      addRecent(indicatorsStr, rangeStr, eventsStr);
+    }, 1500);
+
+    return () => {
+      clearTimeout(urlTimer.current);
+      clearTimeout(recentTimer.current);
+    };
   }, [activeIndicators, yearRange, activeCategories]);
 
   const toggleIndicator = (key: IndicatorKey) =>
