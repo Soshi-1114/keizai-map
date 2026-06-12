@@ -9,6 +9,7 @@ import {
   getRecent,
   isBookmarked,
   toQueryString,
+  describeStorageError,
   type SavedView,
 } from "@/lib/bookmarks";
 
@@ -25,6 +26,14 @@ export function BookmarkPanel({ indicators, range, events }: Props) {
   const [bookmarks, setBookmarks] = useState<SavedView[]>([]);
   const [recent, setRecent] = useState<SavedView[]>([]);
   const [bookmarked, setBookmarked] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // エラーは 5 秒で自動消去
+  useEffect(() => {
+    if (!errorMsg) return;
+    const t = setTimeout(() => setErrorMsg(null), 5000);
+    return () => clearTimeout(t);
+  }, [errorMsg]);
 
   const nameInputRef = useRef<HTMLInputElement>(null);
 
@@ -58,7 +67,11 @@ export function BookmarkPanel({ indicators, range, events }: Props) {
   const handleToggleBookmark = () => {
     if (bookmarked) {
       const id = `${indicators}|${range}|${events}`;
-      removeBookmark(id);
+      const result = removeBookmark(id);
+      if (!result.ok) {
+        setErrorMsg(describeStorageError(result.reason));
+        return;
+      }
       setBookmarks(getBookmarks());
       setBookmarked(false);
     } else {
@@ -68,14 +81,23 @@ export function BookmarkPanel({ indicators, range, events }: Props) {
   };
 
   const confirmBookmark = () => {
-    addBookmark({ indicators, range, events, title: nameDraft.trim() || undefined });
+    const result = addBookmark({ indicators, range, events, title: nameDraft.trim() || undefined });
+    if (!result.ok) {
+      setErrorMsg(describeStorageError(result.reason));
+      setNameDialogOpen(false);
+      return;
+    }
     setBookmarks(getBookmarks());
     setBookmarked(true);
     setNameDialogOpen(false);
   };
 
   const handleRemove = (id: string) => {
-    removeBookmark(id);
+    const result = removeBookmark(id);
+    if (!result.ok) {
+      setErrorMsg(describeStorageError(result.reason));
+      return;
+    }
     setBookmarks(getBookmarks());
   };
 
@@ -103,6 +125,31 @@ export function BookmarkPanel({ indicators, range, events }: Props) {
       >
         📚 履歴
       </button>
+
+      {/* エラートースト（5秒自動消去） */}
+      {errorMsg && (
+        <div
+          role="alert"
+          aria-live="assertive"
+          className="fixed left-1/2 -translate-x-1/2 z-[80] px-4 py-3 rounded-lg shadow-lg max-w-md text-sm"
+          style={{
+            bottom: 20,
+            backgroundColor: "#7f1d1d",
+            color: "#fff",
+            border: "1px solid #b91c1c",
+          }}
+        >
+          ⚠️ {errorMsg}
+          <button
+            onClick={() => setErrorMsg(null)}
+            aria-label="エラーメッセージを閉じる"
+            className="ml-3 underline"
+            style={{ color: "#fecaca" }}
+          >
+            閉じる
+          </button>
+        </div>
+      )}
 
       {/* 名前入力ダイアログ（window.prompt の代替） */}
       {nameDialogOpen && (
