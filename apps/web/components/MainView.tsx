@@ -1,11 +1,15 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
 import { useIsMobile } from "@/lib/hooks";
-import { RAW_DATA, INDICATOR_CONFIGS } from "@/lib/data";
-import { generateNarrative, parseRange, parseIndicators, parseCategories } from "@/lib/utils";
-import { addRecent } from "@/lib/bookmarks";
+import { INDICATOR_CONFIGS } from "@/lib/data";
+import { parseRange, parseIndicators, parseCategories } from "@/lib/utils";
+import {
+  useFilteredData,
+  useEffectiveIndicators,
+  useUrlSync,
+} from "@/lib/dashboard-hooks";
 import { InsightCards } from "./InsightCards";
 import { ComparisonView } from "./ComparisonView";
 import { MobileIndicatorNav } from "./MobileIndicatorNav";
@@ -46,49 +50,9 @@ export function MainView({ initialParams }: MainViewProps) {
     parseCategories(initialParams?.events ?? null),
   );
 
-  // モバイルでも activeIndicators を尊重。0 件のみフォールバック
-  const mobileFallback = INDICATOR_CONFIGS[mobileIndicatorIndex]?.key;
-  const effectiveIndicators = isMobile
-    ? activeIndicators.length > 0
-      ? activeIndicators
-      : mobileFallback
-        ? [mobileFallback]
-        : []
-    : activeIndicators;
-
-  const filteredData = RAW_DATA.filter(d => d.year >= yearRange[0] && d.year <= yearRange[1]);
-  const narrative = generateNarrative(filteredData);
-
-  // URL 同期: 短いデバウンス(300ms)で軽量に書き換え
-  // 履歴登録 (addRecent) は操作完了後の長めの静止 (1500ms) のみ実行し、
-  // スライダー連続操作で履歴 5 枠が潰れないようにする
-  const urlTimer = useRef<ReturnType<typeof setTimeout>>();
-  const recentTimer = useRef<ReturnType<typeof setTimeout>>();
-  useEffect(() => {
-    const indicatorsStr = activeIndicators.join(",");
-    const rangeStr = yearRange.join(",");
-    const eventsStr = activeCategories.join(",");
-    const params = new URLSearchParams({
-      indicators: indicatorsStr,
-      range: rangeStr,
-      events: eventsStr,
-    });
-
-    clearTimeout(urlTimer.current);
-    urlTimer.current = setTimeout(() => {
-      window.history.replaceState(null, "", `/?${params.toString()}`);
-    }, 300);
-
-    clearTimeout(recentTimer.current);
-    recentTimer.current = setTimeout(() => {
-      addRecent(indicatorsStr, rangeStr, eventsStr);
-    }, 1500);
-
-    return () => {
-      clearTimeout(urlTimer.current);
-      clearTimeout(recentTimer.current);
-    };
-  }, [activeIndicators, yearRange, activeCategories]);
+  const effectiveIndicators = useEffectiveIndicators(isMobile, activeIndicators, mobileIndicatorIndex);
+  const { filteredData, narrative } = useFilteredData(yearRange);
+  useUrlSync(activeIndicators, yearRange, activeCategories);
 
   const toggleIndicator = (key: IndicatorKey) =>
     setActiveIndicators(prev =>
