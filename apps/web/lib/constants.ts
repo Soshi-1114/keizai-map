@@ -21,5 +21,5 @@ export const CHART = {
 /** データ年範囲 */
 export const DATA_YEARS = {
   MIN: 1990,
-  MAX: 2024,
+  MAX: 2025,
 } as const;

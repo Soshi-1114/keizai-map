@@ -1,5 +1,5 @@
 /**
- * KeizaiMap データ取得スクリプト（年次・1990-2024）
+ * KeizaiMap データ取得スクリプト（年次・1990-2025）
  *
  * 実行: pnpm fetch (packages/data) または pnpm data:fetch (リポジトリルート)
  *
@@ -22,7 +22,7 @@ import * as fallback from "./fetchers/fallback";
 import { round1 } from "./fetchers/utils";
 
 const TARGET_YEARS: number[] = [];
-for (let y = 1990; y <= 2024; y++) TARGET_YEARS.push(y);
+for (let y = 1990; y <= 2025; y++) TARGET_YEARS.push(y);
 
 interface DataPoint {
   year: number;
@@ -63,7 +63,7 @@ async function safeFetch<T>(fn: () => Promise<Map<number, number>>, label: strin
 }
 
 async function main() {
-  console.log("📊 KeizaiMap データ取得（年次・1990-2024）\n");
+  console.log("📊 KeizaiMap データ取得（年次・1990-2025）\n");
 
   // 並列フェッチ（失敗しても fallback に切り替わる）
   const [cpiMap, birthsMap, fxMap, taxMap, debtMap] = await Promise.all([
