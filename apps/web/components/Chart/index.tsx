@@ -33,8 +33,9 @@ interface Props {
   yAxisMode?: "auto" | "fixed";
 }
 
-const TICK_STYLE = { fill: "var(--muted)", fontSize: 11 };
-const TICK_STYLE_SM = { fill: "var(--muted)", fontSize: 10 };
+// 軸の目盛フォント。可読性のため PC 12px / SP 11px に統一（旧: 11 / 10）
+const TICK_STYLE = { fill: "var(--muted)", fontSize: 12 };
+const TICK_STYLE_SM = { fill: "var(--muted)", fontSize: 11 };
 
 // 色覚多様性対応：線種で各指標を差別化
 const STROKE_DASH: Record<IndicatorKey, string | undefined> = {
@@ -307,7 +308,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
           tickLine={false}
           domain={yDomain}
           tickFormatter={(v) => `${v}`}
-          label={isMobile ? undefined : { value: "指数（1990=100）", angle: -90, position: "insideLeft", fill: "var(--muted)", fontSize: 10, dx: -2 }}
+          label={isMobile ? undefined : { value: "指数（1990=100）", angle: -90, position: "insideLeft", fill: "var(--muted)", fontSize: 12, dx: -2 }}
         />
 
         <Tooltip content={<EventTooltip />} />
@@ -327,7 +328,9 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             strokeOpacity={0.7}
             label={isMobile ? undefined : (() => {
               const lane = laneMap.get(`${ev.year}-${ev.label}`) ?? 0;
-              return { value: ev.label, position: "top", fill: ev.color, fontSize: 9, dy: LANE_DY[lane] ?? -4 };
+              // フォント 9→11、フォントウェイトは Recharts <text> 経由なので
+              // SVG style として直接指定
+              return { value: ev.label, position: "top", fill: ev.color, fontSize: 11, fontWeight: 600, dy: LANE_DY[lane] ?? -4 };
             })()}
           />
         ))}
