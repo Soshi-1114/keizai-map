@@ -347,6 +347,8 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
           />
         ))}
 
+        {/* G7 比較線。元データは隔年（偶数年のみ）のため connectNulls=true で
+            欠けた年を補間して連続線として描画する */}
         {showComparison && activeIndicators.includes("wage") && (
           <Line
             type="monotone"
@@ -357,6 +359,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             strokeDasharray="3 3"
             strokeOpacity={0.5}
             dot={false}
+            connectNulls
           />
         )}
         {showComparison && activeIndicators.includes("cpi") && (
@@ -369,6 +372,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             strokeDasharray="3 3"
             strokeOpacity={0.5}
             dot={false}
+            connectNulls
           />
         )}
         {showComparison && activeIndicators.includes("fx") && (
@@ -381,6 +385,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             strokeDasharray="3 3"
             strokeOpacity={0.5}
             dot={false}
+            connectNulls
           />
         )}
       </ComposedChart>

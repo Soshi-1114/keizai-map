@@ -67,9 +67,9 @@ export function ChartPanel({
           events={activeCategories.join(",")}
         />
 
-        {/* Y 軸レンジモードトグル */}
+        {/* Y 軸レンジモードトグル（SP では差が出にくいので非表示） */}
         <div
-          className="ml-auto flex gap-0.5 rounded-full p-0.5 border"
+          className="ml-auto hidden md:flex gap-0.5 rounded-full p-0.5 border"
           style={{ borderColor: "var(--border)", backgroundColor: "var(--bg)" }}
           role="group"
           aria-label="Y軸レンジモード"
@@ -121,13 +121,13 @@ export function ChartPanel({
       <div className={isMobile ? "pl-[42px] pr-[8px]" : "pl-[60px] pr-[12px]"}>
         <AdminBar administrations={ADMINISTRATIONS} yearRange={yearRange} />
 
-        {/* CSV / データ表 ボタン — モバイルでは縦並び・全幅、PC では右寄せ */}
-        <div className="mt-6 flex flex-col md:flex-row md:flex-wrap gap-2 md:justify-end">
+        {/* CSV / データ表 ボタン — SP/PC ともに横並び */}
+        <div className="mt-6 flex flex-row flex-wrap gap-2 md:justify-end">
           <button
             type="button"
             onClick={handleExportCSV}
             aria-label={`${yearRange[0]}年から${yearRange[1]}年の選択指標を CSV でダウンロード`}
-            className="px-3 py-3 md:py-2 md:px-4 rounded-md border text-sm font-medium transition-colors hover:bg-[var(--bg)] hover:border-[var(--link)] hover:text-[var(--link)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="flex-1 md:flex-initial px-3 py-3 md:py-2 md:px-4 rounded-md border text-sm font-medium transition-colors hover:bg-[var(--bg)] hover:border-[var(--link)] hover:text-[var(--link)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             style={{
               borderColor: "var(--border)",
               backgroundColor: "var(--card)",
@@ -142,7 +142,7 @@ export function ChartPanel({
             onClick={() => setShowDataTable(!showDataTable)}
             aria-expanded={showDataTable}
             aria-controls={dataTableId}
-            className="px-3 py-3 md:py-2 md:px-4 rounded-md border text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="flex-1 md:flex-initial px-3 py-3 md:py-2 md:px-4 rounded-md border text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             style={{
               borderColor: showDataTable ? "var(--link)" : "var(--border)",
               backgroundColor: showDataTable ? "var(--link)" : "var(--card)",
