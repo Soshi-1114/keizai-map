@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
 import { useIsMobile } from "@/lib/hooks";
 import { INDICATOR_CONFIGS } from "@/lib/data";
@@ -11,7 +12,6 @@ import {
   useUrlSync,
 } from "@/lib/dashboard-hooks";
 import { InsightCards } from "./InsightCards";
-import { ComparisonView } from "./ComparisonView";
 import { MobileIndicatorNav } from "./MobileIndicatorNav";
 import { MobileFiltersSheet } from "./MobileFiltersSheet";
 import { DashboardHeader } from "./Dashboard/DashboardHeader";
@@ -19,11 +19,18 @@ import { IndicatorToggleBar } from "./Dashboard/IndicatorToggleBar";
 import { HeroStatsBar } from "./Dashboard/HeroStatsBar";
 import { FilterSection } from "./Dashboard/FilterSection";
 import { ViewModeTabs, VIEW_MODES, type ViewMode } from "./Dashboard/ViewModeTabs";
-import { ChartPanel } from "./Dashboard/ChartPanel";
 import { ShareButton } from "./Dashboard/ShareButton";
 import { DashboardFooter } from "./Dashboard/DashboardFooter";
 import { RelatedArticles } from "./Dashboard/RelatedArticles";
 import { AboutAndFAQ } from "./Dashboard/AboutAndFAQ";
+
+// recharts を含む重いコンポーネントを分割。SSR で HTML を返したうえで JS チャンクを並列ロード
+const ChartPanel = dynamic(() => import("./Dashboard/ChartPanel").then(m => ({ default: m.ChartPanel })), {
+  loading: () => <div style={{ minHeight: 360 }} aria-label="グラフ読み込み中" />,
+});
+const ComparisonView = dynamic(() => import("./ComparisonView").then(m => ({ default: m.ComparisonView })), {
+  loading: () => <div style={{ minHeight: 360 }} aria-label="比較ビュー読み込み中" />,
+});
 
 const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key) as IndicatorKey[];
 
