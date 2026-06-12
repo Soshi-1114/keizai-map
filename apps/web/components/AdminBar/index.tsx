@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { memo, useState } from "react";
 import type { Administration } from "@/lib/types";
-import { useIsMobile } from "@/lib/hooks";
 
 interface Props {
   administrations: Administration[];
   yearRange: [number, number];
+  /** SP判定。親で1回 useIsMobile を呼びprops配布 */
+  isMobile: boolean;
 }
 
-export function AdminBar({ administrations, yearRange }: Props) {
-  const isMobile = useIsMobile();
+function AdminBarImpl({ administrations, yearRange, isMobile }: Props) {
   // ホバー（マウス）またはフォーカス（キーボード）でツールチップを表示
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const [start, end] = yearRange;
@@ -147,3 +147,6 @@ export function AdminBar({ administrations, yearRange }: Props) {
     </div>
   );
 }
+
+export const AdminBar = memo(AdminBarImpl);
+

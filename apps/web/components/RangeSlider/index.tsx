@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useState } from "react";
-import { useIsMobile } from "@/lib/hooks";
+import { memo, useRef, useCallback, useState } from "react";
 
 interface Props {
   min: number;
@@ -9,14 +8,15 @@ interface Props {
   value: [number, number];
   onChange: (value: [number, number]) => void;
   step?: number;
+  /** SP判定。親で1回 useIsMobile を呼びprops配布 */
+  isMobile: boolean;
   "aria-label"?: string;
 }
 
 type Handle = "lo" | "hi";
 
-export function RangeSlider({ min, max, value, onChange, step = 1, ...rest }: Props) {
+function RangeSliderImpl({ min, max, value, onChange, step = 1, isMobile, ...rest }: Props) {
   const ariaLabel = rest["aria-label"];
-  const isMobile = useIsMobile();
   const [lo, hi] = value;
   const range = max - min;
   const loPct = ((lo - min) / range) * 100;
@@ -196,3 +196,6 @@ export function RangeSlider({ min, max, value, onChange, step = 1, ...rest }: Pr
     </div>
   );
 }
+
+export const RangeSlider = memo(RangeSliderImpl);
+

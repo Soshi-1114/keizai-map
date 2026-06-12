@@ -162,6 +162,7 @@ export function MobileFiltersSheet({
             value={yearRange}
             onChange={onYearRangeChange}
             step={1}
+            isMobile
             aria-label={`表示期間: ${yearRange[0]}年から${yearRange[1]}年まで`}
           />
         </section>

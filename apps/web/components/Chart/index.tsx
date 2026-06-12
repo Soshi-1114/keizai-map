@@ -13,10 +13,9 @@ import {
   ReferenceLine,
   ReferenceArea,
 } from "recharts";
-import { MapPin } from "lucide-react";
 import type { DataPoint, EconomicEvent, IndicatorKey, Administration } from "@/lib/types";
 import { INDICATOR_CONFIGS, BASELINE_1990 } from "@/lib/data";
-import { useIsMobile } from "@/lib/hooks";
+import { EventTooltip } from "./EventTooltip";
 
 interface Props {
   data: DataPoint[];
@@ -26,6 +25,8 @@ interface Props {
   activeCategories: string[];
   showComparison?: boolean;
   isSingleIndicator?: boolean;
+  /** SP判定。MainView で1回 useIsMobile を呼びprops配布 */
+  isMobile: boolean;
   /**
    * Y軸レンジモード:
    * - "auto": 表示中指標の min/max にフィットして変化を強調（デフォルト）
@@ -92,8 +93,7 @@ function normalizeData(data: DataPoint[]): Array<Record<string, number | null>> 
   });
 }
 
-export function Chart({ data, events, administrations, activeIndicators, activeCategories, showComparison, isSingleIndicator, yAxisMode = "auto" }: Props) {
-  const isMobile = useIsMobile();
+export function Chart({ data, events, administrations, activeIndicators, activeCategories, showComparison, isSingleIndicator, isMobile, yAxisMode = "auto" }: Props) {
   const visibleEvents = useMemo(
     () => events.filter(e => activeCategories.includes(e.category)),
     [events, activeCategories],
@@ -175,83 +175,12 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
     ? { top: 8, right: 8, left: 0, bottom: 5 }
     : { top: 52, right: 12, left: 0, bottom: 5 };
 
-  // カスタム Tooltip：指数値 + 元単位値 + 近傍イベント情報を統合表示
-  function EventTooltip({ active, payload, label }: {
-    active?: boolean;
-    payload?: Array<{ name: string; value: number; color: string; dataKey: string; payload: Record<string, number | null> }>;
-    label?: number;
-  }) {
-    if (!active || !payload?.length || label == null) return null;
-
-    const nearEvents = visibleEvents
-      .filter(e => Math.abs(e.year - label) <= 1)
-      .sort((a, b) => Math.abs(a.year - label) - Math.abs(b.year - label));
-
-    const dataItems = payload.filter(p => p.value != null && !String(p.dataKey).startsWith("g7"));
-
-    return (
-      <div style={{
-        backgroundColor: "var(--card)",
-        border: "1px solid var(--border)",
-        borderRadius: 8,
-        padding: "8px 12px",
-        fontSize: 12,
-        maxWidth: 260,
-        boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
-      }}>
-        <div style={{ color: "var(--text)", fontWeight: "bold", marginBottom: nearEvents.length ? 6 : 4 }}>
-          {label}年
-        </div>
-
-        {nearEvents.length > 0 && (
-          <div style={{
-            marginBottom: 6,
-            paddingBottom: 6,
-            borderBottom: "1px solid var(--border)",
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-          }}>
-            {nearEvents.map(ev => (
-              <div
-                key={`${ev.year}-${ev.label}`}
-                style={{ color: ev.color, fontWeight: 600, fontSize: 11, display: "flex", alignItems: "center", gap: 4 }}
-              >
-                <MapPin size={11} aria-hidden />
-                {ev.year !== label ? `${ev.year}年 ` : ""}{ev.label}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {dataItems.map(entry => {
-          const key = String(entry.dataKey) as IndicatorKey;
-          const cfg = INDICATOR_CONFIGS.find(c => c.key === key);
-          const rawVal = entry.payload[`${key}_raw`];
-          const rawDisplay = typeof rawVal === "number" ? formatRawValue(key, rawVal) : null;
-          return (
-            <div key={String(entry.dataKey)} style={{
-              display: "flex",
-              justifyContent: "space-between",
-              gap: 16,
-              color: entry.color,
-              lineHeight: "1.6",
-            }}>
-              <span>{cfg?.label ?? entry.name}</span>
-              <span style={{ fontVariantNumeric: "tabular-nums", fontWeight: 600 }}>
-                {entry.value.toFixed(1)}
-                {rawDisplay && (
-                  <span style={{ color: "var(--muted)", fontWeight: 400, marginLeft: 4 }}>
-                    （{rawDisplay}）
-                  </span>
-                )}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
+  // Tooltip は ./EventTooltip に分離（毎レンダの関数参照変化を防止）
+  // recharts <Tooltip content={...} /> には JSX ノードを渡し、visibleEvents を closure 経由で注入
+  const tooltipContent = useMemo(
+    () => <EventTooltip visibleEvents={visibleEvents} />,
+    [visibleEvents],
+  );
 
   // 近接イベントのラベルを 3 レーンに振り分け（デスクトップのみ）
   const LANE_GAP_YEARS = 3;
@@ -347,7 +276,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
           label={isMobile ? undefined : { value: "指数（1990=100）", angle: -90, position: "insideLeft", fill: "var(--muted)", fontSize: 12, dx: -2 }}
         />
 
-        <Tooltip content={<EventTooltip />} />
+        <Tooltip content={tooltipContent} />
 
         <Legend
           wrapperStyle={{ paddingTop: 8 }}

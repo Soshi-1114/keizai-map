@@ -13,6 +13,8 @@ interface Props {
   activeCategories: EventCategory[];
   onYearRangeChange: (range: [number, number]) => void;
   onCategoryToggle: (cat: EventCategory) => void;
+  /** RangeSlider に伝搬する SP判定（親で1回 useIsMobile） */
+  isMobile: boolean;
 }
 
 export function FilterSection({
@@ -20,6 +22,7 @@ export function FilterSection({
   activeCategories,
   onYearRangeChange,
   onCategoryToggle,
+  isMobile,
 }: Props) {
   return (
     <div
@@ -43,6 +46,7 @@ export function FilterSection({
           value={yearRange}
           onChange={onYearRangeChange}
           step={1}
+          isMobile={isMobile}
           aria-label={`表示期間: ${yearRange[0]}年から${yearRange[1]}年まで`}
         />
       </section>
