@@ -204,7 +204,12 @@ export function MainView({ initialParams }: MainViewProps) {
               yearRange={yearRange}
             />
           ) : (
-            <ComparisonView mode={viewMode} activeIndicators={activeIndicators} />
+            <ComparisonView
+              mode={viewMode}
+              activeIndicators={activeIndicators}
+              yearRange={yearRange}
+              activeCategories={activeCategories}
+            />
           )}
         </div>
 
