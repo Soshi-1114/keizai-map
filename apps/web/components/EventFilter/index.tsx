@@ -8,10 +8,11 @@ interface Props {
   onToggle: (category: EventCategory) => void;
 }
 
+// EVENTS の参照線色と一致させ、薄背景上の WCAG AA を満たす深色
 const COLORS: Record<EventCategory, string> = {
-  "税制":   "#F7C94F",
-  "経済":   "#E05C5C",
-  "経済政策": "#4FD9A0",
+  "税制":   "#B45309",
+  "経済":   "#B91C1C",
+  "経済政策": "#047857",
 };
 
 export function EventFilter({ categories, activeCategories, onToggle }: Props) {

@@ -33,20 +33,24 @@ export const ADMINISTRATIONS: Administration[] = [
   { name: "高市",     start: 2025, end: 2026, party: "自民党",   color: "#3B6FD4" },
 ];
 
+// イベントカテゴリ色は INDICATOR_CONFIGS の各指標色とすべて衝突しない値を選定:
+// - 税制: #B45309 (amber-700)   ← tax(#9333EA) と判別容易
+// - 経済: #B91C1C (red-700)     ← 税収だった旧 #E05C5C と紛らわしいので深い赤へ
+// - 経済政策: #047857 (emerald-700) ← fx(#4FD9A0) より暗くして指標と区別
 export const EVENTS: EconomicEvent[] = [
-  { year: 1991, label: "バブル崩壊",   category: "経済",     color: "#E05C5C" },
-  { year: 1997, label: "消費税3→5%",   category: "税制",     color: "#D97706" },
-  { year: 1998, label: "金融危機",     category: "経済",     color: "#E05C5C" },
-  { year: 2008, label: "リーマン",     category: "経済",     color: "#E05C5C" },
-  { year: 2011, label: "東日本大震災", category: "経済",     color: "#E05C5C" },
-  { year: 2013, label: "アベノミクス", category: "経済政策", color: "#4FD9A0" },
-  { year: 2014, label: "消費税5→8%",   category: "税制",     color: "#D97706" },
-  { year: 2016, label: "マイナス金利", category: "経済政策", color: "#4FD9A0" },
-  { year: 2019, label: "消費税8→10%",  category: "税制",     color: "#D97706" },
-  { year: 2020, label: "コロナ禍",     category: "経済",     color: "#E05C5C" },
-  { year: 2022, label: "円安加速",     category: "経済政策", color: "#4FD9A0" },
-  { year: 2024, label: "日銀利上げ",   category: "経済政策", color: "#4FD9A0" },
-  { year: 2025, label: "高市政権発足", category: "経済政策", color: "#4FD9A0" },
+  { year: 1991, label: "バブル崩壊",   category: "経済",     color: "#B91C1C" },
+  { year: 1997, label: "消費税3→5%",   category: "税制",     color: "#B45309" },
+  { year: 1998, label: "金融危機",     category: "経済",     color: "#B91C1C" },
+  { year: 2008, label: "リーマン",     category: "経済",     color: "#B91C1C" },
+  { year: 2011, label: "東日本大震災", category: "経済",     color: "#B91C1C" },
+  { year: 2013, label: "アベノミクス", category: "経済政策", color: "#047857" },
+  { year: 2014, label: "消費税5→8%",   category: "税制",     color: "#B45309" },
+  { year: 2016, label: "マイナス金利", category: "経済政策", color: "#047857" },
+  { year: 2019, label: "消費税8→10%",  category: "税制",     color: "#B45309" },
+  { year: 2020, label: "コロナ禍",     category: "経済",     color: "#B91C1C" },
+  { year: 2022, label: "円安加速",     category: "経済政策", color: "#047857" },
+  { year: 2024, label: "日銀利上げ",   category: "経済政策", color: "#047857" },
+  { year: 2025, label: "高市政権発足", category: "経済政策", color: "#047857" },
 ];
 
 export const INDICATOR_CONFIGS: IndicatorConfig[] = [
