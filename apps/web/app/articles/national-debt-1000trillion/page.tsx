@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "national-debt-1000trillion";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/national-debt-1000trillion" },
-  title: "国債残高1,000兆円超 ─ 日本の財政赤字をデータで理解する | KeizaiMap",
+  title: "国債残高1,000兆円超 ─ 日本の財政赤字をデータで理解する",
   description: "1990年に180兆円だった国債残高は2024年に1,170兆円を超えた。税収の16倍に膨らんだ借金の実態と、その背景にある財政構造を数字で確認する。",
-  openGraph: {
-    images: [{ url: "/og/article?slug=national-debt-1000trillion" }],
-  },
+  openGraph: articleOpenGraph("national-debt-1000trillion"),
 };
 
 export default function NationalDebt1000TrillionPage() {
@@ -24,12 +23,31 @@ export default function NationalDebt1000TrillionPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "日本の国債残高はどれくらいですか？",
+      answer: "2024年の普通国債残高は1,170兆円を超えています。1990年の180兆円から34年間で約6.5倍に増加しました。同期間の税収が60.1兆円から72.1兆円（約20%増）に留まっていることと対比すると、支出が収入を大きく上回り続けてきたことがわかります。",
+    },
+    {
+      question: "なぜ国債残高はここまで膨らんだのですか？",
+      answer: "1990年代はバブル崩壊後の景気対策で公共投資を拡大、2000年代はデフレ・低成長で税収が低水準のまま社会保障費が増大、2010年代は税収回復後も高齢化に伴う社会保障費の増加が続き、2020年代はコロナ禍の大規模給付で財政赤字が急拡大しました。",
+    },
+    {
+      question: "国債残高は税収の何倍ですか？",
+      answer: "2024年の国債残高1,170兆円は、同年の税収72.1兆円の約16年分に相当します。税収をすべて返済に充てても16年かかる規模で、GDP比では約250%程度と先進国の中で最も高い水準にあります。",
+    },
+    {
+      question: "国債残高が増えると何が問題なのですか？",
+      answer: "「将来世代への負担の先送り」と表現されることが多く、現在の社会保障・公共サービスを維持するコストを国債という形で将来に転嫁しているとの見方があります。一方で、日本国債の大半は国内で保有されており対外債務とは性質が異なるという見方もあります。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="国債残高1,000兆円超 ─ 日本の財政赤字をデータで理解する"

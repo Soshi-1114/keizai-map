@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "retirement-2000man-revisited";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/retirement-2000man-revisited" },
-  title: "老後2,000万円問題は今いくら必要？─ 物価で再計算してみた | KeizaiMap",
+  title: "老後2,000万円問題は今いくら必要？─ 物価で再計算してみた",
   description:
     "2019年に話題となった「老後2,000万円問題」。報告書から5年経った2024年、物価上昇と社会保険料増加を反映すると、必要額はいくらまで膨らんでいるのか。データで再試算する。",
-  openGraph: {
-    title: "老後2,000万円問題は今いくら必要？─ 物価で再計算してみた",
-    images: [{ url: `/og/article?slug=${SLUG}` }],
-  },
+  openGraph: articleOpenGraph("retirement-2000man-revisited"),
 };
 
 export default function Retirement2000ManPage() {
@@ -26,12 +24,31 @@ export default function Retirement2000ManPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "「老後2,000万円問題」とは何ですか？",
+      answer: "2019年の金融庁報告書「高齢社会における資産形成・管理」で示された試算です。夫65歳以上・妻60歳以上の無職世帯モデルで、月の実収入20.9万円・実支出26.4万円・不足5.5万円となり、30年で約1,980万円不足するという計算が一人歩きしました。",
+    },
+    {
+      question: "2024年に再計算するといくら必要ですか？",
+      answer: "2017年からのCPI上昇分（約7%）と社会保険料増、マクロ経済スライドによる年金抑制を反映すると、月収入21.5万円・月支出28.2万円・月不足6.7万円、30年で約2,400万円が必要という計算になります。5年で約400万円増加しました。",
+    },
+    {
+      question: "2,400万円を貯めるには毎月いくら積み立てればよいですか？",
+      answer: "運用利回りで大きく変わります。0%（預金）で月6.7万円、1%（債券）で月5.7万円、3%（バランス型）で月4.0万円、5%（株式中心）で月2.9万円、7%（S&P500想定）で月2.0万円。運用利回りで月積立額は3倍以上変わります。",
+    },
+    {
+      question: "老後資金で注意すべき落とし穴は？",
+      answer: "①「平均」ベースの試算なので持ち家の有無・医療費・介護費で大きく変動する個人差、②90歳まで生きると30年では足りない長寿リスク、③今後の支給開始年齢引き上げや給付水準調整がある年金制度の不確実性、の3つに注意が必要です。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="老後2,000万円問題は今いくら必要？─ 物価で再計算してみた"

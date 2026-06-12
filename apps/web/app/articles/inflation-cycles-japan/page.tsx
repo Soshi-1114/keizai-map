@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "inflation-cycles-japan";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/inflation-cycles-japan" },
-  title: "物価高はいつまで続く？─ 過去30年の4つのインフレ局面を分析 | KeizaiMap",
+  title: "物価高はいつまで続く？─ 過去30年の4つのインフレ局面を分析",
   description:
     "1990年バブル崩壊・1997年消費税増税・2008年資源高・2022年円安インフレ。日本経済が直面した4つのインフレ局面を比較し、今回の物価高の終わりを過去データから予測する。",
-  openGraph: {
-    title: "物価高はいつまで続く？─ 過去30年の4つのインフレ局面を分析",
-    images: [{ url: `/og/article?slug=${SLUG}` }],
-  },
+  openGraph: articleOpenGraph("inflation-cycles-japan"),
 };
 
 export default function InflationCyclesJapanPage() {
@@ -26,12 +24,31 @@ export default function InflationCyclesJapanPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "日本は過去30年で何回インフレを経験しましたか？",
+      answer: "4回です。①バブル末期（1989-1991、+3.3%/年）、②橋本増税（1997-1998、+1.8%/年）、③資源高（2007-2008、+1.4%/年）、④円安+資源高（2022-現在、+2.5〜3.0%/年）。それぞれ主因と終わり方が異なります。",
+    },
+    {
+      question: "今回のインフレは過去とどう違いますか？",
+      answer: "過去のインフレが「外的ショック→1〜2年で収束」が大半だったのに対し、2022年以降のインフレは円安と資源高が同時に進行している点、そして賃上げを伴うインフレとして進行している点が異なります。",
+    },
+    {
+      question: "過去のインフレはどうやって終わりましたか？",
+      answer: "バブル末期は1991年の株価暴落（資産バブル崩壊→実需崩壊）、橋本増税は1997年末の金融危機（山一證券・拓銀破綻による需要崩壊）、資源高は2008年のリーマンショックによる原油価格暴落で、いずれも外的ショックで急速に収束しました。",
+    },
+    {
+      question: "今後の物価高はどのように展開しますか？",
+      answer: "3つのシナリオがあります。A：賃金主導の良いインフレへ定着（CPI年2%安定）、B：日米金利差縮小で円高転換しデフレ再来、C：超円安で悪いインフレ継続（円安170円超で実質賃金マイナス固定化）。終わりのカギは為替と賃上げ持続性です。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="物価高はいつまで続く？─ 過去30年の4つのインフレ局面を分析"

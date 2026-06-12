@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "abenomics-real-wages-analysis";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/abenomics-real-wages-analysis" },
-  title: "アベノミクスで実質賃金は上がったのか？ | KeizaiMap",
+  title: "アベノミクスで実質賃金は上がったのか？",
   description: "2012〜2020年のアベノミクス8年間で実質賃金は0.9%低下。株価は上昇し円安が進む中、なぜ実質賃金だけが下落したのか。消費税増税・非正規雇用増加・物価上昇の影響をデータで検証。",
-  openGraph: {
-    images: [{ url: "/og/article?slug=abenomics-real-wages-analysis" }],
-  },
+  openGraph: articleOpenGraph("abenomics-real-wages-analysis"),
 };
 
 export default function AbenomicsRealWagesPage() {
@@ -24,6 +23,24 @@ export default function AbenomicsRealWagesPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "アベノミクスで実質賃金は本当に下がったのですか？",
+      answer: "はい。2012年から2020年のアベノミクス8年間で、実質賃金は97.4から96.5へ0.9%低下しました。名目賃金は5.4%上昇しましたが、物価が6.4%上昇したため、購買力は逆に減少しました。",
+    },
+    {
+      question: "なぜ株価は上がったのに実質賃金は下がったのですか？",
+      answer: "アベノミクスで企業利益は大幅に増え（法人税収は2012年の8.5兆円から2020年の18.8兆円へ121%増加）ました。しかし企業は利益を株主還元や経営層の報酬増に充てることを優先し、労働者への賃上げに反映されなかったためです。",
+    },
+    {
+      question: "消費税増税は実質賃金にどう影響しましたか？",
+      answer: "2014年の5→8%増税で物価指数は2012年比3.6ポイント上昇しました。2019年には8→10%へ引き上げられ、軽減税率導入後も物価は上昇。消費税増税のたびに購買力が圧迫され、実質賃金の低下要因となりました。",
+    },
+    {
+      question: "円安はアベノミクスでどう進みましたか？",
+      answer: "円相場は2012年の79.8円（歴史的円高）から2020年の106.8円まで下落しました。円安は輸出企業（自動車メーカー等）の利益を増やした一方、石油・ガス・食料の輸入に頼る日本の家計では生活コストの上昇を招きました。",
+    },
+  ]);
 
   return (
     <>
@@ -41,6 +58,11 @@ export default function AbenomicsRealWagesPage() {
         id="org-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        id="faq-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <ArticleLayout
         slug={SLUG}

@@ -32,9 +32,10 @@ export function generateArticleJsonLd({
     timeRequired: `PT${readingTime}M`,
     inLanguage: "ja",
     author: {
-      "@type": "Organization",
-      name: "KeizaiMap",
-      url: baseUrl,
+      "@type": "Person",
+      "@id": `${baseUrl}/about#operator`,
+      name: "Soshi",
+      url: "https://github.com/Soshi-1114",
     },
     publisher: {
       "@type": "Organization",
@@ -119,7 +120,55 @@ export function generateOrganizationJsonLd() {
     name: "KeizaiMap",
     description: "数字で見る、日本の30年。賃金・物価・税収・為替の推移を政権帯とともに可視化。",
     url: baseUrl,
-    logo: `${baseUrl}/og`,
-    sameAs: ["https://github.com/Soshi-1114/keizai-map"],
+    logo: {
+      "@type": "ImageObject",
+      url: `${baseUrl}/icon-512`,
+      width: 512,
+      height: 512,
+    },
+    foundingDate: "2026-06",
+    sameAs: [
+      "https://github.com/Soshi-1114/keizai-map",
+      "https://github.com/Soshi-1114",
+    ],
+  };
+}
+
+export function generatePersonJsonLd() {
+  const baseUrl = BASE_URL;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": `${baseUrl}/about#operator`,
+    name: "Soshi",
+    alternateName: "@Soshi-1114",
+    url: "https://github.com/Soshi-1114",
+    sameAs: ["https://github.com/Soshi-1114"],
+    jobTitle: "ソフトウェアエンジニア",
+    knowsAbout: ["日本経済", "公的統計", "データ可視化", "ソフトウェア開発"],
+    worksFor: {
+      "@type": "Organization",
+      name: "KeizaiMap",
+      url: baseUrl,
+    },
+  };
+}
+
+export function generateWebSiteJsonLd() {
+  const baseUrl = BASE_URL;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "KeizaiMap",
+    url: baseUrl,
+    inLanguage: "ja",
+    description: "数字で見る、日本の30年。賃金・物価・税収・為替の推移を政権帯とともに可視化する経済データダッシュボード。",
+    publisher: {
+      "@type": "Organization",
+      name: "KeizaiMap",
+      url: baseUrl,
+    },
   };
 }

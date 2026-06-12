@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "yen-depreciation";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/yen-depreciation" },
-  title: "円安が進む仕組みと日本経済への影響 | KeizaiMap",
+  title: "円安が進む仕組みと日本経済への影響",
   description: "2012年の1ドル=79.8円から2024年の151.8円まで、なぜ円安が進んだのか。日米金利差、日銀の金融政策との関係と、輸出企業・輸入消費者への影響を解説する。",
-  openGraph: {
-    images: [{ url: "/og/article?slug=yen-depreciation" }],
-  },
+  openGraph: articleOpenGraph("yen-depreciation"),
 };
 
 export default function YenDepreciationPage() {
@@ -24,6 +23,24 @@ export default function YenDepreciationPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "なぜ円安が進むのですか？",
+      answer: "為替を動かす最大の要因は金利差です。お金はより高い金利が得られる国の通貨に流れるため、日本の金利が低く米国の金利が高いと、ドルへの需要が高まり円安が進みます。2022年以降は日米金利差の拡大が円安を加速させました。",
+    },
+    {
+      question: "円相場は1990年から2024年でどう変わりましたか？",
+      answer: "1990年の年平均144.8円から、2012年には1ドル=79.8円の歴史的円高をつけ、その後円安に転換しました。2024年には年平均151.8円となり、34年ぶり安値水準まで進みました。",
+    },
+    {
+      question: "円安は日本経済にどんな影響を与えますか？",
+      answer: "円安は輸出企業（自動車・電機）の海外売上を円換算で増やし、インバウンド観光業を後押しします。一方で日本はエネルギーや食料を輸入に依存しているため、輸入物価が上昇し家計を圧迫します。実質賃金の低下にもつながります。",
+    },
+    {
+      question: "2024年の日銀利上げで円安は止まりますか？",
+      answer: "2024年に日銀は17年ぶりの利上げを実施し、マイナス金利政策を解除しました。日米金利差が縮まれば円高要因となりますが、年間平均レートは151.8円と高水準のままです。為替は貿易収支・資本フロー・市場心理など複合要因で動くため予断を許しません。",
+    },
+  ]);
   return (
     <>
       <script
@@ -40,6 +57,11 @@ export default function YenDepreciationPage() {
         id="org-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        id="faq-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <ArticleLayout
         slug={SLUG}

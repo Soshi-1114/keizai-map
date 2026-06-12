@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import Link from "next/link";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "abenomics";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/abenomics" },
-  title: "アベノミクスとは何か ─ 3本の矢と経済指標の変化 | KeizaiMap",
+  title: "アベノミクスとは何か ─ 3本の矢と経済指標の変化",
   description: "2012年末に始まったアベノミクスの「3本の矢」を解説。8年間で税収は43.9兆円から60.8兆円へ増加し、円安も大幅に進んだ。実質賃金への影響はどうだったか。",
-  openGraph: {
-    images: [{ url: "/og/article?slug=abenomics" }],
-  },
+  openGraph: articleOpenGraph("abenomics"),
 };
 
 export default function AbenomicsPage() {
@@ -24,6 +23,24 @@ export default function AbenomicsPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "アベノミクスとは何ですか？",
+      answer: "アベノミクスとは、2012年12月に発足した第二次安倍晋三内閣が推進した経済政策の総称です。「3本の矢」と呼ばれる大胆な金融政策・機動的な財政政策・民間投資を喚起する成長戦略の3本柱で構成されていました。",
+    },
+    {
+      question: "アベノミクスの「3本の矢」とは何ですか？",
+      answer: "第1の矢は日銀による量的・質的金融緩和（QQE）でインフレ目標2%を設定。第2の矢は公共投資の拡大などの積極的な財政出動。第3の矢は規制緩和・女性活躍推進・農業改革などの構造改革による成長戦略です。",
+    },
+    {
+      question: "アベノミクスで税収や為替はどう変化しましたか？",
+      answer: "2012〜2020年の8年間で、税収は43.9兆円から60.8兆円へ約38.5%増加しました。円相場は1ドル=79.8円の歴史的円高から106.8円へと約33.8%円安が進み、輸出企業の収益を押し上げました。",
+    },
+    {
+      question: "アベノミクスで実質賃金は上がりましたか？",
+      answer: "アベノミクス8年間で実質賃金は97.4から96.5へ0.9%低下しました。名目賃金は上昇したものの、消費税増税（5→8→10%）と物価上昇（CPI+6.4%）がそれを上回り、実質的な購買力の改善には至りませんでした。",
+    },
+  ]);
   return (
     <>
       <script
@@ -40,6 +57,11 @@ export default function AbenomicsPage() {
         id="org-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        id="faq-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <ArticleLayout
         slug={SLUG}

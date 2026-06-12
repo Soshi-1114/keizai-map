@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "consumption-tax-wage-price";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/consumption-tax-wage-price" },
-  title: "消費税増税後の物価と賃金の変化【1997→2019】 | KeizaiMap",
+  title: "消費税増税後の物価と賃金の変化【1997→2019】",
   description: "消費税の4回の引き上げ（3→5→8→10%）で、物価はどう変わり、賃金はどう反応したのか。1997年の橋本増税と2019年の岸田増税を比較分析。",
-  openGraph: {
-    images: [{ url: "/og/article?slug=consumption-tax-wage-price" }],
-  },
+  openGraph: articleOpenGraph("consumption-tax-wage-price"),
 };
 
 export default function ConsumptionTaxWagePricePage() {
@@ -24,6 +23,24 @@ export default function ConsumptionTaxWagePricePage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "日本では消費税は何回引き上げられましたか？",
+      answer: "1989年から2019年の30年間で4度の消費税改定が行われました。1989年に3%で導入、1997年に5%、2014年に8%、2019年に10%へと段階的に引き上げられ、2019年には食料品等を対象とする軽減税率（8%据置）も初めて導入されました。",
+    },
+    {
+      question: "1997年の消費税増税はどのような影響をもたらしましたか？",
+      answer: "1997年の3→5%増税は橋本龍太郎政権下で実施されました。物価は1997年に1.9ポイント上昇し、その後アジア通貨危機と金融機関破綻が相次ぎました。実質賃金は1998年から本格的に下降に転じ、「失われた20年」の入り口になったと指摘されています。",
+    },
+    {
+      question: "2014年の消費税増税で物価はどれだけ上がりましたか？",
+      answer: "2014年の5→8%増税で物価指数は2012年比3.6ポイント上昇しました。これは1997年の橋本増税年（+1.9pt）を上回る上昇幅で、実質賃金は97.4から97.1へ低下しました。アベノミクスの円安による輸入物価上昇とも重なりました。",
+    },
+    {
+      question: "消費税収はどのように使われていますか？",
+      answer: "消費税収は年金・医療・介護・少子化対策などの社会保障財源への充当が法律で定められています。財務省資料によると、ほぼ全額が社会保障関連経費に充てられていますが、社会保障費全体の増加額に対しては部分的な充当にとどまるとされています。",
+    },
+  ]);
 
   return (
     <>
@@ -41,6 +58,11 @@ export default function ConsumptionTaxWagePricePage() {
         id="org-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        id="faq-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <ArticleLayout
         slug={SLUG}

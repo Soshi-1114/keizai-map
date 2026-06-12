@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "economic-shocks-comparison";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/economic-shocks-comparison" },
-  title: "リーマンショックとコロナ禍 ─ 2つの経済危機が日本人の生活に与えた傷跡 | KeizaiMap",
+  title: "リーマンショックとコロナ禍 ─ 2つの経済危機が日本人の生活に与えた傷跡",
   description: "2008年のリーマンショックと2020年のコロナ禍。2つの危機で実質賃金・株価・為替・物価はどう動いたか。回復の速さ・深さをデータで比較する。",
-  openGraph: {
-    images: [{ url: "/og/article?slug=economic-shocks-comparison" }],
-  },
+  openGraph: articleOpenGraph("economic-shocks-comparison"),
 };
 
 export default function EconomicShocksComparisonPage() {
@@ -24,12 +23,31 @@ export default function EconomicShocksComparisonPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "リーマンショックとコロナ禍の違いは何ですか？",
+      answer: "リーマンショック（2008年）は米国サブプライムローン問題に端を発した金融危機が実体経済を直撃したショックです。一方、コロナ禍（2020年）は新型コロナの世界的感染による需要急減・サプライチェーン断絶という、行動制限による需要蒸発という異質のショックでした。",
+    },
+    {
+      question: "実質賃金への影響はどちらが大きかったですか？",
+      answer: "リーマンショック後の方が落ち込みが大きく、回復にも時間がかかりました。2006年の103.4から2010年の98.5へ約4.7pt低下したのに対し、コロナ禍では2018年の99.1から2020年の96.5へ約2.6ptの低下に留まりました。",
+    },
+    {
+      question: "コロナ禍で実質賃金の下落が小さく済んだのはなぜですか？",
+      answer: "政府の大規模給付（雇用調整助成金、特別定額給付金）が下支えしたためとみられます。前例のない財政出動と金融緩和の組み合わせで、株価も比較的早期に回復しました。",
+    },
+    {
+      question: "リーマンショックで為替はどう動きましたか？",
+      answer: "世界的なリスク回避と日本の経常黒字への評価から円高が急進し、2008年の103.4円から2010年には87.8円まで進みました。一方コロナ禍では日米ともに大規模緩和を実施したため、110.4円→106.8円と為替の変動は限定的でした。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="リーマンショックとコロナ禍 ─ 2つの経済危機が日本人の生活に与えた傷跡"

@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "nisa-vs-savings";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/nisa-vs-savings" },
-  title: "新NISA vs 貯金 ─ データで考える「30年寝かせるならどっち」 | KeizaiMap",
+  title: "新NISA vs 貯金 ─ データで考える「30年寝かせるならどっち」",
   description:
     "1990年に100万円を銀行預金とS&P500それぞれに置いた場合、2024年にいくらになっているか。日本の超低金利と米国株の長期トレンドを実データで比較し、新NISA時代の選択を考える。",
-  openGraph: {
-    title: "新NISA vs 貯金 ─ データで考える「30年寝かせるならどっち」",
-    images: [{ url: `/og/article?slug=${SLUG}` }],
-  },
+  openGraph: articleOpenGraph("nisa-vs-savings"),
 };
 
 export default function NisaVsSavingsPage() {
@@ -26,12 +24,31 @@ export default function NisaVsSavingsPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "1990年に100万円を預金と投資に置いたらどう違いますか？",
+      answer: "1990年初頭に100万円を34年間放置した場合、銀行普通預金では約101万円（+1%）、日本国債で約122万円、日経平均で約155万円、S&P500（円建て）で約1,400万円（+1,300%）、金で約700万円という結果になります。",
+    },
+    {
+      question: "なぜ日本の預金は増えないのですか？",
+      answer: "日本の銀行普通預金金利は1990年の約2.08%から、2000年代以降は0.1%以下が続き、2020年には約0.001%まで低下しました。34年間の大半が0.1%以下の金利で、この間に物価は20%上昇しているため、預金は実質的にマイナスのリターンとなっています。",
+    },
+    {
+      question: "投資は本当に長期で勝てますか？",
+      answer: "S&P500も10年単位で見ればITバブル+リーマンの「失われた10年」（▲9%）など下落局面があります。ただし20年以上保有すれば過去どのタイミングでも+100%以上のリターンを記録しており、「長期分散投資」が推奨される理由となっています。",
+    },
+    {
+      question: "新NISAはどう使えばよいですか？",
+      answer: "①生活防衛資金（半年分）は預金で確保、②それ以外はS&P500や全世界株式（オルカン）などインデックス投信を選ぶ、③毎月コツコツ積立して20年以上の長期で考える、④短期の値動きに一喜一憂しない、が最低限の戦略です。年間360万円・生涯1,800万円まで非課税です。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="新NISA vs 貯金 ─ データで考える「30年寝かせるならどっち」"

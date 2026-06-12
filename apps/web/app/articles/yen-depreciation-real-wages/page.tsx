@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "yen-depreciation-real-wages";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/yen-depreciation-real-wages" },
-  title: "円安と実質賃金の関係【2012→2024】| KeizaiMap",
+  title: "円安と実質賃金の関係【2012→2024】",
   description: "円相場が79.8円から151.8円へ90%下落した12年間、実質賃金はどう変わったのか。円安が輸出企業を潤す一方で、家計の購買力をどう圧迫したかを分析。",
-  openGraph: {
-    images: [{ url: "/og/article?slug=yen-depreciation-real-wages" }],
-  },
+  openGraph: articleOpenGraph("yen-depreciation-real-wages"),
 };
 
 export default function YenDepreciationRealWagesPage() {
@@ -24,6 +23,24 @@ export default function YenDepreciationRealWagesPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "2012年から2024年で円相場はどれだけ円安が進みましたか？",
+      answer: "1ドル=79.8円（2012年）から151.8円（2024年）へ約90%の円安が進みました。アベノミクスの日銀大規模緩和に加え、2022年以降の米FRBの急速な利上げで日米金利差が拡大したことが要因です。",
+    },
+    {
+      question: "円安はなぜ家計の購買力を下げるのですか？",
+      answer: "日本はエネルギーと食料の大部分を輸入に依存しており、国際商品市場の価格はドル建てが基本です。1ドル=80円から150円になると、同じドル価格のガソリンや食品の円換算額が大きく上がり、消費者物価（CPI）の上昇を通じて家計を直撃します。",
+    },
+    {
+      question: "円安で誰が得をして、誰が損をしますか？",
+      answer: "得をするのは自動車・電機などの輸出企業、海外資産を持つ投資家、経営層・株主、海外事業の多い大企業です。損をするのは輸入品に依存する中小企業、一般労働者（実質賃金低下）、年金受給者、低所得世帯（生活必需品の価格上昇）です。",
+    },
+    {
+      question: "円安と企業利益・実質賃金にはどんな差がありますか？",
+      answer: "2012〜2024年に法人税収は8.5兆円から18.8兆円へ121%増加しましたが、実質賃金は97.4から99.2へ1.8%しか上昇していません。円安による企業利益の増加が労働者に還流せず、株主配当や内部留保に充てられた構造が背景にあります。",
+    },
+  ]);
 
   return (
     <>
@@ -41,6 +58,11 @@ export default function YenDepreciationRealWagesPage() {
         id="org-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        id="faq-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <ArticleLayout
         slug={SLUG}

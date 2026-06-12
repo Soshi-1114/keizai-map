@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "generation-economic-comparison";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/generation-economic-comparison" },
-  title: "氷河期世代 vs Z世代 ─ 経済指標で見る「生まれた時代の不公平」 | KeizaiMap",
+  title: "氷河期世代 vs Z世代 ─ 経済指標で見る「生まれた時代の不公平」",
   description:
     "1973年生・1993年生・2003年生の3世代が就職時に直面した経済環境を、賃金・株価・住宅価格・社会保険料・出生数で比較。世代論を感情ではなくデータで論じる。",
-  openGraph: {
-    title: "氷河期世代 vs Z世代 ─ 経済指標で見る「生まれた時代の不公平」",
-    images: [{ url: `/og/article?slug=${SLUG}` }],
-  },
+  openGraph: articleOpenGraph("generation-economic-comparison"),
 };
 
 export default function GenerationEconomicComparisonPage() {
@@ -26,12 +24,31 @@ export default function GenerationEconomicComparisonPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "氷河期世代の実質賃金水準はZ世代より高かったのですか？",
+      answer: "はい。1995年就職の氷河期世代の就職時実質賃金は1990年=100で109.0と高水準でした。一方、2015年就職のミレニアル世代は96.6、2025年就職のZ世代は推定99です。「就職が苦しかった」のは事実ですが、就職できた人の賃金水準は氷河期世代の方が高かったのです。",
+    },
+    {
+      question: "住宅を最も買いやすかった世代はどれですか？",
+      answer: "ミレニアル世代（2015年就職）です。住宅価格指数は1995年88.8、2015年63.7、2025年69+で、ミレニアル世代は底値圏の住宅価格と超低金利の住宅ローンを組めました。Z世代は住宅価格が上昇局面に転じ、日銀利上げも重なり最も家を買いにくい世代になりつつあります。",
+    },
+    {
+      question: "社会保険料負担は世代でどれくらい違いますか？",
+      answer: "就職時の社会保険料負担率は1995年12.5%、2015年16.8%、2025年18.6%と、世代を追うごとに重くなります。氷河期世代の入社時に比べてZ世代の負担率は約1.5倍。同じ月給30万円でも、Z世代の手取りは氷河期世代より2万円以上少ない計算です。",
+    },
+    {
+      question: "どの世代が経済的に一番不遇ですか？",
+      answer: "単純な答えはありません。データで見るとどの世代にも明確に有利な点と不利な点があります。氷河期世代は就職と人口プレッシャーで苦しんだが賃金水準と保険料負担は軽く、Z世代は就職と投資環境では恵まれているが住宅価格と社会保険料の重さに直面しています。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="氷河期世代 vs Z世代 ─ 経済指標で見る「生まれた時代の不公平」"

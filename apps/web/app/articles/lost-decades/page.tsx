@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import Link from "next/link";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "lost-decades";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/lost-decades" },
-  title: "「失われた30年」─ 数字で見る日本経済の停滞 | KeizaiMap",
+  title: "「失われた30年」─ 数字で見る日本経済の停滞",
   description: "バブル崩壊（1991年）から現在まで、日本経済の何が「失われた」のか。実質賃金・物価・税収・為替の推移をデータで俯瞰し、長期停滞の構造を読み解く。",
-  openGraph: {
-    images: [{ url: "/og/article?slug=lost-decades" }],
-  },
+  openGraph: articleOpenGraph("lost-decades"),
 };
 
 export default function LostDecadesPage() {
@@ -24,6 +23,24 @@ export default function LostDecadesPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "「失われた30年」とは何ですか？",
+      answer: "1991年のバブル崩壊から現在まで約30年間、日本経済が他の先進国と比較して成長が停滞している期間を指します。実質賃金は1990年比でほぼ横ばい、税収もバブル期水準からの回復に時間がかかり、長期的な経済停滞が続いてきました。",
+    },
+    {
+      question: "失われた30年で日本の実質賃金はどう変化しましたか？",
+      answer: "1990年を100とすると、2024年の実質賃金は99.2と0.8%低下しています。バブル後の一時的な高水準（2000年107.8）の後、2012年に97.4まで落ち込み、その後も1990年水準に届かない停滞が続いています。",
+    },
+    {
+      question: "なぜ税収は税率引き上げで増えたのですか？",
+      answer: "税収は1990年の60.1兆円から2002年に43.8兆円まで落ち込み、2024年に72.1兆円まで回復しました。この回復は消費税率の段階的引き上げ（3%→5%→8%→10%）と、アベノミクス以降の企業業績改善によるもので、「実質的な経済成長」というより税率変更による見かけの増加という側面が強いです。",
+    },
+    {
+      question: "失われた30年で何が失われたのですか？",
+      answer: "実質所得の成長、企業の活力（デフレで設備投資や研究開発が抑制）、人口ボーナス（少子高齢化で内需が萎縮）、そして金銭的な豊かさ（賃金停滞と社会保障負担増による可処分所得の減少）です。グローバル競争での相対的な地位低下も指摘されます。",
+    },
+  ]);
   return (
     <>
       <script
@@ -40,6 +57,11 @@ export default function LostDecadesPage() {
         id="org-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        id="faq-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <ArticleLayout
         slug={SLUG}

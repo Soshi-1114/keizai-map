@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "shunto-2025-real-impact";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/shunto-2025-real-impact" },
-  title: "2025年 春闘・賃上げの実態 ─ 過去30年で最高水準だが家計に届くか | KeizaiMap",
+  title: "2025年 春闘・賃上げの実態 ─ 過去30年で最高水準だが家計に届くか",
   description:
     "2025年春闘の平均賃上げ率は5%超。33年ぶりの高水準だが、物価上昇と社会保険料増加でどれだけ手取りに反映されるのか。過去30年の賃上げ率と実質賃金の関係をデータで検証する。",
-  openGraph: {
-    title: "2025年 春闘・賃上げの実態 ─ 過去30年で最高水準だが家計に届くか",
-    images: [{ url: `/og/article?slug=${SLUG}` }],
-  },
+  openGraph: articleOpenGraph("shunto-2025-real-impact"),
 };
 
 export default function Shunto2025Page() {
@@ -26,12 +24,31 @@ export default function Shunto2025Page() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "2025年春闘の賃上げ率はいくらですか？",
+      answer: "連合がまとめた2025年春闘の平均賃上げ率は5.46%（5月最終集計、5,000円以上）で、前年（5.10%）に続き2年連続で5%超えを達成しました。これは1991年（5.66%）以来、約34年ぶりの高水準です。",
+    },
+    {
+      question: "賃上げが実質賃金にどれだけ反映されますか？",
+      answer: "2025年は春闘5.46%、CPI上昇率は約+2.5%予測のため、実質賃金ベースでは約+2.5%増の見込みです。ただし社会保険料率も毎年上昇しており、実際に家計に届く正味の手取り改善は1.5〜2%程度にとどまる可能性が高いです。",
+    },
+    {
+      question: "中小企業や非正規労働者にも賃上げは波及していますか？",
+      answer: "連合データは主に労組のある大企業（5.46%）の数字です。中小企業は約4.5%、非正規労働者は約3〜4%、公務員（人事院勧告）は約2.7%とされ、雇用者の約7割を占める中小企業や約4割の非正規労働者への満額反映が今後の焦点です。",
+    },
+    {
+      question: "この賃上げの流れはいつまで続きますか？",
+      answer: "3つの見方があります。楽観シナリオでは人手不足・労働分配率の見直しで今後5年は3〜4%台が定着、中立シナリオでは物価上昇が落ち着けば2〜3%台に、悲観シナリオでは資源高・円安が落ち着けば過去30年と同じ低水準に戻ります。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="2025年 春闘・賃上げの実態 ─ 過去30年で最高水準だが家計に届くか"

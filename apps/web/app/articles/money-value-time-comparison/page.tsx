@@ -2,19 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { LiveDataBox } from "@/components/LiveDataBox";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "money-value-time-comparison";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/money-value-time-comparison" },
-  title: "30年前の月収30万円は今いくら？─ 物価で換算する「お金の実質価値」 | KeizaiMap",
+  title: "30年前の月収30万円は今いくら？─ 物価で換算する「お金の実質価値」",
   description:
     "1990年の30万円は2024年の何円相当か。消費者物価指数（CPI）を使って、過去の金額を現在価値に換算する方法を解説。月収・年収・貯金額を年代別に実質換算してみよう。",
-  openGraph: {
-    title: "30年前の月収30万円は今いくら？─ 物価で換算する「お金の実質価値」",
-    images: [{ url: `/og/article?slug=${SLUG}` }],
-  },
+  openGraph: articleOpenGraph("money-value-time-comparison"),
 };
 
 export default function MoneyValueTimeComparisonPage() {
@@ -27,12 +25,31 @@ export default function MoneyValueTimeComparisonPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "1990年の30万円は2024年でいくら相当ですか？",
+      answer: "消費者物価指数（CPI）で換算すると約36万円相当です。1990年のCPIを100、2024年を119.9として計算すると、30万円×1.199≒36万円となります。年収500万円なら約600万円、貯金1000万円なら約1199万円相当です。",
+    },
+    {
+      question: "過去の金額を現在価値に換算する方法は？",
+      answer: "「現在価値=過去の金額×（現在のCPI÷過去のCPI）」で計算できます。例えば2024年のCPIは119.9なので、1990年の金額を1.199倍すれば現在価値が得られます。同様に、各年のCPIを使えばどの年代の金額でも現在価値に換算可能です。",
+    },
+    {
+      question: "近年の物価上昇は過去と比べてどれくらい速いですか？",
+      answer: "2020年→2024年でCPIが112.4から119.9に急上昇し、たった4年で約7%上昇しました。これは1990〜2020年の30年間で12.4%しか上がらなかったのと比べて、近年の物価上昇速度が異常に高まっていることを示しています。",
+    },
+    {
+      question: "名目値と実質値はなぜ区別が必要なのですか？",
+      answer: "「過去最高の税収」「過去最高の日経平均」と報道される数字が名目値であれば、物価上昇による「水ぶくれ」を含んでいるためです。真の比較には物価で割り戻して実質値で見る必要があり、「給料は上がっているのに生活が楽にならない」感覚の正体はこの物価補正の差にあります。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="30年前の月収30万円は今いくら？─ 物価で換算する「お金の実質価値」"

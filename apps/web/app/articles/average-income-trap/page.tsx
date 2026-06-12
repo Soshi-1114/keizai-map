@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "average-income-trap";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/average-income-trap" },
-  title: "「平均年収」の罠 ─ メディアが報じない統計の落とし穴 | KeizaiMap",
+  title: "「平均年収」の罠 ─ メディアが報じない統計の落とし穴",
   description:
     "「日本の平均年収は458万円」と言われるが、それを実際に稼いでいる人は意外と少ない。平均値・中央値・最頻値の違いをデータで解説し、本当の日本の所得分布を明らかにする。",
-  openGraph: {
-    title: "「平均年収」の罠 ─ メディアが報じない統計の落とし穴",
-    images: [{ url: `/og/article?slug=${SLUG}` }],
-  },
+  openGraph: articleOpenGraph("average-income-trap"),
 };
 
 export default function AverageIncomeTrapPage() {
@@ -26,12 +24,31 @@ export default function AverageIncomeTrapPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "日本の平均年収・中央値・最頻値の違いは？",
+      answer: "国税庁の民間給与実態統計調査では、平均年収は458万円、中央値は約400万円、最頻値は300〜400万円帯です。平均値は一部の高所得者が引き上げるため実感とズレやすく、中央値（半分の人がそれより下）の方が生活感に近い指標です。",
+    },
+    {
+      question: "日本の給与所得者の半数以上は平均年収より低いのですか？",
+      answer: "はい。年収400万円以下が累計で51.4%を占めており、給与所得者の半数以上は平均年収（458万円）よりも低い水準です。一方、年収1,000万円超のいわゆる高所得者は全体の約6.8%です。",
+    },
+    {
+      question: "日本の平均年収はピークからどれくらい下がっていますか？",
+      answer: "平均年収は2000年の約461万円がピークで、25年経ってもその水準を超えていません。2010年のリーマン後には約412万円まで下落し、2023年は458万円とピーク未回復のままです。これが「給料が上がらない国」と呼ばれる根拠の一つです。",
+    },
+    {
+      question: "なぜメディアは中央値ではなく平均値を報道するのですか？",
+      answer: "①歴史的に「平均」が最もポピュラーな統計指標として定着している、②中央値の計算には個票データが必要で開示が遅い、③「日本の平均年収は400万円」よりも「458万円」の方がポジティブに聞こえる、の3つの理由が挙げられます。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="「平均年収」の罠 ─ メディアが報じない統計の落とし穴"

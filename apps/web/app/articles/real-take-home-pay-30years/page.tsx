@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "real-take-home-pay-30years";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/real-take-home-pay-30years" },
-  title: "年収500万でも、30年前の年収300万に負けている？─ 実質手取りで見る30年 | KeizaiMap",
+  title: "年収500万でも、30年前の年収300万に負けている？─ 実質手取りで見る30年",
   description:
     "名目の年収が増えても、社会保険料・消費税・物価上昇で実質手取りは目減りしている。年収300万・500万・800万の3パターンで「実質手取り」を1990年と2024年で比較する。",
-  openGraph: {
-    title: "年収500万でも、30年前の年収300万に負けている？─ 実質手取りで見る30年",
-    images: [{ url: `/og/article?slug=${SLUG}` }],
-  },
+  openGraph: articleOpenGraph("real-take-home-pay-30years"),
 };
 
 export default function RealTakeHomePay30YearsPage() {
@@ -26,12 +24,31 @@ export default function RealTakeHomePay30YearsPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "年収500万円の実質手取りは1990年と比べてどう変化しましたか？",
+      answer: "年収500万円の実質手取りは1990年の396万円から2024年の約298.2万円へと約25%減少しました。これは1990年の年収約376万円相当でしかなく、「年収500万円なのに余裕がない」と感じる原因がここにあります。",
+    },
+    {
+      question: "なぜ実質手取りは目減りするのですか？",
+      answer: "①社会保険料の上昇（1990年10.8%→2024年18.5%、+7.7pt）、②消費税の創設・引き上げ（0%→10%）、③物価上昇（CPI+19.9%）の3つが重なっているためです。所得から税金が引かれた後の支出にも追加で10%が課される構造的な圧迫があります。",
+    },
+    {
+      question: "年収300万円・800万円の実質手取りはどう変化しましたか？",
+      answer: "年収300万円は実質手取りが246.6万円から186.4万円へ約25%減少、年収800万円は593.6万円から443.7万円へ約25%減少しました。高年収帯でも約150万円分の購買力を失っており、3つのケースすべてで約25%の目減りが共通しています。",
+    },
+    {
+      question: "30年前と同じ生活水準を維持するには年収はいくら必要ですか？",
+      answer: "30年前の年収300万円と同じ生活水準を2024年に維持するには、年収約400万円が必要になる計算です。「年収を上げる」だけでは追いつかない構造になっており、社会保険料・消費税・物価の三重苦が家計を圧迫しています。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="年収500万でも、30年前の年収300万に負けている？─ 実質手取りで見る30年"

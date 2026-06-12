@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "next-decade-forecast";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/next-decade-forecast" },
-  title: "「失われた40年」になる前に ─ 2025〜2035年の日本経済を9つの指標で展望する | KeizaiMap",
+  title: "「失われた40年」になる前に ─ 2025〜2035年の日本経済を9つの指標で展望する",
   description:
     "過去30年のトレンドから今後10年の日本経済を展望。少子化・財政赤字・円安・賃上げの行方を、政府・IMF・OECDの長期見通しと過去データで照合する。",
-  openGraph: {
-    title: "「失われた40年」になる前に ─ 2025〜2035年の日本経済を9つの指標で展望する",
-    images: [{ url: `/og/article?slug=${SLUG}` }],
-  },
+  openGraph: articleOpenGraph("next-decade-forecast"),
 };
 
 export default function NextDecadeForecastPage() {
@@ -26,12 +24,31 @@ export default function NextDecadeForecastPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "2035年の日本の出生数はどれくらいになりますか？",
+      answer: "社人研の中位推計では、2024年の73万人台から2030年に約65万人（▲11%）、2035年に約60万人（▲18%）まで減少する見込みです。子どもを産む世代の人口が既に決まっているため、今後10年の出生数は概ね決定済みと言えます。",
+    },
+    {
+      question: "社会保険料負担率は2035年にどうなりますか？",
+      answer: "1990年10.8%→2024年18.5%のペースが続けば、2030年に約19.8%、2035年に約21.0%まで上昇する可能性が高いです。年収500万円の人は、毎月の手取りが追加で5,000円〜1万円減る計算になります。",
+    },
+    {
+      question: "今後10年で実質賃金は1990年水準に戻りますか？",
+      answer: "2024年の春闘で平均賃上げ率5.10%が33年ぶり高水準となりました。この流れが続けば、実質賃金は2027年頃に1990年水準（100）を超える可能性があります。楽観シナリオでは2035年に約108、悲観シナリオでは2027年に98へ再下落します。",
+    },
+    {
+      question: "個人としてできる10年後への備えは？",
+      answer: "①NISA等で長期分散投資を始める、②給与収入だけでなく副業・複業でドル建て収入を確保する、③住宅は「都心vs地方」の二極化を意識して購入判断する、④社会保険料の上昇に備えて固定費を圧縮しておく、の4つが現実的な備えです。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="「失われた40年」になる前に ─ 2025〜2035年の日本経済を9つの指標で展望する"

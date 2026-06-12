@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "declining-birthrate-economy";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/declining-birthrate-economy" },
-  title: "少子化と経済の悪循環 ─ 出生数激減が家計と社会保障に与える影響 | KeizaiMap",
+  title: "少子化と経済の悪循環 ─ 出生数激減が家計と社会保障に与える影響",
   description: "1990年に121万人いた出生数は2024年に73万人台へ激減。人口減少は労働力不足を招き、社会保険料の上昇と国債残高の膨張を加速させる。少子化が経済に与える連鎖をデータで追う。",
-  openGraph: {
-    images: [{ url: "/og/article?slug=declining-birthrate-economy" }],
-  },
+  openGraph: articleOpenGraph("declining-birthrate-economy"),
 };
 
 export default function DecliningBirthrateEconomyPage() {
@@ -24,12 +23,31 @@ export default function DecliningBirthrateEconomyPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "日本の出生数は34年でどれくらい減りましたか？",
+      answer: "1990年に約121万人だった出生数は、2024年には73万人台にまで落ち込み、34年間でおよそ40%減少しました。2016年に初めて100万人を割り込み、その後も減少が加速しており、過去最少記録が更新され続けています。",
+    },
+    {
+      question: "少子化は経済にどんな影響を与えますか？",
+      answer: "①労働力不足で経済全体のアウトプットが縮小、②支える側（現役世代）が減って社会保険料負担が増加（1990年10.8%→2024年18.5%）、③社会保障費を国債発行で補填するため国債残高が膨張（1990年180兆円→2024年1,170兆円超）、という3つの連鎖が起きます。",
+    },
+    {
+      question: "少子化の原因は何ですか？",
+      answer: "未婚率・晩婚化の進行（若年層の経済的余裕の低下）、子育て費用・教育費の高騰、長時間労働文化と仕事と育児の両立困難、住宅価格の高止まり（特に都市部）などが主な要因として挙げられます。",
+    },
+    {
+      question: "少子化と社会保障・財政の関係はどうなっていますか？",
+      answer: "出生数▼40%、社会保険料負担率+7.7pt、国債残高+550%という3つの数字は独立した問題ではなく、少子化を共通の根とする現象です。財政悪化が社会保険料引き上げを招き、子育てコストが上がってさらに少子化が進む悪循環が形成されている可能性があります。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="少子化と経済の悪循環 ─ 出生数激減が家計と社会保障に与える影響"

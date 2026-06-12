@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
+import { articleOpenGraph } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "nikkei-vs-wages";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/nikkei-vs-wages" },
-  title: "日経平均は最高値なのに、なぜ生活は豊かにならないのか | KeizaiMap",
+  title: "日経平均は最高値なのに、なぜ生活は豊かにならないのか",
   description: "2024年、日経平均は1990年比で55%以上上昇している。しかし同じ期間の実質賃金は99.2と横ばいだ。株高の恩恵はなぜ家計に届かないのか。データで構造を読み解く。",
-  openGraph: {
-    images: [{ url: "/og/article?slug=nikkei-vs-wages" }],
-  },
+  openGraph: articleOpenGraph("nikkei-vs-wages"),
 };
 
 export default function NikkeiVsWagesPage() {

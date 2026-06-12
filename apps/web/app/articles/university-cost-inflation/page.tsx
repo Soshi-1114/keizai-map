@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "university-cost-inflation";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/university-cost-inflation" },
-  title: "大学費用30年前と今 ─ 親世代と子世代の教育費インフレ実態 | KeizaiMap",
+  title: "大学費用30年前と今 ─ 親世代と子世代の教育費インフレ実態",
   description:
     "1990年の国立大学授業料は年34万円、2024年は53.6万円。私立大学はさらに上昇率が高い。CPI補正・賃金との対比で「教育費は本当に重くなったのか」をデータで検証する。",
-  openGraph: {
-    title: "大学費用30年前と今 ─ 親世代と子世代の教育費インフレ実態",
-    images: [{ url: `/og/article?slug=${SLUG}` }],
-  },
+  openGraph: articleOpenGraph("university-cost-inflation"),
 };
 
 export default function UniversityCostInflationPage() {
@@ -26,12 +24,31 @@ export default function UniversityCostInflationPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "国立大学の授業料は30年でどれくらい上がりましたか？",
+      answer: "1990年の33.9万円から2024年の53.6万円へ、約1.58倍に上昇しました。1990年から2005年まで毎年のように引き上げられた後、53.6万円に到達した時点から20年近く据え置かれています。",
+    },
+    {
+      question: "私立大学の授業料はどれくらい上がりましたか？",
+      answer: "私立大学（文系平均）は1990年の61.5万円から2024年の約94万円へ、約53%上昇しました。理系・医療系はさらに上昇率が高く、医歯学系では年間500万円超に達するケースもあります。",
+    },
+    {
+      question: "物価補正後の実質的な大学費用の負担増は？",
+      answer: "CPI（消費者物価指数）が同期間に約20%上昇したことを差し引いても、国立大の実質負担は+31%、私立大も+28%増加しています。一方で実質賃金は横ばいのため、世帯の購買力に対する大学費用の重さは30年で約30%増加しました。",
+    },
+    {
+      question: "大学費用が上がる構造的な理由は？",
+      answer: "①大学進学率が1990年の約24%から2024年は60%超へ上昇し需要拡大、②国立大学運営費交付金が2004年の独立法人化以降年1%ずつ削減、③ICT環境・実験設備など教育水準維持のためのコスト増、④少子化による大学間競争激化での広告・施設投資増、の4つです。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="大学費用30年前と今 ─ 親世代と子世代の教育費インフレ実態"

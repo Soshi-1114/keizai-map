@@ -2,18 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { LiveDataBox } from "@/components/LiveDataBox";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "housing-price";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/housing-price" },
-  title: "なぜ若者は家を買えないのか ─ 住宅価格と賃金の34年をデータで見る | KeizaiMap",
+  title: "なぜ若者は家を買えないのか ─ 住宅価格と賃金の34年をデータで見る",
   description: "バブル崩壊で一度は下落した住宅価格は、アベノミクス以降に再上昇。一方で実質賃金は横ばいのまま。住宅価格指数と賃金・金利の動きを重ねてデータで読み解く。",
-  openGraph: {
-    title: "なぜ若者は家を買えないのか ─ 住宅価格と賃金の34年をデータで見る",
-    images: [{ url: "/og/article?slug=housing-price" }],
-  },
+  openGraph: articleOpenGraph("housing-price"),
 };
 
 export default function HousingPricePage() {
@@ -26,12 +24,31 @@ export default function HousingPricePage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "バブル崩壊後、住宅価格はどう変動しましたか？",
+      answer: "1991年のバブル崩壊から2012年頃にかけて、住宅価格指数は1990年比で約36%下落しました（指数100→64.2）。その後、アベノミクスによる低金利・都市再開発・外国人投資家の流入で、特に都市部を中心に価格が回復傾向に転じています。",
+    },
+    {
+      question: "なぜ若者は家を買いにくいのですか？",
+      answer: "実質賃金がほぼ横ばいのまま、住宅価格だけが（都市部では特に大幅に）上昇しているためです。「賃金に対する住宅価格」という意味での買いやすさ（affordability）は、バブル期よりむしろ厳しくなっているエリアもあります。",
+    },
+    {
+      question: "住宅価格を押し上げた構造的要因は何ですか？",
+      answer: "①都市集中と地方格差で大都市圏の需要が集まる、②アベノミクス以降の超低金利が月々の返済額を下げ「買える価格」の上限を引き上げた、③低金利と円安を背景に国内機関投資家・外国人投資家の購入が実需以上に価格を押し上げた、の3つです。",
+    },
+    {
+      question: "2024年の日銀利上げで住宅市場はどうなりますか？",
+      answer: "2024年3月の日銀によるマイナス金利解除を受け、住宅ローン金利は上昇傾向に転じています。住宅の買いやすさが改善するかは、金利上昇による住宅価格の引き下げ効果と、賃金上昇のどちらが先行するかにかかっています。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="なぜ若者は家を買えないのか ─ 住宅価格と賃金の34年をデータで見る"

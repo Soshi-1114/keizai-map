@@ -2,19 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { LiveDataBox } from "@/components/LiveDataBox";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "yen-purchasing-power-decline";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/yen-purchasing-power-decline" },
-  title: "日本の通貨価値はどれだけ下がったか ─ ドル建てで見る30年 | KeizaiMap",
+  title: "日本の通貨価値はどれだけ下がったか ─ ドル建てで見る30年",
   description:
     "円安と物価上昇のダブルパンチで、円の購買力は急減している。ドル建て換算した最低賃金・日経平均・GDPで日本経済を見直すと、別の風景が見えてくる。",
-  openGraph: {
-    title: "日本の通貨価値はどれだけ下がったか ─ ドル建てで見る30年",
-    images: [{ url: `/og/article?slug=${SLUG}` }],
-  },
+  openGraph: articleOpenGraph("yen-purchasing-power-decline"),
 };
 
 export default function YenPurchasingPowerDeclinePage() {
@@ -27,12 +25,31 @@ export default function YenPurchasingPowerDeclinePage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "日本の最低賃金はドル建てで見るとどう変化していますか？",
+      answer: "全国加重平均最低賃金は1990年の約474円から2024年に1,055円と円ベースで約2.2倍に上昇しました。しかしドル建てで見ると、2012年の$9.49/時を頂点に2024年は$6.95/時へ約27%下落しています。世界基準で見れば労働の価値が下がっているのです。",
+    },
+    {
+      question: "日経平均はドル建てで見ても史上最高値ですか？",
+      answer: "いいえ。2024年12月末の日経平均は39,200円÷151.8円で約$258、1989年12月末（38,915円÷144.8円で約$269）を約4%下回っています。円ベースでは35年ぶり最高値更新ですが、ドル建てではまだバブル期の水準を回復していません。",
+    },
+    {
+      question: "ドル建てGDPで日本は何位ですか？",
+      answer: "2024年時点で日本のドル建てGDPは約$4.1兆で世界4位です。1995年（$5.5兆）は2位、2012年（$6.2兆）は3位でしたが、2023年にドイツに抜かれて4位に転落しました。2025〜2027年にはインドにも抜かれる予測があります。",
+    },
+    {
+      question: "なぜドル建てで日本経済を見ることが重要なのですか？",
+      answer: "原油・半導体・AIクラウド・海外旅行・留学費用・輸入食品など、国際的なモノ・サービスの価格はほとんどがドル建てで決まります。円安が進めば円ベースで自動的に値上がりするため、ドル建てで稼げないことは海外モノが買えなくなることを意味します。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="日本の通貨価値はどれだけ下がったか ─ ドル建てで見る30年"

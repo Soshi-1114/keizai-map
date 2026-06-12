@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "real-wages-trend-1990-2024";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/real-wages-trend-1990-2024" },
-  title: "日本の実質賃金推移【1990〜2024】データ分析 | KeizaiMap",
+  title: "日本の実質賃金推移【1990〜2024】データ分析",
   description: "バブル期の1990年を100とした実質賃金指数は34年後の2024年に99.2と0.8%低下。デフレ・リーマンショック・消費税増税・円安インフレの4つの局面で賃金がどう変化したかを時系列で分析。",
-  openGraph: {
-    images: [{ url: "/og/article?slug=real-wages-trend-1990-2024" }],
-  },
+  openGraph: articleOpenGraph("real-wages-trend-1990-2024"),
 };
 
 export default function RealWagesTrendPage() {
@@ -24,6 +23,24 @@ export default function RealWagesTrendPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "1990年から2024年で実質賃金はどれくらい変化しましたか？",
+      answer: "1990年を100とすると、2024年の実質賃金は99.2となり、34年間で0.8%低下しました。同期間に物価（CPI）は119.9まで約19.9%上昇しており、物価との乖離が家計の購買力を圧迫しています。",
+    },
+    {
+      question: "実質賃金が最も低かったのはいつですか？",
+      answer: "実質賃金の底はリーマンショック直後の2010年（98.5）と、アベノミクス末期からコロナ初年度の2020年（96.5）でした。1998年の金融危機までは109.5の高水準だった水準と比べると、約13ポイントの低下となっています。",
+    },
+    {
+      question: "アベノミクスで実質賃金は上昇しましたか？",
+      answer: "2012年（97.4）から2020年（96.5）にかけて、実質賃金は0.9%低下しました。アベノミクスは株価と円安をもたらしましたが、消費税増税と輸入物価上昇による物価上昇が名目賃金の上昇を上回ったため、実質賃金は伸び悩みました。",
+    },
+    {
+      question: "2022年以降に実質賃金は回復していますか？",
+      answer: "2020年の96.5から2022年の97.8、2024年の99.2へと回復傾向にあります。ただし1990年水準（100）には依然届いておらず、ロシア・ウクライナ戦争によるエネルギー価格上昇や円安加速で物価上昇が続いているため、本格回復は途上です。",
+    },
+  ]);
 
   return (
     <>
@@ -41,6 +58,11 @@ export default function RealWagesTrendPage() {
         id="org-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        id="faq-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <ArticleLayout
         slug={SLUG}

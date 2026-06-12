@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import Link from "next/link";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "social-insurance-burden";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/social-insurance-burden" },
-  title: "手取りが増えない本当の理由 ─ 社会保険料30年の増加をデータで見る | KeizaiMap",
+  title: "手取りが増えない本当の理由 ─ 社会保険料30年の増加をデータで見る",
   description: "給与が上がっても手取りが増えない。その原因のひとつが社会保険料の上昇だ。1990年の10.8%から2024年の18.5%へ、34年で約8ポイント増加した社会保険料負担率をデータで読む。",
-  openGraph: {
-    images: [{ url: "/og/article?slug=social-insurance-burden" }],
-  },
+  openGraph: articleOpenGraph("social-insurance-burden"),
 };
 
 export default function SocialInsuranceBurdenPage() {
@@ -24,12 +23,31 @@ export default function SocialInsuranceBurdenPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "社会保険料負担率は34年でどれくらい上がりましたか？",
+      answer: "1990年の10.8%から2024年の18.5%へ、34年間で約7.7ポイント上昇しました。「給与の約1割強」だった社会保険料が「約2割弱」へと増えたことになり、月給30万円の会社員なら社会保険料は約3.2万円から5.6万円へ増えた計算になります。",
+    },
+    {
+      question: "なぜ給与が上がっても手取りが増えないのですか？",
+      answer: "名目給与が上がっても、社会保険料（健康保険・厚生年金・介護保険・雇用保険）の増加分が手取りの伸びを相殺し続けてきたためです。さらに実質賃金が横ばい、消費者物価が約20%上昇という状況が重なり、家計の購買力が圧迫されています。",
+    },
+    {
+      question: "社会保険料は何に使われているのですか？",
+      answer: "厚生年金保険料は老齢・障害・遺族年金の財源、健康保険料は医療費と高齢者医療への拠出、介護保険料は40歳以上が負担する介護サービス費用、雇用保険料は失業給付・育児休業給付の財源です。いずれも少子高齢化が進むほど費用が膨らむ構造を持ちます。",
+    },
+    {
+      question: "今後も社会保険料負担率は上がりますか？",
+      answer: "少子高齢化がさらに進む今後、支える側（現役世代）が減り受け取る側（高齢者・要介護者）が増えるため、社会保険料負担率は上昇圧力が続くとみられます。一方で給付水準の見直しや就労延長・移民政策など対応策も議論されています。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="手取りが増えない本当の理由 ─ 社会保険料30年の増加をデータで見る"

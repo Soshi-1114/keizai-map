@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "mortgage-rate-simulation";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/mortgage-rate-simulation" },
-  title: "日銀利上げで住宅ローンはどうなる？─ 金利推移と家計シミュレーション | KeizaiMap",
+  title: "日銀利上げで住宅ローンはどうなる？─ 金利推移と家計シミュレーション",
   description:
     "2024年3月、日銀はマイナス金利を解除。1990年代初頭の8%台から2022年の0.4%まで下がった住宅ローン金利は、ここから上昇に転じる可能性が高い。借入額別の月返済額シミュレーションを提示する。",
-  openGraph: {
-    title: "日銀利上げで住宅ローンはどうなる？─ 金利推移と家計シミュレーション",
-    images: [{ url: `/og/article?slug=${SLUG}` }],
-  },
+  openGraph: articleOpenGraph("mortgage-rate-simulation"),
 };
 
 export default function MortgageRateSimulationPage() {
@@ -26,12 +24,31 @@ export default function MortgageRateSimulationPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "住宅ローン変動金利は30年でどう変わりましたか？",
+      answer: "1990年に8.5%だった変動金利は、2000年に2.4%、2016年に0.5%、2022年に0.4%まで20倍以上の下落となりました。2024年の日銀利上げ後は約0.6%に上昇しており、長く続いた異常な低金利時代が転換点を迎えています。",
+    },
+    {
+      question: "金利上昇で月返済額はどれくらい変わりますか？",
+      answer: "借入3,500万円・35年返済の場合、金利0.4%なら月8.9万円、1.5%なら月10.7万円となり、月約1.8万円の増加（35年通算で749万円の追加負担）になります。借入5,000万円なら金利2%で月16.6万円、年収700万円世帯の手取りの36%が返済に消える計算です。",
+    },
+    {
+      question: "変動金利と固定金利、どちらを選ぶべきですか？",
+      answer: "変動金利は月返済額に余裕があり繰上返済を予定している人、短期で売却・完済する見込みの人に向いています。固定金利は金利上昇リスクを取りたくない人、家計のキャッシュフローを長期で予測したい人、35年フルローンを組む人に向いています。",
+    },
+    {
+      question: "今後5年で住宅ローン金利はどうなりますか？",
+      answer: "3つのシナリオが想定されます。緩やかな利上げで2028年に住宅ローン変動金利1.0〜1.2%、中位で年0.5%程度の利上げで1.5〜2.0%、急速利上げで2〜3%台。フラット35の固定金利は1.8%前後で、金利が2%上昇すると変動の方が高くなります。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="日銀利上げで住宅ローンはどうなる？─ 金利推移と家計シミュレーション"

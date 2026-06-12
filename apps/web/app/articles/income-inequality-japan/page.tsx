@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { articleOpenGraph } from "@/lib/article-metadata";
+import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "income-inequality-japan";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/income-inequality-japan" },
-  title: "格差は本当に広がっているのか？─ ジニ係数と所得分布で見る30年 | KeizaiMap",
+  title: "格差は本当に広がっているのか？─ ジニ係数と所得分布で見る30年",
   description:
     "「日本は格差社会化している」とよく言われる。本当か。ジニ係数（当初/再分配）・相対的貧困率・所得分布の変化を30年スパンで検証し、格差の実態と政策効果をデータで解説する。",
-  openGraph: {
-    title: "格差は本当に広がっているのか？─ ジニ係数と所得分布で見る30年",
-    images: [{ url: `/og/article?slug=${SLUG}` }],
-  },
+  openGraph: articleOpenGraph("income-inequality-japan"),
 };
 
 export default function IncomeInequalityPage() {
@@ -26,12 +24,31 @@ export default function IncomeInequalityPage() {
   });
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(SLUG);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const faqJsonLd = generateFaqPageJsonLd([
+    {
+      question: "ジニ係数とは何ですか？",
+      answer: "ジニ係数は0〜1の間の数字で、0が完全平等・1が完全不平等を意味する格差指標です。日本では厚生労働省「所得再分配調査」が、政府介入前の「当初所得ジニ係数」と税・社会保障給付後の「再分配所得ジニ係数」の2種類を発表しています。",
+    },
+    {
+      question: "日本のジニ係数は30年でどう変化しましたか？",
+      answer: "当初所得ジニ係数は1990年の0.434から2024年の約0.580へ34%上昇し、経済そのものの格差は大幅に拡大しています。一方、再分配後のジニ係数は0.364→約0.380とわずか4%の上昇にとどまっており、政府の再分配機能が格差を半分以上吸収しています。",
+    },
+    {
+      question: "日本の相対的貧困率はどれくらいですか？",
+      answer: "日本の相対的貧困率は2022年で15.4%、OECD平均（11.4%）を大きく上回ります。特にひとり親世帯の貧困率は44.5%とOECD諸国の中でも最悪水準で、約半数が貧困線以下で生活しています。",
+    },
+    {
+      question: "国際的に見て日本は平等な国ですか？",
+      answer: "再分配ジニ係数で見るとスウェーデン0.28、ドイツ・フランス0.30、OECD平均0.32に対して日本は0.38で、米国（0.39）に次ぐ高水準の格差です。貧困率も米国とほぼ同水準で、「日本は平等な国」というイメージはもはや事実と乖離しています。",
+    },
+  ]);
 
   return (
     <>
       <script id="article-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script id="org-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
         title="格差は本当に広がっているのか？─ ジニ係数と所得分布で見る30年"
