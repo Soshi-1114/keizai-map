@@ -11,16 +11,22 @@ interface Props {
 
 export function AdminBar({ administrations, yearRange }: Props) {
   const isMobile = useIsMobile();
-  const [hoveredKey, setHoveredKey] = useState<string | null>(null);
+  // ホバー（マウス）またはフォーカス（キーボード）でツールチップを表示
+  const [activeKey, setActiveKey] = useState<string | null>(null);
   const [start, end] = yearRange;
   const span = end - start;
 
   const visible = administrations.filter(a => a.end > start && a.start < end);
 
   return (
-    <div className="relative mt-1" style={{ height: 40 }}>
+    <div
+      className="relative mt-1"
+      style={{ height: 40 }}
+      role="group"
+      aria-label={`政権の表示帯（${start}年〜${end}年）`}
+    >
       {/* clipped band backgrounds */}
-      <div className="absolute inset-0 rounded overflow-hidden">
+      <div className="absolute inset-0 rounded overflow-hidden" aria-hidden>
         {visible.map(admin => {
           const bandStart = Math.max(admin.start, start);
           const bandEnd = Math.min(admin.end, end);
@@ -42,33 +48,48 @@ export function AdminBar({ administrations, yearRange }: Props) {
         })}
       </div>
 
-      {/* interactive overlay — overflow visible so tooltips can escape upward */}
+      {/* interactive overlay — button にしてキーボード/SR 対応 */}
       {visible.map(admin => {
         const bandStart = Math.max(admin.start, start);
         const bandEnd = Math.min(admin.end, end);
         const left = ((bandStart - start) / span) * 100;
         const width = ((bandEnd - bandStart) / span) * 100;
         const key = `${admin.name}-${admin.start}`;
-        const isHovered = hoveredKey === key;
+        const isActive = activeKey === key;
+        const description = `${admin.name}（${admin.party}） ${admin.start}年から${admin.end}年`;
 
         return (
-          <div
+          <button
+            type="button"
             key={key}
-            className="absolute top-0 bottom-0 flex flex-col items-center justify-center"
+            className="absolute top-0 bottom-0 flex flex-col items-center justify-center bg-transparent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600"
             style={{
               left: `${left}%`,
               width: `${width}%`,
               minWidth: 2,
               cursor: "default",
-              zIndex: isHovered ? 20 : 1,
+              zIndex: isActive ? 20 : 1,
+              border: "none",
+              padding: 0,
             }}
-            onMouseEnter={() => setHoveredKey(key)}
-            onMouseLeave={() => setHoveredKey(null)}
+            aria-label={description}
+            aria-expanded={isActive}
+            onMouseEnter={() => setActiveKey(key)}
+            onMouseLeave={() => setActiveKey((prev) => (prev === key ? null : prev))}
+            onFocus={() => setActiveKey(key)}
+            onBlur={() => setActiveKey((prev) => (prev === key ? null : prev))}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                setActiveKey(null);
+                (e.currentTarget as HTMLButtonElement).blur();
+              }
+            }}
           >
             {!isMobile && width > 4 && (
               <span
                 className="text-[9px] font-bold leading-tight px-0.5 w-full text-center overflow-hidden"
                 style={{ color: admin.color }}
+                aria-hidden
               >
                 {width > 6 ? admin.name : "…"}
               </span>
@@ -76,7 +97,8 @@ export function AdminBar({ administrations, yearRange }: Props) {
             {!isMobile && width > 8 && (
               <span
                 className="text-[8px] leading-tight px-0.5 w-full text-center overflow-hidden"
-                style={{ color: admin.color + "bb" }}
+                style={{ color: admin.color }}
+                aria-hidden
               >
                 {admin.party}
               </span>
@@ -87,13 +109,15 @@ export function AdminBar({ administrations, yearRange }: Props) {
               <span
                 className="text-[7px] font-bold leading-tight px-0.5 w-full text-center overflow-hidden truncate"
                 style={{ color: admin.color }}
+                aria-hidden
               >
                 {admin.party}
               </span>
             )}
 
-            {isHovered && (
+            {isActive && (
               <div
+                role="tooltip"
                 className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 z-50 whitespace-nowrap rounded-lg px-3 py-2 text-xs shadow-xl pointer-events-none"
                 style={{
                   backgroundColor: "var(--card)",
@@ -107,7 +131,7 @@ export function AdminBar({ administrations, yearRange }: Props) {
                 <div style={{ color: "var(--muted)" }}>{admin.start}–{admin.end}</div>
               </div>
             )}
-          </div>
+          </button>
         );
       })}
     </div>
