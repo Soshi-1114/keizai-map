@@ -37,6 +37,31 @@ test.describe("モバイル表示", () => {
     const windowWidth = await page.evaluate(() => window.innerWidth);
     expect(bodyWidth).toBeLessThanOrEqual(windowWidth + 2); // 2px の誤差許容
   });
+
+  test("AdminBarに政権名が表示される（1990-2025）", async ({ page }) => {
+    // 長期政権の名前のいくつかは aria-hidden span として描画されるため
+    // テキストノードで包括的に確認する
+    const adminBar = page.getByRole("group", { name: /政権の表示帯/ });
+    await expect(adminBar).toBeVisible();
+    // 長期政権の代表的な名前のうち少なくとも1つは見える（width > 6%の閾値を超える）
+    const candidates = ["小泉", "安倍", "岸田", "民主"];
+    const visibleCount = await Promise.all(
+      candidates.map(async (name) =>
+        adminBar.locator(`text=${name}`).first().isVisible().catch(() => false),
+      ),
+    ).then((arr) => arr.filter(Boolean).length);
+    expect(visibleCount).toBeGreaterThan(0);
+  });
+
+  test("指標トグルの主要4指標が常に表示される", async ({ page }) => {
+    const group = page.getByRole("group", { name: "重ねて表示する指標" }).first();
+    await expect(group).toBeVisible();
+    for (const label of ["実質賃金", "消費者物価（CPI）", "税収", "USD/JPY"]) {
+      await expect(
+        group.getByRole("button", { name: label }),
+      ).toBeVisible();
+    }
+  });
 });
 
 test.describe("モバイル記事表示", () => {
