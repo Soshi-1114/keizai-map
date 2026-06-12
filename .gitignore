@@ -14,3 +14,8 @@ apps/web/out/
 # misc
 .DS_Store
 *.log
+
+# test artifacts
+apps/web/coverage/
+apps/web/playwright-report/
+apps/web/test-results/
