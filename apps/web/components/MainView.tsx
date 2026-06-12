@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import dynamic from "next/dynamic";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
 import { useIsMobile } from "@/lib/hooks";
@@ -12,12 +12,14 @@ import {
 } from "@/lib/dashboard-hooks";
 import { InsightCards } from "./InsightCards";
 import { MobileFiltersSheet } from "./MobileFiltersSheet";
+import { DataTable } from "./DataTable";
 import { DashboardHeader } from "./Dashboard/DashboardHeader";
 import { IndicatorToggleBar } from "./Dashboard/IndicatorToggleBar";
 import { HeroStory } from "./Dashboard/HeroStory";
 import { FilterSection } from "./Dashboard/FilterSection";
 import { ViewModeTabs, VIEW_MODES, type ViewMode } from "./Dashboard/ViewModeTabs";
 import { ShareButton } from "./Dashboard/ShareButton";
+import { ChartToolbar } from "./Dashboard/ChartToolbar";
 import { DashboardFooter } from "./Dashboard/DashboardFooter";
 import { RelatedArticles } from "./Dashboard/RelatedArticles";
 import { AboutAndFAQ } from "./Dashboard/AboutAndFAQ";
@@ -49,6 +51,10 @@ export function MainView({ initialParams }: MainViewProps) {
 
   const [viewMode, setViewMode] = useState<ViewMode>("chart");
   const [showFiltersSheet, setShowFiltersSheet] = useState(false);
+  // DataTable はモード横断機能。state を MainView に持ち上げ、推移/政権/ショック/イベント
+  // のどのビューでもチャート下に表示できるようにする。
+  const [showDataTable, setShowDataTable] = useState(false);
+  const dataTableContainerId = useId();
 
   const [yearRange, setYearRange] = useState<[number, number]>(() =>
     parseRange(initialParams?.range ?? null),
@@ -171,6 +177,17 @@ export function MainView({ initialParams }: MainViewProps) {
           {!isMobile && <ShareButton variant="inline" />}
         </div>
 
+        {/* モード横断ツールバー（ブックマーク・CSV・データ表）— どのビューモードでも操作可 */}
+        <ChartToolbar
+          variant={isMobile ? "mobile" : "pc"}
+          activeIndicators={activeIndicators}
+          activeCategories={activeCategories}
+          yearRange={yearRange}
+          showDataTable={showDataTable}
+          onToggleDataTable={() => setShowDataTable(v => !v)}
+          dataTableContainerId={dataTableContainerId}
+        />
+
         {/* Chart / ComparisonView コンテナ
             SP: 横余白を最小化 + 画面端まで広げる (-mx-2) ことで描画幅 +24px */}
         <div
@@ -184,7 +201,6 @@ export function MainView({ initialParams }: MainViewProps) {
               isMobile={isMobile}
               filteredData={filteredData}
               effectiveIndicators={activeIndicators}
-              activeIndicators={activeIndicators}
               activeCategories={activeCategories}
               yearRange={yearRange}
             />
@@ -200,6 +216,17 @@ export function MainView({ initialParams }: MainViewProps) {
             />
           )}
         </div>
+
+        {/* データテーブル（モード横断のアクセシビリティ用代替ビュー） */}
+        {showDataTable && (
+          <div
+            id={dataTableContainerId}
+            className="rounded-xl border p-4"
+            style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+          >
+            <DataTable data={filteredData} activeIndicators={activeIndicators} />
+          </div>
+        )}
 
         <InsightCards
           data={filteredData}
