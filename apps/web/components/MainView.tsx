@@ -18,12 +18,16 @@ import { DashboardHeader } from "./Dashboard/DashboardHeader";
 import { IndicatorToggleBar } from "./Dashboard/IndicatorToggleBar";
 import { HeroStatsBar } from "./Dashboard/HeroStatsBar";
 import { FilterSection } from "./Dashboard/FilterSection";
-import { ViewModeTabs, type ViewMode } from "./Dashboard/ViewModeTabs";
+import { ViewModeTabs, VIEW_MODES, type ViewMode } from "./Dashboard/ViewModeTabs";
 import { ChartPanel } from "./Dashboard/ChartPanel";
 import { ShareButton } from "./Dashboard/ShareButton";
 import { DashboardFooter } from "./Dashboard/DashboardFooter";
 
 const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key) as IndicatorKey[];
+
+const VIEW_MODE_DESCRIPTIONS: Record<ViewMode, string> = Object.fromEntries(
+  VIEW_MODES.map(m => [m.key, m.description]),
+) as Record<ViewMode, string>;
 
 interface MainViewProps {
   initialParams?: {
@@ -159,16 +163,23 @@ export function MainView({ initialParams }: MainViewProps) {
           />
         )}
 
-        {/* ビューモード + Chart / ComparisonView */}
+        {/* ビューモードを上位レベルに昇格 + 現在モードの説明 */}
+        <div className={`flex items-center gap-2 ${isMobile ? "flex-col" : ""}`}>
+          <ViewModeTabs viewMode={viewMode} onChange={setViewMode} isMobile={isMobile} />
+          {!isMobile && (
+            <p className="text-xs" style={{ color: "var(--muted)" }}>
+              {VIEW_MODE_DESCRIPTIONS[viewMode]}
+            </p>
+          )}
+          {!isMobile && <div className="flex-1" />}
+          {!isMobile && <ShareButton variant="inline" />}
+        </div>
+
+        {/* Chart / ComparisonView コンテナ */}
         <div
           className="rounded-xl border p-4"
           style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
         >
-          <div className={`flex items-center gap-2 mb-3 ${isMobile ? "flex-col" : ""}`}>
-            <ViewModeTabs viewMode={viewMode} onChange={setViewMode} isMobile={isMobile} />
-            {!isMobile && <div className="flex-1" />}
-            {!isMobile && <ShareButton variant="inline" />}
-          </div>
 
           {viewMode === "chart" ? (
             <ChartPanel
