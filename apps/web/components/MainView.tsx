@@ -23,6 +23,7 @@ import { ChartToolbar } from "./Dashboard/ChartToolbar";
 import { DashboardFooter } from "./Dashboard/DashboardFooter";
 import { RelatedArticles } from "./Dashboard/RelatedArticles";
 import { AboutAndFAQ } from "./Dashboard/AboutAndFAQ";
+import { Sidebar } from "./Dashboard/Sidebar";
 
 // recharts を含む重いコンポーネントを分割。SSR で HTML を返したうえで JS チャンクを並列ロード
 const ChartPanel = dynamic(() => import("./Dashboard/ChartPanel").then(m => ({ default: m.ChartPanel })), {
@@ -110,7 +111,8 @@ export function MainView({ initialParams }: MainViewProps) {
       className="min-h-screen p-4 md:p-10"
       style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
     >
-      <div className="max-w-7xl mx-auto space-y-5">
+      <div className="max-w-screen-2xl mx-auto xl:grid xl:grid-cols-[minmax(0,1fr)_340px] xl:gap-8 space-y-5 xl:space-y-0">
+        <div className="space-y-5 xl:col-start-1">
         <DashboardHeader />
 
         {/* ファーストビューの読み解き — PC/SP 両方で表示 */}
@@ -149,16 +151,18 @@ export function MainView({ initialParams }: MainViewProps) {
           </button>
         )}
 
-        {/* フィルターセクション（PC） */}
+        {/* フィルターセクション（PC、xl未満のみ。xl以上は Sidebar に移動） */}
         {!isMobile && (
-          <FilterSection
-            yearRange={yearRange}
-            activeCategories={activeCategories}
-            onYearRangeChange={setYearRange}
-            onYearRangeCommit={setCommittedYearRange}
-            onCategoryToggle={toggleCategory}
-            isMobile={isMobile}
-          />
+          <div className="xl:hidden">
+            <FilterSection
+              yearRange={yearRange}
+              activeCategories={activeCategories}
+              onYearRangeChange={setYearRange}
+              onYearRangeCommit={setCommittedYearRange}
+              onCategoryToggle={toggleCategory}
+              isMobile={isMobile}
+            />
+          </div>
         )}
 
         {/* ボトムシート（モバイル） */}
@@ -285,13 +289,29 @@ export function MainView({ initialParams }: MainViewProps) {
           activeIndicators={activeIndicators}
         />
 
-        <RelatedArticles activeIndicators={activeIndicators} yearRange={yearRange} />
+        {/* 関連記事は xl 以上では Sidebar に集約。xl 未満ではここに表示 */}
+        <div className="xl:hidden">
+          <RelatedArticles activeIndicators={activeIndicators} yearRange={yearRange} />
+        </div>
 
         <AboutAndFAQ />
 
         {isMobile && <ShareButton variant="block" />}
 
         <DashboardFooter />
+        </div>
+
+        {/* xl 以上のみ表示するサイドバー */}
+        {!isMobile && (
+          <Sidebar
+            yearRange={yearRange}
+            activeIndicators={activeIndicators}
+            activeCategories={activeCategories}
+            onYearRangeChange={setYearRange}
+            onYearRangeCommit={setCommittedYearRange}
+            onCategoryToggle={toggleCategory}
+          />
+        )}
       </div>
     </main>
   );
