@@ -31,23 +31,29 @@ export function MobileFiltersSheet({
   const dragStartY = useRef<number | null>(null);
   const [dragOffset, setDragOffset] = useState(0);
 
-  // Escape キーで閉じる
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
-  // マウント時:
-  //  (a) Chart が見える位置までスクロール
-  //  (b) 背景の body スクロールをロック
-  useEffect(() => {
+  // 閉じる際、フィルター変更を反映したチャートを見せたい
+  const handleClose = useCallback(() => {
     document.getElementById("chart-container")?.scrollIntoView({
       block: "start",
       behavior: "smooth",
     });
+    onClose();
+  }, [onClose]);
+
+  // Escape キーで閉じる
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [handleClose]);
+
+  // マウント時: 背景の body スクロールをロックするだけに留める。
+  // 開いた瞬間に scrollIntoView でチャート位置へ飛ぶと、ユーザーが触っていない
+  // のに背景が動いて見えて混乱するため削除（以前の挙動）。
+  // 代わりに handleClose 経由で閉じるタイミングでチャートへスクロール。
+  useEffect(() => {
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
@@ -73,9 +79,9 @@ export function MobileFiltersSheet({
       const delta = e.clientY - dragStartY.current;
       dragStartY.current = null;
       setDragOffset(0);
-      if (delta > DRAG_CLOSE_THRESHOLD) onClose();
+      if (delta > DRAG_CLOSE_THRESHOLD) handleClose();
     },
-    [onClose],
+    [handleClose],
   );
 
   return (
@@ -84,7 +90,7 @@ export function MobileFiltersSheet({
       <div
         className="fixed inset-0 z-40"
         style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-        onClick={onClose}
+        onClick={handleClose}
         aria-hidden
       />
 
@@ -122,7 +128,7 @@ export function MobileFiltersSheet({
             <div className="h-1 w-12 rounded-full" style={{ backgroundColor: "var(--border)" }} />
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             aria-label="フィルターを閉じる"
             className="flex items-center justify-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             style={{

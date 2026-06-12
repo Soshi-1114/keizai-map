@@ -30,8 +30,8 @@ export function EventFilter({ categories, activeCategories, onToggle }: Props) {
             aria-label={`${cat}カテゴリのイベントを${active ? "非表示" : "表示"}`}
             className="rounded-full text-sm font-medium transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             style={{
-              // タップ領域 44x44 相当を確保（WCAG 2.5.5）
-              minHeight: 36,
+              // タップ領域 44x44 を確保（WCAG 2.5.5 推奨）
+              minHeight: 44,
               padding: "0 14px",
               // 非アクティブ時も透明度を下げず、線種で状態を区別
               border: active ? `2px solid ${color}` : "1.5px dashed var(--border)",

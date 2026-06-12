@@ -22,8 +22,10 @@ export function EraShortcuts({ yearRange, onRangeChange }: Props) {
           <button
             key={label}
             onClick={() => onRangeChange(range)}
-            className="px-3 py-1 rounded-full text-xs border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="rounded-full text-xs border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             style={{
+              minHeight: 44,
+              padding: "0 14px",
               borderColor:     isActive ? "var(--link)" : "var(--border)",
               color:           isActive ? "var(--link)" : "var(--muted)",
               backgroundColor: isActive ? "#1d4ed815" : "transparent",

@@ -113,9 +113,16 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
     };
   }, [normalized]);
 
-  // モバイルでは10年おき、PCでは5年おきに目盛り
+  // 表示期間の長さに応じて目盛り間隔を動的決定。短期間では中間の年も
+  // 読めるよう細かく、長期間では字が重ならない粗さにする。
   const xTicks = useMemo(() => {
-    const step = isMobile ? 10 : 5;
+    const span = maxYear - minYear;
+    let step: number;
+    if (isMobile) {
+      step = span >= 30 ? 10 : span >= 10 ? 5 : 2;
+    } else {
+      step = span >= 30 ? 5 : span >= 10 ? 2 : 1;
+    }
     return normalized
       .filter(d => Number(d.year) % step === 0 || d.year === minYear || d.year === maxYear)
       .map(d => Number(d.year));
@@ -160,7 +167,8 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
   }, [normalized, activeConfigs, yAxisMode]);
 
   const yAxisWidth = isMobile ? 42 : 60;
-  const chartHeight = isMobile ? 260 : 360;
+  // SP は 260 → 300 に引き上げ。9指標 + イベント線 + 政権バーで詰まり気味だったため
+  const chartHeight = isMobile ? 300 : 360;
   // PC は 3 レーン分のラベル高さを確保（lane2 dy=-32 ＋ 余白）
   const chartMargin = isMobile
     ? { top: 8, right: 8, left: 0, bottom: 5 }
@@ -315,8 +323,8 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
 
         <Legend
           wrapperStyle={{ paddingTop: 8 }}
-          formatter={v => <span style={{ color: "var(--text)", fontSize: isMobile ? 11 : 12 }}>{v}</span>}
-          iconSize={isMobile ? 8 : 14}
+          formatter={v => <span style={{ color: "var(--text)", fontSize: 12 }}>{v}</span>}
+          iconSize={14}
         />
 
         {visibleEvents.map(ev => (
