@@ -1,11 +1,11 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { generatePageBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { generatePageBreadcrumbJsonLd, generateOrganizationJsonLd, generatePersonJsonLd, generateWebSiteJsonLd } from "@/lib/jsonld";
 import { BASE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "KeizaiMapについて — データソース・サービス概要",
+  title: "KeizaiMapについて — データソース・運営体制",
   description:
     "KeizaiMapのサービス概要・データ出典・政治的中立性に関する宣言。賃金・物価・税収・為替データの出典と取得方法を掲載。",
   alternates: { canonical: "/about" },
@@ -47,11 +47,15 @@ export default function AboutPage() {
     { name: "KeizaiMapについて", url: `${BASE_URL}/about` },
   ]);
   const organizationJsonLd = generateOrganizationJsonLd();
+  const personJsonLd = generatePersonJsonLd();
+  const websiteJsonLd = generateWebSiteJsonLd();
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
     <main id="main" className="min-h-screen p-6 overflow-x-hidden" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
       <div className="mx-auto space-y-0 min-w-0" style={{ maxWidth: 720 }}>
 
@@ -140,15 +144,37 @@ export default function AboutPage() {
           </p>
         </Section>
 
-        {/* 運営者 */}
-        <Section title="運営者">
+        {/* 編集方針 */}
+        <Section title="編集方針">
           <div
             className="rounded-xl p-4 text-sm leading-relaxed space-y-2"
             style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}
           >
             <p style={{ color: "var(--text)" }}>
+              KeizaiMap は<strong>「公的統計の数字をそのまま見せる」</strong>ことを編集の原則としています。
+            </p>
+            <ul className="list-disc pl-5 space-y-1" style={{ color: "var(--muted)" }}>
+              <li><strong>一次情報のみを採用</strong>：厚生労働省・総務省・財務省・日本銀行・国土交通省・OECD の公開統計が出典。二次的なまとめ記事・ニュース記事は数値ソースに使用しません。</li>
+              <li><strong>計算式とロジックを公開</strong>：指数化（1990=100）や年平均化などの集計処理はすべて GitHub の <code>packages/data</code> に実装し、変更履歴を残しています。</li>
+              <li><strong>記事は政治的中立</strong>：特定の政党・政権の評価を目的としません。「3本の矢で税収は43.9兆円から60.8兆円へ増加した」のように、評価ではなく事実を提示します。</li>
+              <li><strong>誤りは即時訂正</strong>：データの誤り・記述ミスを発見した場合は GitHub のコミット履歴で訂正の事実を残し、記事末尾の出典欄に最終更新日を明記します。</li>
+            </ul>
+            <p style={{ color: "var(--muted)" }}>
+              本サービスは投資助言・税務助言を提供するものではありません。掲載数値は投資判断・税務判断の根拠としての利用を意図したものではなく、利用は自己責任でお願いします。
+            </p>
+          </div>
+        </Section>
+
+        {/* 運営者 */}
+        <Section title="運営者">
+          <div
+            id="operator"
+            className="rounded-xl p-4 text-sm leading-relaxed space-y-2"
+            style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}
+          >
+            <p style={{ color: "var(--text)" }}>
               <strong>KeizaiMap</strong> は個人開発のオープンソースプロジェクトです。
-              開発・運営者は GitHub（<a href="https://github.com/Soshi-1114" target="_blank" rel="noopener noreferrer" style={{ color: "var(--link)" }}>@Soshi-1114</a>）で活動するエンジニアです。
+              開発・運営者は GitHub（<a href="https://github.com/Soshi-1114" target="_blank" rel="author noopener noreferrer" style={{ color: "var(--link)" }}>@Soshi-1114</a>）で活動するソフトウェアエンジニアです。
             </p>
             <p style={{ color: "var(--muted)" }}>
               本サービスは経済学者・専門家の監修を受けていません。掲載するすべての数値は

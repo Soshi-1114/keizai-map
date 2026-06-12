@@ -5,7 +5,7 @@ import { generatePageBreadcrumbJsonLd } from "@/lib/jsonld";
 import { BASE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "プライバシーポリシー — KeizaiMap",
+  title: "プライバシーポリシー",
   description:
     "KeizaiMapのプライバシーポリシー。Cookie・アクセス解析（Google Analytics）・広告配信・アフィリエイトリンクに関する取り扱いを説明します。",
   alternates: { canonical: "/privacy" },

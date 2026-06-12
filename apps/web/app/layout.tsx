@@ -19,7 +19,10 @@ const GA_ID = "G-L3881RG05D";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  title: "KeizaiMap — 数字で見る、日本の30年",
+  title: {
+    default: "KeizaiMap — 数字で見る、日本の30年",
+    template: "%s | KeizaiMap",
+  },
   alternates: {
     canonical: "/",
     types: {

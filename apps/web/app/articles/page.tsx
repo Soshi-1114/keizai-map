@@ -4,7 +4,7 @@ import { ARTICLES } from "@/lib/articles";
 import { BASE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "日本経済の解説記事一覧 — 実質賃金・消費税・円安をデータで読む | KeizaiMap",
+  title: "日本経済の解説記事一覧 — 実質賃金・消費税・円安をデータで読む",
   description: `実質賃金・消費税・円安・社会保険料・少子化など、日本経済30年の論点を公的統計データで解説する全${ARTICLES.length}本の記事一覧。グラフと数字で「なぜ生活が苦しくなったのか」を読み解きます。`,
   alternates: { canonical: "/articles" },
   openGraph: {

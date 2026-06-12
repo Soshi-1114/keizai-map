@@ -5,7 +5,7 @@ import { generatePageBreadcrumbJsonLd } from "@/lib/jsonld";
 import { BASE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "お問い合わせ — KeizaiMap",
+  title: "お問い合わせ",
   description:
     "KeizaiMapへのお問い合わせページ。データの誤り・機能改善のご提案・その他のご連絡はこちらからどうぞ。原則48時間以内に確認・回答します。",
   alternates: { canonical: "/contact" },
