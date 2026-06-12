@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   BarChart, Bar,
   LineChart, Line,
+  LabelList,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ReferenceLine, ResponsiveContainer,
 } from "recharts";
@@ -101,7 +102,7 @@ function AdminChart({
     const s = atOrAfter(sYear);
     const e = atOrBefore(eYear);
     if (!s || !e || s.year === e.year) return null;
-    const row: Record<string, string | number> = {
+    const row: Record<string, string | number | boolean> = {
       name:      `${admin.name}\n(${admin.party})`,
       startYear: s.year,
       endYear:   e.year,
@@ -112,6 +113,10 @@ function AdminChart({
       const ev = e[cfg.key];
       if (typeof sv === "number" && typeof ev === "number" && sv !== 0) {
         row[cfg.key] = changePct(sv, ev);
+      } else {
+        // 欠損データ: バーは0で描画し、N/A ラベルで明示
+        row[cfg.key] = 0;
+        row[`${cfg.key}__na`] = true;
       }
     }
     return row;
@@ -145,7 +150,7 @@ function AdminChartBody({
   data,
   shown,
 }: {
-  data: Array<Record<string, string | number>>;
+  data: Array<Record<string, string | number | boolean>>;
   shown: typeof INDICATOR_CONFIGS;
 }) {
   return (
@@ -153,6 +158,9 @@ function AdminChartBody({
       <p className="text-xs mb-4" style={{ color: "var(--muted)" }}>
         各政権の就任期間中における指標変化率（%）。2年ごとの最近接データから算出。
         正の値が必ずしも「良い」とは限りません。
+        <span className="ml-1" style={{ color: "var(--muted)" }}>
+          欠損は <em style={{ fontStyle: "italic" }}>N/A</em> 表記。
+        </span>
       </p>
       <ResponsiveContainer width="100%" height={Math.max(300, data.length * 64)}>
         <BarChart
@@ -185,10 +193,15 @@ function AdminChartBody({
               const d = payload?.[0]?.payload;
               return d ? `${d.name.replace(/\n/g, " ")}（${d.startYear}→${d.endYear}年）` : "";
             }}
-            formatter={(v: number, name: string) => [
-              `${v > 0 ? "+" : ""}${v.toFixed(1)}%`,
-              name,
-            ]}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            formatter={(v: number, name: string, item: any) => {
+              const payload = item?.payload;
+              const dataKey = item?.dataKey;
+              if (payload && dataKey && payload[`${dataKey}__na`]) {
+                return ["N/A（データなし）", name];
+              }
+              return [`${v > 0 ? "+" : ""}${v.toFixed(1)}%`, name];
+            }}
           />
           <Legend
             wrapperStyle={{ paddingTop: 12 }}
@@ -203,7 +216,60 @@ function AdminChartBody({
               fill={cfg.color}
               radius={2}
               maxBarSize={16}
-            />
+            >
+              {/* 欠損 → N/A、ゼロ → 0% のラベルで欠損と実値を区別 */}
+              <LabelList
+                dataKey={cfg.key}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                content={(props: any) => {
+                  const { x, y, width, height, index } = props;
+                  if (
+                    typeof index !== "number" ||
+                    !data[index]
+                  ) {
+                    return null;
+                  }
+                  const row = data[index];
+                  const isNa = Boolean(row[`${cfg.key}__na`]);
+                  const value = row[cfg.key] as number;
+                  const xNum = Number(x ?? 0);
+                  const yNum = Number(y ?? 0);
+                  const widthNum = Number(width ?? 0);
+                  const heightNum = Number(height ?? 0);
+                  // N/A は0位置の右に薄字で表示
+                  if (isNa) {
+                    return (
+                      <text
+                        x={xNum + widthNum + 4}
+                        y={yNum + heightNum / 2}
+                        dy=".32em"
+                        fontSize={10}
+                        fontStyle="italic"
+                        fill="var(--muted)"
+                      >
+                        N/A
+                      </text>
+                    );
+                  }
+                  // 0% は同じ位置に「0%」と明示してN/Aと区別
+                  if (Math.abs(value) < 0.05) {
+                    return (
+                      <text
+                        x={xNum + widthNum + 4}
+                        y={yNum + heightNum / 2}
+                        dy=".32em"
+                        fontSize={10}
+                        fill="var(--text)"
+                        fontWeight={600}
+                      >
+                        0%
+                      </text>
+                    );
+                  }
+                  return null;
+                }}
+              />
+            </Bar>
           ))}
         </BarChart>
       </ResponsiveContainer>
