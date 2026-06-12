@@ -1,7 +1,17 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+
+// next/font で Noto Sans JP を最適ロード。CSS 変数 --font-sans で参照
+const notoSansJP = Noto_Sans_JP({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-sans",
+  preload: true,
+});
 
 const GA_ID = "G-L3881RG05D";
 
@@ -51,7 +61,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" suppressHydrationWarning>
+    <html lang="ja" suppressHydrationWarning className={notoSansJP.variable}>
       <head>
         <meta name="theme-color" content="#0f172a" />
         <meta name="mobile-web-app-capable" content="yes" />

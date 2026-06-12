@@ -37,7 +37,7 @@
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: 'Hiragino Sans', 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--font-sans), 'Hiragino Sans', 'Helvetica Neue', Arial, sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
