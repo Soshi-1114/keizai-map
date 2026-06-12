@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import type { DataPoint, EventCategory, IndicatorKey } from "./types";
-import { RAW_DATA, INDICATOR_CONFIGS } from "./data";
+import { RAW_DATA } from "./data";
 import { generateNarrative } from "./utils";
 import { addRecent } from "./bookmarks";
 
@@ -18,20 +18,6 @@ export function useFilteredData(yearRange: [number, number]): {
   );
   const narrative = useMemo(() => generateNarrative(filteredData), [filteredData]);
   return { filteredData, narrative };
-}
-
-/** モバイル時 1 指標フォールバックを含む実効指標を計算 */
-export function useEffectiveIndicators(
-  isMobile: boolean,
-  activeIndicators: IndicatorKey[],
-  mobileIndicatorIndex: number,
-): IndicatorKey[] {
-  return useMemo(() => {
-    if (!isMobile) return activeIndicators;
-    if (activeIndicators.length > 0) return activeIndicators;
-    const fallback = INDICATOR_CONFIGS[mobileIndicatorIndex]?.key;
-    return fallback ? [fallback] : [];
-  }, [isMobile, activeIndicators, mobileIndicatorIndex]);
 }
 
 /**

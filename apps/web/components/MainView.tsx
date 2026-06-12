@@ -8,11 +8,9 @@ import { INDICATOR_CONFIGS } from "@/lib/data";
 import { parseRange, parseIndicators, parseCategories } from "@/lib/utils";
 import {
   useFilteredData,
-  useEffectiveIndicators,
   useUrlSync,
 } from "@/lib/dashboard-hooks";
 import { InsightCards } from "./InsightCards";
-import { MobileIndicatorNav } from "./MobileIndicatorNav";
 import { MobileFiltersSheet } from "./MobileFiltersSheet";
 import { DashboardHeader } from "./Dashboard/DashboardHeader";
 import { IndicatorToggleBar } from "./Dashboard/IndicatorToggleBar";
@@ -50,7 +48,6 @@ export function MainView({ initialParams }: MainViewProps) {
   const isMobile = useIsMobile();
 
   const [viewMode, setViewMode] = useState<ViewMode>("chart");
-  const [mobileIndicatorIndex, setMobileIndicatorIndex] = useState(0);
   const [showFiltersSheet, setShowFiltersSheet] = useState(false);
 
   const [yearRange, setYearRange] = useState<[number, number]>(() =>
@@ -63,7 +60,6 @@ export function MainView({ initialParams }: MainViewProps) {
     parseCategories(initialParams?.events ?? null),
   );
 
-  const effectiveIndicators = useEffectiveIndicators(isMobile, activeIndicators, mobileIndicatorIndex);
   const { filteredData, narrative } = useFilteredData(yearRange);
   useUrlSync(activeIndicators, yearRange, activeCategories);
 
@@ -86,36 +82,19 @@ export function MainView({ initialParams }: MainViewProps) {
       <div className="max-w-7xl mx-auto space-y-5">
         <DashboardHeader />
 
-        {/* 指標トグル: PC では水平バー、モバイルではナビ + トグル */}
-        {!isMobile ? (
-          <IndicatorToggleBar
-            variant="pc"
-            activeIndicators={activeIndicators}
-            onToggle={toggleIndicator}
-            onSetAll={setActiveIndicators}
-          />
-        ) : (
-          <div className="space-y-3">
-            <MobileIndicatorNav
-              currentIndex={mobileIndicatorIndex}
-              onIndexChange={setMobileIndicatorIndex}
-              filteredData={filteredData}
-              yearRange={yearRange}
-            />
-            <IndicatorToggleBar
-              variant="mobile"
-              activeIndicators={activeIndicators}
-              onToggle={toggleIndicator}
-              onSetAll={setActiveIndicators}
-            />
-          </div>
-        )}
+        {/* 指標トグル: PC では水平バー、モバイルではコンパクトトグル */}
+        <IndicatorToggleBar
+          variant={isMobile ? "mobile" : "pc"}
+          activeIndicators={activeIndicators}
+          onToggle={toggleIndicator}
+          onSetAll={setActiveIndicators}
+        />
 
         {/* ヒーロー統計バー（PC のみ） */}
         {!isMobile && (
           <HeroStatsBar
             data={filteredData}
-            activeIndicators={effectiveIndicators}
+            activeIndicators={activeIndicators}
             topN={4}
           />
         )}
@@ -194,7 +173,7 @@ export function MainView({ initialParams }: MainViewProps) {
             <ChartPanel
               isMobile={isMobile}
               filteredData={filteredData}
-              effectiveIndicators={effectiveIndicators}
+              effectiveIndicators={activeIndicators}
               activeIndicators={activeIndicators}
               activeCategories={activeCategories}
               yearRange={yearRange}
@@ -203,6 +182,7 @@ export function MainView({ initialParams }: MainViewProps) {
             <ComparisonView
               mode={viewMode}
               activeIndicators={activeIndicators}
+              onToggleIndicator={toggleIndicator}
               yearRange={yearRange}
               activeCategories={activeCategories}
             />
@@ -212,7 +192,7 @@ export function MainView({ initialParams }: MainViewProps) {
         <InsightCards
           data={filteredData}
           yearRange={yearRange}
-          activeIndicators={effectiveIndicators}
+          activeIndicators={activeIndicators}
         />
 
         {narrative && (
@@ -229,7 +209,7 @@ export function MainView({ initialParams }: MainViewProps) {
           </div>
         )}
 
-        <RelatedArticles activeIndicators={effectiveIndicators} yearRange={yearRange} />
+        <RelatedArticles activeIndicators={activeIndicators} yearRange={yearRange} />
 
         <AboutAndFAQ />
 

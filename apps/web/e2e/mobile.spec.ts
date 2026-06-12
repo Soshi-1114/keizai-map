@@ -7,16 +7,9 @@ test.describe("モバイル表示", () => {
     await page.goto("/");
   });
 
-  test("MobileIndicatorNav が表示される", async ({ page }) => {
-    // モバイルナビの ‹ または › ボタンが存在する
-    await expect(page.getByRole("button", { name: "前の指標" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "次の指標" })).toBeVisible();
-  });
-
-  test("指標を次へ切り替えられる", async ({ page }) => {
-    await page.getByRole("button", { name: "次の指標" }).click();
-    // グラフが再描画される
-    await expect(page.locator(".recharts-surface").first()).toBeVisible();
+  test("指標トグルバーが表示される", async ({ page }) => {
+    // 「重ねて表示する指標」セクションが存在する
+    await expect(page.getByRole("group", { name: "重ねて表示する指標" }).first()).toBeVisible();
   });
 
   test("フィルターボタンが表示される", async ({ page }) => {

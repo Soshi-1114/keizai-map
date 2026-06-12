@@ -72,14 +72,83 @@ function changePct(start: number, end: number): number {
 }
 
 // ─────────────────────────────────────────────────────────
+// 指標選択チップ（admin / shock / event で共通）
+// ─────────────────────────────────────────────────────────
+
+interface IndicatorChipSelectorProps {
+  /** "multi" は selected 配列に含まれる全指標、"single" は 1 指標のみ強調 */
+  mode: "multi" | "single";
+  selected: IndicatorKey[] | IndicatorKey;
+  onToggle: (key: IndicatorKey) => void;
+  /** disabled なら斜線 + クリック不可。データが無い等で表示できない指標を示す */
+  disabledKeys?: IndicatorKey[];
+  label?: string;
+}
+
+function IndicatorChipSelector({
+  mode,
+  selected,
+  onToggle,
+  disabledKeys = [],
+  label = "重ねて表示する指標",
+}: IndicatorChipSelectorProps) {
+  const isActive = (key: IndicatorKey) =>
+    mode === "multi"
+      ? (selected as IndicatorKey[]).includes(key)
+      : selected === key;
+
+  return (
+    <div className="mb-4">
+      <div className="text-xs mb-2" style={{ color: "var(--muted)" }}>{label}</div>
+      <div className="flex gap-1.5 flex-wrap" role="group" aria-label={label}>
+        {INDICATOR_CONFIGS.map(cfg => {
+          const active = isActive(cfg.key);
+          const disabled = disabledKeys.includes(cfg.key);
+          return (
+            <button
+              key={cfg.key}
+              onClick={() => !disabled && onToggle(cfg.key)}
+              disabled={disabled}
+              aria-pressed={active}
+              aria-disabled={disabled}
+              className="rounded-full text-xs transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              style={{
+                minHeight: 36,
+                padding: "0 10px",
+                border: `1px solid ${active && !disabled ? cfg.color : "var(--border)"}`,
+                color: disabled
+                  ? "var(--muted)"
+                  : active
+                    ? cfg.darkColor
+                    : "var(--muted)",
+                backgroundColor: active && !disabled ? cfg.color + "15" : "transparent",
+                fontWeight: active ? 600 : 400,
+                cursor: disabled ? "not-allowed" : "pointer",
+                opacity: disabled ? 0.5 : 1,
+                textDecoration: disabled ? "line-through" : "none",
+              }}
+              title={disabled ? "このモードでは表示できません" : undefined}
+            >
+              {cfg.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────
 // 政権別パフォーマンス棒グラフ
 // ─────────────────────────────────────────────────────────
 
 function AdminChart({
   activeIndicators,
+  onToggleIndicator,
   yearRange,
 }: {
   activeIndicators: IndicatorKey[];
+  onToggleIndicator: (key: IndicatorKey) => void;
   yearRange: [number, number];
 }) {
   const shown = INDICATOR_CONFIGS.filter(c => activeIndicators.includes(c.key));
@@ -96,35 +165,54 @@ function AdminChart({
     const s = atOrAfter(sYear);
     const e = atOrBefore(eYear);
     if (!s || !e || s.year === e.year) return null;
-    return {
+    const row: Record<string, string | number> = {
       name:      `${admin.name}\n(${admin.party})`,
       startYear: s.year,
       endYear:   e.year,
       party:     admin.party,
-      wage:      changePct(s.wage, e.wage),
-      cpi:       changePct(s.cpi,  e.cpi),
-      tax:       changePct(s.tax,  e.tax),
-      fx:        changePct(s.fx,   e.fx),
     };
+    for (const cfg of INDICATOR_CONFIGS) {
+      const sv = s[cfg.key];
+      const ev = e[cfg.key];
+      if (typeof sv === "number" && typeof ev === "number" && sv !== 0) {
+        row[cfg.key] = changePct(sv, ev);
+      }
+    }
+    return row;
   }).filter((d): d is NonNullable<typeof d> => d !== null);
-
-  if (shown.length === 0) {
-    return (
-      <p className="text-sm text-center py-8" style={{ color: "var(--muted)" }}>
-        比較する指標を 1 つ以上選択してください。
-      </p>
-    );
-  }
-  if (data.length === 0) {
-    return (
-      <p className="text-sm text-center py-8" style={{ color: "var(--muted)" }}>
-        選択期間（{rangeStart}〜{rangeEnd}年）に該当する政権がありません。
-      </p>
-    );
-  }
 
   return (
     <div>
+      <IndicatorChipSelector
+        mode="multi"
+        selected={activeIndicators}
+        onToggle={onToggleIndicator}
+      />
+
+      {shown.length === 0 ? (
+        <p className="text-sm text-center py-8" style={{ color: "var(--muted)" }}>
+          比較する指標を 1 つ以上選択してください。
+        </p>
+      ) : data.length === 0 ? (
+        <p className="text-sm text-center py-8" style={{ color: "var(--muted)" }}>
+          選択期間（{rangeStart}〜{rangeEnd}年）に該当する政権がありません。
+        </p>
+      ) : (
+        <AdminChartBody data={data} shown={shown} />
+      )}
+    </div>
+  );
+}
+
+function AdminChartBody({
+  data,
+  shown,
+}: {
+  data: Array<Record<string, string | number>>;
+  shown: typeof INDICATOR_CONFIGS;
+}) {
+  return (
+    <>
       <p className="text-xs mb-4" style={{ color: "var(--muted)" }}>
         各政権の就任期間中における指標変化率（%）。2年ごとの最近接データから算出。
         正の値が必ずしも「良い」とは限りません。
@@ -182,7 +270,7 @@ function AdminChart({
           ))}
         </BarChart>
       </ResponsiveContainer>
-    </div>
+    </>
   );
 }
 
@@ -236,25 +324,11 @@ function ShockChart({
 
   return (
     <div>
-      {/* 指標セレクター */}
-      <div className="flex items-center gap-2 mb-4 flex-wrap">
-        <span className="text-xs shrink-0" style={{ color: "var(--muted)" }}>表示指標:</span>
-        {INDICATOR_CONFIGS.map(c => (
-          <button
-            key={c.key}
-            onClick={() => setIndicator(c.key)}
-            className="px-3 py-1 rounded-full text-xs border transition-all"
-            style={{
-              borderColor:     indicator === c.key ? c.color : "var(--border)",
-              color:           indicator === c.key ? c.color : "var(--muted)",
-              backgroundColor: indicator === c.key ? c.color + "20" : "transparent",
-              fontWeight:      indicator === c.key ? 600 : 400,
-            }}
-          >
-            {c.label}
-          </button>
-        ))}
-      </div>
+      <IndicatorChipSelector
+        mode="single"
+        selected={indicator}
+        onToggle={setIndicator}
+      />
 
       <p className="text-xs mb-4" style={{ color: "var(--muted)" }}>
         各ショック発生時を100として指数化。{cfg.label}がどのように変動したかを比較。
@@ -330,9 +404,9 @@ function EventDetailChart({
   const eventChoices = visibleShocks.length > 0 ? visibleShocks : SHOCK_EVENTS;
 
   const [selectedEvent, setSelectedEvent] = useState<typeof SHOCK_EVENTS[0]>(eventChoices[0]);
-  // activeIndicators が空でも全指標から選べるようにフォールバック
-  const indicatorChoices = activeIndicators.length > 0 ? activeIndicators : INDICATOR_CONFIGS.map(c => c.key);
-  const [selectedIndicator, setSelectedIndicator] = useState<IndicatorKey>(indicatorChoices[0] || "wage");
+  const [selectedIndicator, setSelectedIndicator] = useState<IndicatorKey>(
+    activeIndicators[0] ?? "wage",
+  );
 
   const chartData = SHOCK_EVENTS.map(ev => {
     const label = ev.label;
@@ -352,59 +426,34 @@ function EventDetailChart({
 
   return (
     <div className="p-4">
-      <div className="mb-6 flex gap-4 flex-wrap">
-        <div>
-          <label className="text-sm block mb-2" style={{ color: "var(--muted)" }}>
-            イベント選択
-          </label>
-          <div className="flex gap-2 flex-wrap">
-            {eventChoices.map(ev => {
-              const active = selectedEvent.label === ev.label;
-              return (
-                <button
-                  key={ev.label}
-                  onClick={() => setSelectedEvent(ev)}
-                  aria-pressed={active}
-                  className="rounded-md px-4 py-2 text-sm transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                  style={{
-                    border: `1px solid ${active ? ev.color : "var(--border)"}`,
-                    backgroundColor: active ? `${ev.color}20` : "transparent",
-                    color: active ? ev.color : "var(--text)",
-                    fontWeight: active ? 600 : 400,
-                  }}
-                >
-                  {ev.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+      <IndicatorChipSelector
+        mode="single"
+        selected={selectedIndicator}
+        onToggle={setSelectedIndicator}
+      />
 
-        <div>
-          <label
-            htmlFor="event-detail-indicator"
-            className="text-sm block mb-2"
-            style={{ color: "var(--muted)" }}
-          >
-            指標選択
-          </label>
-          <select
-            id="event-detail-indicator"
-            value={selectedIndicator}
-            onChange={(e) => setSelectedIndicator(e.target.value as IndicatorKey)}
-            aria-label="比較する指標を選択"
-            className="px-4 py-2 rounded-md border text-sm cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-            style={{
-              borderColor: "var(--border)",
-              backgroundColor: "var(--card)",
-              color: "var(--text)",
-            }}
-          >
-            {indicatorChoices.map(key => {
-              const cfg = INDICATOR_CONFIGS.find(c => c.key === key);
-              return <option key={key} value={key}>{cfg?.label}</option>;
-            })}
-          </select>
+      <div className="mb-6">
+        <div className="text-xs mb-2" style={{ color: "var(--muted)" }}>イベント選択</div>
+        <div className="flex gap-2 flex-wrap">
+          {eventChoices.map(ev => {
+            const active = selectedEvent.label === ev.label;
+            return (
+              <button
+                key={ev.label}
+                onClick={() => setSelectedEvent(ev)}
+                aria-pressed={active}
+                className="rounded-md px-4 py-2 text-sm transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                style={{
+                  border: `1px solid ${active ? ev.color : "var(--border)"}`,
+                  backgroundColor: active ? `${ev.color}20` : "transparent",
+                  color: active ? ev.color : "var(--text)",
+                  fontWeight: active ? 600 : 400,
+                }}
+              >
+                {ev.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -452,15 +501,20 @@ function EventDetailChart({
 interface Props {
   mode: "admin" | "shock" | "event";
   activeIndicators: IndicatorKey[];
+  onToggleIndicator: (key: IndicatorKey) => void;
   yearRange: [number, number];
   activeCategories?: EventCategory[];
 }
 
-export function ComparisonView({ mode, activeIndicators, yearRange }: Props) {
+export function ComparisonView({ mode, activeIndicators, onToggleIndicator, yearRange }: Props) {
   return (
     <>
       {mode === "admin" ? (
-        <AdminChart activeIndicators={activeIndicators} yearRange={yearRange} />
+        <AdminChart
+          activeIndicators={activeIndicators}
+          onToggleIndicator={onToggleIndicator}
+          yearRange={yearRange}
+        />
       ) : mode === "shock" ? (
         <ShockChart activeIndicators={activeIndicators} yearRange={yearRange} />
       ) : (
