@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { Database } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { generatePageBreadcrumbJsonLd, generateOrganizationJsonLd, generatePersonJsonLd, generateWebSiteJsonLd } from "@/lib/jsonld";
 import { BASE_URL } from "@/lib/constants";
@@ -217,7 +218,13 @@ export default function AboutPage() {
               </p>
             </div>
             <div>
-              <div className="font-semibold mb-1" style={{ color: "var(--text)" }}>📊 データの集計範囲</div>
+              <div
+                className="inline-flex items-center gap-1.5 font-semibold mb-1"
+                style={{ color: "var(--text)" }}
+              >
+                <Database size={14} aria-hidden />
+                データの集計範囲
+              </div>
               <p style={{ color: "var(--muted)" }}>
                 1990年（バブル絶頂期）〜直近確定値までの<strong>年次データ</strong>を表示します。
                 月次・四半期データの追加は現在検討中です。

@@ -13,6 +13,7 @@ import {
   ReferenceLine,
   ReferenceArea,
 } from "recharts";
+import { MapPin } from "lucide-react";
 import type { DataPoint, EconomicEvent, IndicatorKey, Administration } from "@/lib/types";
 import { INDICATOR_CONFIGS, BASELINE_1990 } from "@/lib/data";
 import { useIsMobile } from "@/lib/hooks";
@@ -212,8 +213,12 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             gap: 2,
           }}>
             {nearEvents.map(ev => (
-              <div key={`${ev.year}-${ev.label}`} style={{ color: ev.color, fontWeight: 600, fontSize: 11 }}>
-                📌 {ev.year !== label ? `${ev.year}年 ` : ""}{ev.label}
+              <div
+                key={`${ev.year}-${ev.label}`}
+                style={{ color: ev.color, fontWeight: 600, fontSize: 11, display: "flex", alignItems: "center", gap: 4 }}
+              >
+                <MapPin size={11} aria-hidden />
+                {ev.year !== label ? `${ev.year}年 ` : ""}{ev.label}
               </div>
             ))}
           </div>
