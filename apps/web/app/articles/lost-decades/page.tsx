@@ -89,9 +89,9 @@ export default function LostDecadesPage() {
         <DataBox
           items={[
             { label: "1990年",   value: "100.0", color: "#D97706" },
-            { label: "2002年",   value: "99.9",  note: "デフレの深刻化", color: "#ef4444" },
-            { label: "2012年",   value: "101.5", note: "デフレ脱却へ動く", color: "#D97706" },
-            { label: "2024年",   value: "119.9", note: "34年間で20%上昇", color: "#D97706" },
+            { label: "2002年",   value: "106.8",  note: "97年以降ほぼ横ばい", color: "#ef4444" },
+            { label: "2012年",   value: "105.6", note: "デフレ・震災後", color: "#D97706" },
+            { label: "2024年",   value: "119.9", note: "34年間で約20%上昇", color: "#D97706" },
           ]}
         />
         <p>
@@ -100,7 +100,7 @@ export default function LostDecadesPage() {
         </p>
       </Section>
 
-      <Section heading="税収：景気停滞を反映した40年間の低迷">
+      <Section heading="税収：景気停滞を反映した30年間の低迷">
         <p>
           政府の一般会計税収は、バブル期の高水準からの回復を見せていません。
         </p>
