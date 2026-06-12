@@ -40,8 +40,9 @@ export function AdminBar({ administrations, yearRange }: Props) {
                 left: `${left}%`,
                 width: `${width}%`,
                 minWidth: 2,
-                backgroundColor: admin.color + "22",
-                borderRight: `1px solid ${admin.color}44`,
+                backgroundColor: admin.color + "30",
+                // 境界線を太く・濃くして連続自民の代替わりも視認可能に
+                borderRight: `1.5px solid ${admin.color}aa`,
               }}
             />
           );

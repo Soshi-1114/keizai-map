@@ -10,27 +10,32 @@ export const RAW_DATA: DataPoint[] = rawArray;
 /** フォーマット: "YYYY-MM" */
 export const DATA_UPDATED_AT: string = generatedAt ?? "";
 
+// 自民党は連続代が多く同色だと境界が見えないため、4 段階の青の濃淡を
+// 順番にローテーションさせて隣接政権を視覚的に区別する。
+// AA1=深、AA2=中、AA3=明、AA4=最明
+const LDP_TONES = ["#1E3A78", "#3B6FD4", "#6D9CE5", "#A8C3EE"] as const;
+
 export const ADMINISTRATIONS: Administration[] = [
-  { name: "海部",     start: 1989, end: 1991, party: "自民党",   color: "#3B6FD4" },
-  { name: "宮澤",     start: 1991, end: 1993, party: "自民党",   color: "#3B6FD4" },
+  { name: "海部",     start: 1989, end: 1991, party: "自民党",   color: LDP_TONES[0] },
+  { name: "宮澤",     start: 1991, end: 1993, party: "自民党",   color: LDP_TONES[1] },
   { name: "細川",     start: 1993, end: 1994, party: "日本新党", color: "#2D9E6B" },
-  { name: "羽田",     start: 1994, end: 1994, party: "新生党",   color: "#2D9E6B" },
+  { name: "羽田",     start: 1994, end: 1994, party: "新生党",   color: "#1F7A52" },
   { name: "村山",     start: 1994, end: 1996, party: "自社さ",   color: "#A06FD4" },
-  { name: "橋本",     start: 1996, end: 1998, party: "自民党",   color: "#3B6FD4" },
-  { name: "小渕",     start: 1998, end: 2000, party: "自民党",   color: "#3B6FD4" },
-  { name: "森",       start: 2000, end: 2001, party: "自民党",   color: "#3B6FD4" },
-  { name: "小泉",     start: 2001, end: 2006, party: "自民党",   color: "#3B6FD4" },
-  { name: "安倍①",   start: 2006, end: 2007, party: "自民党",   color: "#3B6FD4" },
-  { name: "福田",     start: 2007, end: 2008, party: "自民党",   color: "#3B6FD4" },
-  { name: "麻生",     start: 2008, end: 2009, party: "自民党",   color: "#3B6FD4" },
+  { name: "橋本",     start: 1996, end: 1998, party: "自民党",   color: LDP_TONES[0] },
+  { name: "小渕",     start: 1998, end: 2000, party: "自民党",   color: LDP_TONES[1] },
+  { name: "森",       start: 2000, end: 2001, party: "自民党",   color: LDP_TONES[2] },
+  { name: "小泉",     start: 2001, end: 2006, party: "自民党",   color: LDP_TONES[0] },
+  { name: "安倍①",   start: 2006, end: 2007, party: "自民党",   color: LDP_TONES[1] },
+  { name: "福田",     start: 2007, end: 2008, party: "自民党",   color: LDP_TONES[2] },
+  { name: "麻生",     start: 2008, end: 2009, party: "自民党",   color: LDP_TONES[3] },
   { name: "鳩山",     start: 2009, end: 2010, party: "民主党",   color: "#2D9E6B" },
-  { name: "菅",       start: 2010, end: 2011, party: "民主党",   color: "#2D9E6B" },
-  { name: "野田",     start: 2011, end: 2012, party: "民主党",   color: "#2D9E6B" },
-  { name: "安倍②",   start: 2012, end: 2020, party: "自民党",   color: "#3B6FD4" },
-  { name: "菅(義偉)", start: 2020, end: 2021, party: "自民党",   color: "#3B6FD4" },
-  { name: "岸田",     start: 2021, end: 2024, party: "自民党",   color: "#3B6FD4" },
-  { name: "石破",     start: 2024, end: 2025, party: "自民党",   color: "#3B6FD4" },
-  { name: "高市",     start: 2025, end: 2026, party: "自民党",   color: "#3B6FD4" },
+  { name: "菅",       start: 2010, end: 2011, party: "民主党",   color: "#1F7A52" },
+  { name: "野田",     start: 2011, end: 2012, party: "民主党",   color: "#0F5D3D" },
+  { name: "安倍②",   start: 2012, end: 2020, party: "自民党",   color: LDP_TONES[0] },
+  { name: "菅(義偉)", start: 2020, end: 2021, party: "自民党",   color: LDP_TONES[1] },
+  { name: "岸田",     start: 2021, end: 2024, party: "自民党",   color: LDP_TONES[2] },
+  { name: "石破",     start: 2024, end: 2025, party: "自民党",   color: LDP_TONES[0] },
+  { name: "高市",     start: 2025, end: 2026, party: "自民党",   color: LDP_TONES[1] },
 ];
 
 // イベントカテゴリ色は INDICATOR_CONFIGS の各指標色とすべて衝突しない値を選定:
