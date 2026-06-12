@@ -55,6 +55,9 @@ export function MainView({ initialParams }: MainViewProps) {
   // のどのビューでもチャート下に表示できるようにする。
   const [showDataTable, setShowDataTable] = useState(false);
   const dataTableContainerId = useId();
+  // ViewModeTabs ↔ chart-container を aria-controls で紐付ける固定ID。
+  // MobileFiltersSheet 内 getElementById("chart-container") との互換のため固定値を維持。
+  const tabpanelId = "chart-container";
 
   const [yearRange, setYearRange] = useState<[number, number]>(() =>
     parseRange(initialParams?.range ?? null),
@@ -161,7 +164,12 @@ export function MainView({ initialParams }: MainViewProps) {
 
         {/* ビューモードを上位レベルに昇格 + 現在モードの説明（SP/PC両方で表示） */}
         <div className={`flex items-center gap-2 ${isMobile ? "flex-col items-stretch" : ""}`}>
-          <ViewModeTabs viewMode={viewMode} onChange={setViewMode} isMobile={isMobile} />
+          <ViewModeTabs
+            viewMode={viewMode}
+            onChange={setViewMode}
+            isMobile={isMobile}
+            tabpanelId={tabpanelId}
+          />
           <p
             className={`text-xs ${isMobile ? "text-center" : ""}`}
             style={{ color: "var(--muted)" }}
@@ -184,11 +192,14 @@ export function MainView({ initialParams }: MainViewProps) {
         />
 
         {/* Chart / ComparisonView コンテナ
-            SP: 横余白を最小化 + 画面端まで広げる (-mx-2) ことで描画幅 +24px */}
+            SP: 横余白を最小化 + 画面端まで広げる (-mx-2) ことで描画幅 +24px
+            ARIA: role="tabpanel" で ViewModeTabs と紐付け */}
         <div
           id="chart-container"
           className="rounded-xl border p-2 md:p-4 -mx-2 md:mx-0 scroll-mt-4"
           style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+          role="tabpanel"
+          aria-label={VIEW_MODE_DESCRIPTIONS[viewMode]}
         >
 
           {viewMode === "chart" ? (

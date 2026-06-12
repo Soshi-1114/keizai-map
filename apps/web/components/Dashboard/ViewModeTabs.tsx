@@ -6,6 +6,8 @@ interface Props {
   viewMode: ViewMode;
   onChange: (mode: ViewMode) => void;
   isMobile: boolean;
+  /** 関連付けする tabpanel のDOM id（aria-controls） */
+  tabpanelId?: string;
 }
 
 // 目的別ラベル + アイコン + 説明文（hover/フォーカス時にツールチップ）
@@ -22,7 +24,7 @@ export const VIEW_MODES: {
   { key: "event", label: "個別イベント",   shortLabel: "イベント", icon: "🔎", description: "特定の経済イベント周辺を詳細に分析" },
 ];
 
-export function ViewModeTabs({ viewMode, onChange, isMobile }: Props) {
+export function ViewModeTabs({ viewMode, onChange, isMobile, tabpanelId }: Props) {
   return (
     <div
       className={`flex gap-0.5 rounded-lg p-0.5 ${isMobile ? "w-full" : ""}`}
@@ -38,6 +40,7 @@ export function ViewModeTabs({ viewMode, onChange, isMobile }: Props) {
             role="tab"
             aria-selected={active}
             aria-label={`${label} — ${description}`}
+            aria-controls={tabpanelId}
             title={description}
             onClick={() => onChange(key)}
             className={`rounded-md transition-all text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${

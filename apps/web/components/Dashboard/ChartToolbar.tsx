@@ -67,6 +67,13 @@ export function ChartToolbar({
       onClick={onToggleDataTable}
       aria-expanded={showDataTable}
       aria-controls={dataTableContainerId}
+      // SVG チャートをキーボード/SR で読めないため、本ボタンが代替アクセス手段
+      aria-label={
+        showDataTable
+          ? "データ表を閉じる"
+          : "データ表を開く（キーボード・スクリーンリーダー向け代替表示）"
+      }
+      title="キーボード/スクリーンリーダーで年次値を読みたい場合はこちら"
       className={`${
         isPc ? "" : "w-full"
       } px-3 py-1.5 rounded-full text-xs border font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600`}

@@ -277,9 +277,32 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
     ? `${activeConfigs.map(c => c.label).join(', ')} の ${minYear}年から${maxYear}年までの推移（1990=100指数）`
     : `経済指標の ${minYear}年から${maxYear}年までの推移`;
 
+  // スクリーンリーダー向け：選択期間の開始値と最終値を文字列化。
+  // recharts SVG はキーボード/SRで読めないため、ここで「データ表ボタンを開いて
+  // 詳細を見られる」ことも案内する。aria-live で yearRange/indicator 変更を通知。
+  const srSummary = (() => {
+    if (normalized.length === 0 || activeConfigs.length === 0) return "";
+    const first = normalized[0];
+    const last = normalized[normalized.length - 1];
+    const lines = activeConfigs.map(cfg => {
+      const sv = typeof first[cfg.key] === "number" ? (first[cfg.key] as number).toFixed(1) : "—";
+      const ev = typeof last[cfg.key] === "number" ? (last[cfg.key] as number).toFixed(1) : "—";
+      const rawS = first[`${cfg.key}_raw`];
+      const rawE = last[`${cfg.key}_raw`];
+      const rawText = typeof rawS === "number" && typeof rawE === "number"
+        ? `元値 ${formatRawValue(cfg.key, rawS)} から ${formatRawValue(cfg.key, rawE)}`
+        : "";
+      return `${cfg.label}: ${minYear}年は${sv}、${maxYear}年は${ev}（1990=100指数）${rawText ? "、" + rawText : ""}。`;
+    });
+    return `${minYear}年から${maxYear}年までのデータ要約。${lines.join(" ")} 個別の年次値はチャート下の「データ表」ボタンで一覧できます。`;
+  })();
+
   return (
-    <div role="img" aria-labelledby="chart-title" className="w-full">
+    <div role="img" aria-labelledby="chart-title" aria-describedby="chart-sr-summary" className="w-full">
       <h2 id="chart-title" className="sr-only">{chartDescription}</h2>
+      <p id="chart-sr-summary" className="sr-only" aria-live="polite">
+        {srSummary}
+      </p>
       <ResponsiveContainer width="100%" height={chartHeight}>
       <ComposedChart data={normalized} margin={chartMargin}>
         {administrations
