@@ -63,28 +63,50 @@ export function MobileIndicatorNav({ currentIndex, onIndexChange, filteredData, 
           ) : (
             <span className="text-xs" style={{ color: "var(--muted)" }}>—</span>
           )}
-          <span className="text-[10px]" style={{ color: "var(--muted)" }}>
+          <span className="text-tiny" style={{ color: "var(--muted)" }}>
             {yearRange[0]}–{yearRange[1]}
           </span>
         </div>
 
-        {/* ドットナビゲーター */}
-        <div className="flex gap-1 mt-0.5">
-          {INDICATOR_CONFIGS.map((cfg, i) => (
-            <button
-              key={cfg.key}
-              onClick={() => onIndexChange(i)}
-              aria-label={cfg.label}
-              style={{
-                width: i === currentIndex ? 16 : 6,
-                height: 6,
-                borderRadius: 3,
-                backgroundColor: i === currentIndex ? current.color : "var(--border)",
-                transition: "width 0.2s ease, background-color 0.2s ease",
-                flexShrink: 0,
-              }}
-            />
-          ))}
+        {/* ドットナビゲーター — 透明タップ領域 36px に視覚ドット 8px を内包（WCAG 2.5.5） */}
+        <div className="flex mt-0.5" role="tablist" aria-label="指標を切り替え">
+          {INDICATOR_CONFIGS.map((cfg, i) => {
+            const isCurrent = i === currentIndex;
+            return (
+              <button
+                key={cfg.key}
+                role="tab"
+                aria-selected={isCurrent}
+                aria-label={cfg.label}
+                onClick={() => onIndexChange(i)}
+                className="focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-600 rounded"
+                style={{
+                  minWidth: 28,
+                  minHeight: 36,
+                  padding: "12px 4px",
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  flexShrink: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <span
+                  aria-hidden
+                  style={{
+                    display: "block",
+                    width: isCurrent ? 18 : 8,
+                    height: 8,
+                    borderRadius: 4,
+                    backgroundColor: isCurrent ? current.color : "var(--border)",
+                    transition: "width 0.2s ease, background-color 0.2s ease",
+                  }}
+                />
+              </button>
+            );
+          })}
         </div>
       </div>
 

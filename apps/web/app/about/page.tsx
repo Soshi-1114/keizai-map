@@ -53,7 +53,7 @@ export default function AboutPage() {
     <>
       <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <Script id="organization-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
-    <main className="min-h-screen p-6 overflow-x-hidden" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
+    <main id="main" className="min-h-screen p-6 overflow-x-hidden" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
       <div className="mx-auto space-y-0 min-w-0" style={{ maxWidth: 720 }}>
 
         {/* Header */}
@@ -117,7 +117,7 @@ export default function AboutPage() {
                     <td className="p-3 text-xs" style={{ color: "var(--muted)" }}>{row.method}</td>
                     <td className="p-3 text-xs hidden sm:table-cell">
                       <span
-                        className="inline-block px-2 py-0.5 rounded-full text-[10px] font-semibold whitespace-nowrap"
+                        className="inline-block px-2 py-0.5 rounded-full text-tiny font-semibold whitespace-nowrap"
                         style={{
                           backgroundColor: row.status === "auto" ? "#16653420" : "#92400e20",
                           color: row.status === "auto" ? "#166534" : "#92400e",
@@ -239,7 +239,7 @@ export default function AboutPage() {
                 <div className="shrink-0 text-xs tabular-nums pt-0.5" style={{ color: "var(--muted)", minWidth: 72 }}>{date}</div>
                 <div className="flex-1 min-w-0">
                   <span
-                    className="inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded mr-2"
+                    className="inline-block text-tiny font-semibold px-1.5 py-0.5 rounded mr-2"
                     style={{
                       backgroundColor: label === "自動取得" ? "#16653420" : label === "記事追加" ? "#1d4ed820" : "#92400e20",
                       color: label === "自動取得" ? "#166534" : label === "記事追加" ? "#1d4ed8" : "#92400e",

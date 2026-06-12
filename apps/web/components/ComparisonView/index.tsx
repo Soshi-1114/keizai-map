@@ -7,7 +7,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ReferenceLine, ResponsiveContainer,
 } from "recharts";
-import type { IndicatorKey } from "@/lib/types";
+import type { EventCategory, IndicatorKey } from "@/lib/types";
 import { RAW_DATA, INDICATOR_CONFIGS } from "@/lib/data";
 
 // ─────────────────────────────────────────────────────────
@@ -75,12 +75,26 @@ function changePct(start: number, end: number): number {
 // 政権別パフォーマンス棒グラフ
 // ─────────────────────────────────────────────────────────
 
-function AdminChart({ activeIndicators }: { activeIndicators: IndicatorKey[] }) {
+function AdminChart({
+  activeIndicators,
+  yearRange,
+}: {
+  activeIndicators: IndicatorKey[];
+  yearRange: [number, number];
+}) {
   const shown = INDICATOR_CONFIGS.filter(c => activeIndicators.includes(c.key));
+  const [rangeStart, rangeEnd] = yearRange;
 
-  const data = NOTABLE_ADMINS.map(admin => {
-    const s = atOrAfter(admin.start);
-    const e = atOrBefore(admin.end);
+  // 期間と重なる政権だけを対象に
+  const visibleAdmins = NOTABLE_ADMINS.filter(
+    admin => admin.end > rangeStart && admin.start < rangeEnd,
+  );
+
+  const data = visibleAdmins.map(admin => {
+    const sYear = Math.max(admin.start, rangeStart);
+    const eYear = Math.min(admin.end, rangeEnd);
+    const s = atOrAfter(sYear);
+    const e = atOrBefore(eYear);
     if (!s || !e || s.year === e.year) return null;
     return {
       name:      `${admin.name}\n(${admin.party})`,
@@ -93,6 +107,21 @@ function AdminChart({ activeIndicators }: { activeIndicators: IndicatorKey[] }) 
       fx:        changePct(s.fx,   e.fx),
     };
   }).filter((d): d is NonNullable<typeof d> => d !== null);
+
+  if (shown.length === 0) {
+    return (
+      <p className="text-sm text-center py-8" style={{ color: "var(--muted)" }}>
+        比較する指標を 1 つ以上選択してください。
+      </p>
+    );
+  }
+  if (data.length === 0) {
+    return (
+      <p className="text-sm text-center py-8" style={{ color: "var(--muted)" }}>
+        選択期間（{rangeStart}〜{rangeEnd}年）に該当する政権がありません。
+      </p>
+    );
+  }
 
   return (
     <div>
@@ -161,8 +190,23 @@ function AdminChart({ activeIndicators }: { activeIndicators: IndicatorKey[] }) 
 // 経済ショック比較折れ線グラフ
 // ─────────────────────────────────────────────────────────
 
-function ShockChart() {
-  const [indicator, setIndicator] = useState<IndicatorKey>("wage");
+function ShockChart({
+  activeIndicators,
+  yearRange,
+}: {
+  activeIndicators: IndicatorKey[];
+  yearRange: [number, number];
+}) {
+  const [rangeStart, rangeEnd] = yearRange;
+  // 期間内で発生したショックだけに絞る（発生時±2年が範囲に重なる場合）
+  const visibleShocks = SHOCK_EVENTS.filter(
+    ev => ev.year >= rangeStart - 2 && ev.year <= rangeEnd + 2,
+  );
+
+  // 上位フィルタで選択中の指標を優先的に表示。なければ wage にフォールバック
+  const defaultIndicator: IndicatorKey =
+    activeIndicators.length > 0 ? activeIndicators[0] : "wage";
+  const [indicator, setIndicator] = useState<IndicatorKey>(defaultIndicator);
   const cfg = INDICATOR_CONFIGS.find(c => c.key === indicator)!;
 
   // ショック発生時=100 に正規化したデータを構築
@@ -170,7 +214,7 @@ function ShockChart() {
     const row: Record<string, string | number | null> = {
       label: rel === 0 ? "発生時" : rel > 0 ? `+${rel}年` : `${rel}年`,
     };
-    for (const ev of SHOCK_EVENTS) {
+    for (const ev of visibleShocks) {
       const base   = RAW_DATA.find(d => d.year === ev.year);
       const target = RAW_DATA.find(d => d.year === ev.year + rel);
       row[ev.label] =
@@ -180,6 +224,15 @@ function ShockChart() {
     }
     return row;
   });
+
+  if (visibleShocks.length === 0) {
+    return (
+      <p className="text-sm text-center py-8" style={{ color: "var(--muted)" }}>
+        選択期間（{rangeStart}〜{rangeEnd}年）にショックイベントがありません。
+        スライダーを広げてください。
+      </p>
+    );
+  }
 
   return (
     <div>
@@ -240,7 +293,7 @@ function ShockChart() {
             strokeWidth={1.5}
             label={{ value: "100", position: "right", fill: "var(--muted)", fontSize: 10 }}
           />
-          {SHOCK_EVENTS.map(ev => (
+          {visibleShocks.map(ev => (
             <Line
               key={ev.label}
               type="monotone"
@@ -263,9 +316,23 @@ function ShockChart() {
 // 詳細イベント分析
 // ─────────────────────────────────────────────────────────
 
-function EventDetailChart({ activeIndicators }: { activeIndicators: IndicatorKey[] }) {
-  const [selectedEvent, setSelectedEvent] = useState<typeof SHOCK_EVENTS[0]>(SHOCK_EVENTS[0]);
-  const [selectedIndicator, setSelectedIndicator] = useState<IndicatorKey>(activeIndicators[0] || "wage");
+function EventDetailChart({
+  activeIndicators,
+  yearRange,
+}: {
+  activeIndicators: IndicatorKey[];
+  yearRange: [number, number];
+}) {
+  const [rangeStart, rangeEnd] = yearRange;
+  const visibleShocks = SHOCK_EVENTS.filter(
+    ev => ev.year >= rangeStart - 2 && ev.year <= rangeEnd + 2,
+  );
+  const eventChoices = visibleShocks.length > 0 ? visibleShocks : SHOCK_EVENTS;
+
+  const [selectedEvent, setSelectedEvent] = useState<typeof SHOCK_EVENTS[0]>(eventChoices[0]);
+  // activeIndicators が空でも全指標から選べるようにフォールバック
+  const indicatorChoices = activeIndicators.length > 0 ? activeIndicators : INDICATOR_CONFIGS.map(c => c.key);
+  const [selectedIndicator, setSelectedIndicator] = useState<IndicatorKey>(indicatorChoices[0] || "wage");
 
   const chartData = SHOCK_EVENTS.map(ev => {
     const label = ev.label;
@@ -284,53 +351,56 @@ function EventDetailChart({ activeIndicators }: { activeIndicators: IndicatorKey
   const selectedEvData = chartData.find(d => d.name === selectedEvent.label);
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <div style={{ marginBottom: "1.5rem", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+    <div className="p-4">
+      <div className="mb-6 flex gap-4 flex-wrap">
         <div>
-          <label style={{ fontSize: "0.875rem", color: "var(--muted)", display: "block", marginBottom: "0.5rem" }}>
+          <label className="text-sm block mb-2" style={{ color: "var(--muted)" }}>
             イベント選択
           </label>
-          <div style={{ display: "flex", gap: "0.5rem" }}>
-            {SHOCK_EVENTS.map(ev => (
-              <button
-                key={ev.label}
-                onClick={() => setSelectedEvent(ev)}
-                style={{
-                  padding: "0.5rem 1rem",
-                  borderRadius: "0.375rem",
-                  border: `1px solid ${selectedEvent.label === ev.label ? ev.color : "var(--border)"}`,
-                  backgroundColor: selectedEvent.label === ev.label ? `${ev.color}20` : "transparent",
-                  color: selectedEvent.label === ev.label ? ev.color : "var(--text)",
-                  cursor: "pointer",
-                  fontSize: "0.875rem",
-                  fontWeight: selectedEvent.label === ev.label ? 600 : 400,
-                  transition: "all 200ms",
-                }}
-              >
-                {ev.label}
-              </button>
-            ))}
+          <div className="flex gap-2 flex-wrap">
+            {eventChoices.map(ev => {
+              const active = selectedEvent.label === ev.label;
+              return (
+                <button
+                  key={ev.label}
+                  onClick={() => setSelectedEvent(ev)}
+                  aria-pressed={active}
+                  className="rounded-md px-4 py-2 text-sm transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                  style={{
+                    border: `1px solid ${active ? ev.color : "var(--border)"}`,
+                    backgroundColor: active ? `${ev.color}20` : "transparent",
+                    color: active ? ev.color : "var(--text)",
+                    fontWeight: active ? 600 : 400,
+                  }}
+                >
+                  {ev.label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
         <div>
-          <label style={{ fontSize: "0.875rem", color: "var(--muted)", display: "block", marginBottom: "0.5rem" }}>
+          <label
+            htmlFor="event-detail-indicator"
+            className="text-sm block mb-2"
+            style={{ color: "var(--muted)" }}
+          >
             指標選択
           </label>
           <select
+            id="event-detail-indicator"
             value={selectedIndicator}
             onChange={(e) => setSelectedIndicator(e.target.value as IndicatorKey)}
+            aria-label="比較する指標を選択"
+            className="px-4 py-2 rounded-md border text-sm cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "0.375rem",
-              border: "1px solid var(--border)",
+              borderColor: "var(--border)",
               backgroundColor: "var(--card)",
               color: "var(--text)",
-              cursor: "pointer",
-              fontSize: "0.875rem",
             }}
           >
-            {activeIndicators.map(key => {
+            {indicatorChoices.map(key => {
               const cfg = INDICATOR_CONFIGS.find(c => c.key === key);
               return <option key={key} value={key}>{cfg?.label}</option>;
             })}
@@ -340,36 +410,29 @@ function EventDetailChart({ activeIndicators }: { activeIndicators: IndicatorKey
 
       {selectedEvData && (
         <div
-          style={{
-            backgroundColor: "var(--card)",
-            border: "1px solid var(--border)",
-            borderRadius: "0.75rem",
-            padding: "1.5rem",
-            marginBottom: "1.5rem",
-          }}
+          className="rounded-xl p-6 mb-6 border"
+          style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
         >
-          <h3 style={{ fontSize: "0.875rem", fontWeight: 600, marginBottom: "1rem", color: "var(--muted)" }}>
+          <h3 className="text-sm font-semibold mb-4" style={{ color: "var(--muted)" }}>
             {selectedEvent.label} 前後の {INDICATOR_CONFIGS.find(c => c.key === selectedIndicator)?.label}
           </h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(80px, 1fr))", gap: "0.75rem" }}>
+          <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(80px, 1fr))" }}>
             {[-2, -1, 0, 1, 2, 3, 4].map(offset => {
               const key = `y${offset}`;
               const value = selectedEvData[key];
               return (
                 <div
                   key={key}
+                  className="rounded-md p-3 text-center"
                   style={{
                     backgroundColor: offset === 0 ? `${selectedEvent.color}30` : "transparent",
                     border: offset === 0 ? `2px solid ${selectedEvent.color}` : "1px solid var(--border)",
-                    borderRadius: "0.375rem",
-                    padding: "0.75rem",
-                    textAlign: "center",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginBottom: "0.25rem" }}>
+                  <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>
                     {offset === 0 ? "発生時" : offset > 0 ? `+${offset}年` : `${offset}年`}
                   </div>
-                  <div className="tabular-nums" style={{ fontSize: "1rem", fontWeight: 600, color: "var(--text)" }}>
+                  <div className="text-base font-semibold tabular-nums" style={{ color: "var(--text)" }}>
                     {value !== undefined && typeof value === "number" ? value.toFixed(1) : "—"}
                   </div>
                 </div>
@@ -389,17 +452,19 @@ function EventDetailChart({ activeIndicators }: { activeIndicators: IndicatorKey
 interface Props {
   mode: "admin" | "shock" | "event";
   activeIndicators: IndicatorKey[];
+  yearRange: [number, number];
+  activeCategories?: EventCategory[];
 }
 
-export function ComparisonView({ mode, activeIndicators }: Props) {
+export function ComparisonView({ mode, activeIndicators, yearRange }: Props) {
   return (
     <>
       {mode === "admin" ? (
-        <AdminChart activeIndicators={activeIndicators} />
+        <AdminChart activeIndicators={activeIndicators} yearRange={yearRange} />
       ) : mode === "shock" ? (
-        <ShockChart />
+        <ShockChart activeIndicators={activeIndicators} yearRange={yearRange} />
       ) : (
-        <EventDetailChart activeIndicators={activeIndicators} />
+        <EventDetailChart activeIndicators={activeIndicators} yearRange={yearRange} />
       )}
     </>
   );

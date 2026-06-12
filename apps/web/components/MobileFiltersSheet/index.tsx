@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import type { EventCategory } from "@/lib/types";
 import { COLORS } from "@/lib/constants";
 import { DATA_YEARS } from "@/lib/constants";
@@ -24,6 +25,15 @@ export function MobileFiltersSheet({
   onCategoryToggle,
   onClose,
 }: Props) {
+  // Escape キーで閉じる
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
   return (
     <>
       {/* Backdrop */}
@@ -31,10 +41,14 @@ export function MobileFiltersSheet({
         className="fixed inset-0 z-40"
         style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
         onClick={onClose}
+        aria-hidden
       />
 
       {/* Sheet */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="mobile-filters-title"
         className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl p-6 space-y-4 max-h-[80vh] overflow-y-auto"
         style={{
           backgroundColor: "var(--card)",
@@ -42,8 +56,9 @@ export function MobileFiltersSheet({
           animation: "slideUp 0.3s ease-out",
         }}
       >
+        <h2 id="mobile-filters-title" className="sr-only">フィルター設定</h2>
         {/* Handle */}
-        <div className="flex justify-center mb-2">
+        <div className="flex justify-center mb-2" aria-hidden>
           <div className="h-1 w-12 rounded-full" style={{ backgroundColor: "var(--border)" }} />
         </div>
 

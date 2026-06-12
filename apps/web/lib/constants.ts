@@ -8,14 +8,12 @@ export const COLORS = {
   TWITTER: "#1DA1F2",
 } as const;
 
-/** グラフ設定 */
+/** グラフ設定 — 全指標を 1990=100 正規化指数で 1 軸統一表示 */
 export const CHART = {
-  MOBILE_AXIS_WIDTH: 38,
-  DESKTOP_AXIS_WIDTH: 55,
+  MOBILE_AXIS_WIDTH: 42,
+  DESKTOP_AXIS_WIDTH: 60,
   MOBILE_HEIGHT: 260,
   DESKTOP_HEIGHT: 360,
-  Y_LEFT_DOMAIN: [85, 140] as [number, number],
-  Y_RIGHT_DOMAIN: [30, 170] as [number, number],
 } as const;
 
 /** データ年範囲 */

@@ -12,6 +12,8 @@ interface Props {
 }
 
 export function ArticleLayout({ title, description, readingTime, tags, slug, children }: Props) {
+  const article = slug ? ARTICLES.find((a) => a.slug === slug) : undefined;
+  const ctaHref = article?.presetQuery ? `/${article.presetQuery}` : "/";
   const related = slug
     ? ARTICLES.filter(
         (a) => a.slug !== slug && tags?.some((t) => a.tags.includes(t))
@@ -19,6 +21,7 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
     : [];
   return (
     <main
+      id="main"
       className="min-h-screen py-8 px-4 w-full min-w-0 overflow-x-hidden"
       style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
     >
@@ -69,20 +72,22 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
         {/* 本文 */}
         <div className="space-y-6">{children}</div>
 
-        {/* CTA */}
+        {/* CTA — 記事のテーマに応じた指標・期間のプリセットで開く */}
         <div
           className="mt-10 rounded-xl border p-5 text-center"
           style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
         >
           <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
-            KeizaiMap でこの指標を実際のデータで確認できます
+            {article?.presetQuery
+              ? "この記事の指標・期間がそのまま表示される設定で KeizaiMap を開きます"
+              : "KeizaiMap でこの指標を実際のデータで確認できます"}
           </p>
           <Link
-            href="/"
+            href={ctaHref}
             className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition-opacity hover:opacity-80"
             style={{ backgroundColor: "var(--accent-btn)", color: "#fff" }}
           >
-            📊 KeizaiMap でグラフを見る
+            📊 この記事の設定で KeizaiMap を開く
           </Link>
         </div>
 

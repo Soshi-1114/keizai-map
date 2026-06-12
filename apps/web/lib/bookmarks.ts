@@ -21,6 +21,9 @@ export interface SavedView {
   savedAt: number;     // UNIX timestamp (ms)
 }
 
+export type StorageResult = { ok: true } | { ok: false; reason: StorageErrorReason };
+export type StorageErrorReason = "quota_exceeded" | "unavailable" | "unknown";
+
 function buildId(indicators: string, range: string, events: string): string {
   return `${indicators}|${range}|${events}`;
 }
@@ -36,23 +39,34 @@ function read<T>(key: string, fallback: T): T {
   }
 }
 
-function write<T>(key: string, value: T): void {
-  if (typeof window === "undefined") return;
+function write<T>(key: string, value: T): StorageResult {
+  if (typeof window === "undefined") return { ok: false, reason: "unavailable" };
   try {
     localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // QuotaExceeded など、サイレントに無視
+    return { ok: true };
+  } catch (err) {
+    if (err instanceof DOMException) {
+      if (
+        err.name === "QuotaExceededError" ||
+        err.name === "NS_ERROR_DOM_QUOTA_REACHED" ||
+        err.code === 22 ||
+        err.code === 1014
+      ) {
+        return { ok: false, reason: "quota_exceeded" };
+      }
+    }
+    return { ok: false, reason: "unknown" };
   }
 }
 
 /** 直近の閲覧を保存（重複は最新で上書き、最大MAX_RECENT件） */
-export function addRecent(indicators: string, range: string, events: string): void {
+export function addRecent(indicators: string, range: string, events: string): StorageResult {
   const id = buildId(indicators, range, events);
   const list = read<SavedView[]>(RECENT_KEY, []);
   const filtered = list.filter((v) => v.id !== id);
   const next: SavedView = { id, indicators, range, events, savedAt: Date.now() };
   const updated = [next, ...filtered].slice(0, MAX_RECENT);
-  write(RECENT_KEY, updated);
+  return write(RECENT_KEY, updated);
 }
 
 export function getRecent(): SavedView[] {
@@ -61,22 +75,26 @@ export function getRecent(): SavedView[] {
 
 export function clearRecent(): void {
   if (typeof window === "undefined") return;
-  localStorage.removeItem(RECENT_KEY);
+  try {
+    localStorage.removeItem(RECENT_KEY);
+  } catch {
+    /* noop */
+  }
 }
 
 /** ブックマーク手動保存 */
-export function addBookmark(view: Omit<SavedView, "id" | "savedAt"> & { title?: string }): void {
+export function addBookmark(view: Omit<SavedView, "id" | "savedAt"> & { title?: string }): StorageResult {
   const id = buildId(view.indicators, view.range, view.events);
   const list = read<SavedView[]>(BOOKMARK_KEY, []);
   const filtered = list.filter((v) => v.id !== id);
   const next: SavedView = { ...view, id, savedAt: Date.now() };
   const updated = [next, ...filtered].slice(0, MAX_BOOKMARKS);
-  write(BOOKMARK_KEY, updated);
+  return write(BOOKMARK_KEY, updated);
 }
 
-export function removeBookmark(id: string): void {
+export function removeBookmark(id: string): StorageResult {
   const list = read<SavedView[]>(BOOKMARK_KEY, []);
-  write(BOOKMARK_KEY, list.filter((v) => v.id !== id));
+  return write(BOOKMARK_KEY, list.filter((v) => v.id !== id));
 }
 
 export function getBookmarks(): SavedView[] {
@@ -96,4 +114,15 @@ export function toQueryString(view: SavedView): string {
     events: view.events,
   });
   return `?${params.toString()}`;
+}
+
+export function describeStorageError(reason: StorageErrorReason): string {
+  switch (reason) {
+    case "quota_exceeded":
+      return "ブラウザの保存容量がいっぱいです。不要なブックマークを削除してから再度お試しください。";
+    case "unavailable":
+      return "プライベートブラウズなどの理由でブックマークを保存できません。";
+    case "unknown":
+      return "ブックマークの保存中に予期せぬエラーが発生しました。";
+  }
 }

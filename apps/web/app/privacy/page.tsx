@@ -31,7 +31,7 @@ export default function PrivacyPage() {
   return (
     <>
       <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-    <main className="min-h-screen p-6" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
+    <main id="main" className="min-h-screen p-6" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
       <div className="mx-auto space-y-0" style={{ maxWidth: 720 }}>
 
         {/* Header */}
