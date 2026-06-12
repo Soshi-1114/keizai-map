@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   ResponsiveContainer,
   ComposedChart,
@@ -85,20 +86,33 @@ function normalizeData(data: DataPoint[]): Array<Record<string, number | null>> 
 
 export function Chart({ data, events, administrations, activeIndicators, activeCategories, showComparison, isSingleIndicator }: Props) {
   const isMobile = useIsMobile();
-  const visibleEvents = events.filter(e => activeCategories.includes(e.category));
-  const activeConfigs = INDICATOR_CONFIGS.filter(c => activeIndicators.includes(c.key));
+  const visibleEvents = useMemo(
+    () => events.filter(e => activeCategories.includes(e.category)),
+    [events, activeCategories],
+  );
+  const activeConfigs = useMemo(
+    () => INDICATOR_CONFIGS.filter(c => activeIndicators.includes(c.key)),
+    [activeIndicators],
+  );
 
   // 1990=100 に正規化した表示用データ。元値は `${key}_raw` に保持。
-  const normalized = normalizeData(data);
+  const normalized = useMemo(() => normalizeData(data), [data]);
 
-  const years = normalized.map(d => Number(d.year));
-  const minYear = years[0] ?? 1990;
-  const maxYear = years[years.length - 1] ?? 2025;
+  const { minYear, maxYear } = useMemo(() => {
+    const years = normalized.map(d => Number(d.year));
+    return {
+      minYear: years[0] ?? 1990,
+      maxYear: years[years.length - 1] ?? 2025,
+    };
+  }, [normalized]);
 
   // モバイルでは10年おき、PCでは5年おきに目盛り
-  const xTicks = isMobile
-    ? normalized.filter(d => Number(d.year) % 10 === 0 || d.year === minYear || d.year === maxYear).map(d => Number(d.year))
-    : normalized.filter(d => Number(d.year) % 5 === 0 || d.year === minYear || d.year === maxYear).map(d => Number(d.year));
+  const xTicks = useMemo(() => {
+    const step = isMobile ? 10 : 5;
+    return normalized
+      .filter(d => Number(d.year) % step === 0 || d.year === minYear || d.year === maxYear)
+      .map(d => Number(d.year));
+  }, [normalized, isMobile, minYear, maxYear]);
 
   const yAxisWidth = isMobile ? 42 : 60;
   const chartHeight = isMobile ? 260 : 360;
@@ -182,12 +196,13 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
   }
 
   // 近接イベントのラベルを 3 レーンに振り分け（デスクトップのみ）
-  // 各レーンの「最後に使った年」を追跡し、LANE_GAP_YEARS 以上空いている
-  // レーンの中で最若いインデックスを選ぶ greedy 配置。
   const LANE_GAP_YEARS = 3;
   const TOTAL_LANES = 3;
-  const laneMap = new Map<string, number>();
-  if (!isMobile) {
+  const LANE_DY: Record<number, number> = { 0: -4, 1: -18, 2: -32 };
+
+  const laneMap = useMemo(() => {
+    const map = new Map<string, number>();
+    if (isMobile) return map;
     const sorted = [...visibleEvents].sort((a, b) => a.year - b.year);
     const laneLastYear = new Array<number>(TOTAL_LANES).fill(-Infinity);
     for (const ev of sorted) {
@@ -197,16 +212,13 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
           chosen = i;
           break;
         }
-        // 全レーンが詰まっているときは最も古いレーンを上書き
         if (laneLastYear[i] < laneLastYear[chosen]) chosen = i;
       }
-      laneMap.set(`${ev.year}-${ev.label}`, chosen);
+      map.set(`${ev.year}-${ev.label}`, chosen);
       laneLastYear[chosen] = ev.year;
     }
-  }
-
-  // レーンごとの dy（縦位置オフセット）。上から段階的にずらす。
-  const LANE_DY: Record<number, number> = { 0: -4, 1: -18, 2: -32 };
+    return map;
+  }, [visibleEvents, isMobile]);
 
   const chartDescription = activeConfigs.length > 0
     ? `${activeConfigs.map(c => c.label).join(', ')} の ${minYear}年から${maxYear}年までの推移（1990=100指数）`
