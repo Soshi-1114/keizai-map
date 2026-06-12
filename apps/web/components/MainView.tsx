@@ -14,7 +14,7 @@ import { InsightCards } from "./InsightCards";
 import { MobileFiltersSheet } from "./MobileFiltersSheet";
 import { DashboardHeader } from "./Dashboard/DashboardHeader";
 import { IndicatorToggleBar } from "./Dashboard/IndicatorToggleBar";
-import { HeroStatsBar } from "./Dashboard/HeroStatsBar";
+import { HeroStory } from "./Dashboard/HeroStory";
 import { FilterSection } from "./Dashboard/FilterSection";
 import { ViewModeTabs, VIEW_MODES, type ViewMode } from "./Dashboard/ViewModeTabs";
 import { ShareButton } from "./Dashboard/ShareButton";
@@ -82,6 +82,9 @@ export function MainView({ initialParams }: MainViewProps) {
       <div className="max-w-7xl mx-auto space-y-5">
         <DashboardHeader />
 
+        {/* ファーストビューの読み解き — PC/SP 両方で表示 */}
+        <HeroStory data={filteredData} yearRange={yearRange} />
+
         {/* 指標トグル: PC では水平バー、モバイルではコンパクトトグル */}
         <IndicatorToggleBar
           variant={isMobile ? "mobile" : "pc"}
@@ -89,15 +92,6 @@ export function MainView({ initialParams }: MainViewProps) {
           onToggle={toggleIndicator}
           onSetAll={setActiveIndicators}
         />
-
-        {/* ヒーロー統計バー（PC のみ） */}
-        {!isMobile && (
-          <HeroStatsBar
-            data={filteredData}
-            activeIndicators={activeIndicators}
-            topN={4}
-          />
-        )}
 
         {/* フィルターボタン（モバイル） */}
         {isMobile && (
