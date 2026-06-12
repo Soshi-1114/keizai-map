@@ -98,7 +98,7 @@ export async function GET(request: Request) {
 
         {/* Bottom: URL */}
         <div style={{ fontSize: 16, color: "#3E4563", display: "flex" }}>
-          keizai-map.vercel.app/articles
+          keizaimap.jp/articles
         </div>
       </div>
     ),

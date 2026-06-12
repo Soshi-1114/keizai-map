@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ARTICLES } from "@/lib/articles";
+import { BASE_URL } from "@/lib/constants";
 
 // 記事数の多い順にタグをソート
 const TAGS_BY_COUNT = (() => {
@@ -39,7 +40,6 @@ export default function ArticlesPage() {
     ? ARTICLES.filter((a) => a.tags.includes(selectedTag))
     : ARTICLES;
 
-  const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://keizai-map.vercel.app";
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",

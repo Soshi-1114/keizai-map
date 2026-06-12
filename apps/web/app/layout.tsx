@@ -4,6 +4,7 @@ import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { BASE_URL } from "@/lib/constants";
 
 // next/font で Noto Sans JP を最適ロード。CSS 変数 --font-sans で参照
 const notoSansJP = Noto_Sans_JP({
@@ -15,8 +16,6 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 const GA_ID = "G-L3881RG05D";
-
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://keizai-map.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { generatePageBreadcrumbJsonLd, generateOrganizationJsonLd } from "@/lib/jsonld";
+import { BASE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "KeizaiMapについて — データソース・サービス概要",
@@ -39,8 +40,6 @@ function Section({ title, children }: { title: string; children: React.ReactNode
     </section>
   );
 }
-
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://keizai-map.vercel.app";
 
 export default function AboutPage() {
   const breadcrumbJsonLd = generatePageBreadcrumbJsonLd([

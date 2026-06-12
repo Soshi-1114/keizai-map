@@ -29,7 +29,7 @@ test.describe("ページナビゲーション", () => {
     const response = await page.goto("/sitemap.xml");
     expect(response?.status()).toBe(200);
     const content = await page.content();
-    expect(content).toContain("keizai-map.vercel.app");
+    expect(content).toContain("keizaimap.jp");
   });
 
   test("robots.txt が返る", async ({ page }) => {

@@ -1,8 +1,0 @@
-User-agent: *
-Allow: /
-Allow: /articles/*
-
-Disallow: /.next/
-Disallow: /api/
-
-Sitemap: https://keizai-map.vercel.app/sitemap.xml

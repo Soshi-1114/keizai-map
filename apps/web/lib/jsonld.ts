@@ -1,3 +1,5 @@
+import { BASE_URL } from "@/lib/constants";
+
 export function generateArticleJsonLd({
   title,
   description,
@@ -13,7 +15,7 @@ export function generateArticleJsonLd({
   tags?: string[];
   publishedDate?: string;
 }) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://keizai-map.vercel.app";
+  const baseUrl = BASE_URL;
   const articleUrl = `${baseUrl}/articles/${slug}`;
 
   return {
@@ -49,7 +51,7 @@ export function generateArticleJsonLd({
 }
 
 export function generateBreadcrumbJsonLd(slug: string) {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://keizai-map.vercel.app";
+  const baseUrl = BASE_URL;
 
   return {
     "@context": "https://schema.org",
@@ -106,7 +108,7 @@ export function generateFaqPageJsonLd(faqs: { question: string; answer: string }
 }
 
 export function generateOrganizationJsonLd() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://keizai-map.vercel.app";
+  const baseUrl = BASE_URL;
 
   return {
     "@context": "https://schema.org",

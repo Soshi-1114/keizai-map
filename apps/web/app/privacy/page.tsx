@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { generatePageBreadcrumbJsonLd } from "@/lib/jsonld";
+import { BASE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "プライバシーポリシー — KeizaiMap",
@@ -18,8 +19,6 @@ function Section({ title, children }: { title: string; children: React.ReactNode
     </section>
   );
 }
-
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://keizai-map.vercel.app";
 
 export default function PrivacyPage() {
   const lastUpdated = "2026年6月11日";
