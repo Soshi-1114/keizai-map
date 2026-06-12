@@ -22,6 +22,7 @@ import { ViewModeTabs, VIEW_MODES, type ViewMode } from "./Dashboard/ViewModeTab
 import { ChartPanel } from "./Dashboard/ChartPanel";
 import { ShareButton } from "./Dashboard/ShareButton";
 import { DashboardFooter } from "./Dashboard/DashboardFooter";
+import { RelatedArticles } from "./Dashboard/RelatedArticles";
 
 const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key) as IndicatorKey[];
 
@@ -219,6 +220,8 @@ export function MainView({ initialParams }: MainViewProps) {
             </p>
           </div>
         )}
+
+        <RelatedArticles activeIndicators={effectiveIndicators} yearRange={yearRange} />
 
         {isMobile && <ShareButton variant="block" />}
 

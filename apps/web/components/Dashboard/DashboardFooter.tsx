@@ -14,12 +14,20 @@ export function DashboardFooter() {
       </p>
       {DATA_UPDATED_AT && <p>最終更新: {formatUpdatedAt(DATA_UPDATED_AT)}</p>}
       <p>
+        <Link href="/articles" className="hover:underline" style={{ color: "var(--muted)" }}>
+          解説記事
+        </Link>
+        &nbsp;|&nbsp;
         <Link href="/about" className="hover:underline" style={{ color: "var(--muted)" }}>
           データソースについて
         </Link>
         &nbsp;|&nbsp;
         <Link href="/privacy" className="hover:underline" style={{ color: "var(--muted)" }}>
           プライバシーポリシー
+        </Link>
+        &nbsp;|&nbsp;
+        <Link href="/contact" className="hover:underline" style={{ color: "var(--muted)" }}>
+          お問い合わせ
         </Link>
       </p>
     </footer>
