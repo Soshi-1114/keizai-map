@@ -420,6 +420,18 @@
       "debt": 1170.3,
       "births": 73,
       "insurance": 18.5
+    },
+    {
+      "year": 2025,
+      "wage": 97.9,
+      "cpi": 123.7,
+      "tax": 80.7,
+      "fx": 149.7,
+      "nikkei": 196.1,
+      "housing": 68.8,
+      "debt": 1128.5,
+      "births": 70.6,
+      "insurance": 18.6
     }
   ]
 }

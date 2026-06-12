@@ -49,7 +49,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
 
   const years = data.map(d => d.year);
   const minYear = years[0] ?? 1990;
-  const maxYear = years[years.length - 1] ?? 2024;
+  const maxYear = years[years.length - 1] ?? 2025;
 
   // モバイルでは4年おきに間引く
   const xTicks = isMobile

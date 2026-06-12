@@ -30,6 +30,7 @@ export const ADMINISTRATIONS: Administration[] = [
   { name: "菅(義偉)", start: 2020, end: 2021, party: "自民党",   color: "#3B6FD4" },
   { name: "岸田",     start: 2021, end: 2024, party: "自民党",   color: "#3B6FD4" },
   { name: "石破",     start: 2024, end: 2025, party: "自民党",   color: "#3B6FD4" },
+  { name: "高市",     start: 2025, end: 2026, party: "自民党",   color: "#3B6FD4" },
 ];
 
 export const EVENTS: EconomicEvent[] = [
@@ -45,6 +46,7 @@ export const EVENTS: EconomicEvent[] = [
   { year: 2020, label: "コロナ禍",     category: "経済",     color: "#E05C5C" },
   { year: 2022, label: "円安加速",     category: "経済政策", color: "#4FD9A0" },
   { year: 2024, label: "日銀利上げ",   category: "経済政策", color: "#4FD9A0" },
+  { year: 2025, label: "高市政権発足", category: "経済政策", color: "#4FD9A0" },
 ];
 
 export const INDICATOR_CONFIGS: IndicatorConfig[] = [
