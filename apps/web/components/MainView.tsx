@@ -134,27 +134,47 @@ export function MainView({ initialParams }: MainViewProps) {
         {!isMobile && (
           <section aria-labelledby="indicators-heading">
             <h2 id="indicators-heading" className="sr-only">表示する指標を選択</h2>
-          <div className="flex gap-2 flex-wrap" role="group" aria-labelledby="indicators-heading">
-            {INDICATOR_CONFIGS.map(cfg => {
-              const active = activeIndicators.includes(cfg.key);
-              return (
+            <div className="flex gap-2 flex-wrap items-center" role="group" aria-labelledby="indicators-heading">
+              {INDICATOR_CONFIGS.map(cfg => {
+                const active = activeIndicators.includes(cfg.key);
+                return (
+                  <button
+                    key={cfg.key}
+                    onClick={() => toggleIndicator(cfg.key)}
+                    aria-pressed={active}
+                    className="px-3 py-1.5 md:py-1 rounded-full text-sm border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                    style={{
+                      borderColor: active ? cfg.color : "var(--border)",
+                      color: active ? cfg.darkColor : "var(--muted)",
+                      backgroundColor: active ? cfg.color + "15" : "transparent",
+                      opacity: 1,
+                      fontWeight: active ? 600 : 400,
+                    }}
+                  >
+                    {cfg.label}
+                  </button>
+                );
+              })}
+              <div className="ml-auto flex gap-1.5">
                 <button
-                  key={cfg.key}
-                  onClick={() => toggleIndicator(cfg.key)}
-                  className="px-3 py-1.5 md:py-1 rounded-full text-sm border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                  style={{
-                    borderColor: active ? cfg.color : "var(--border)",
-                    color: active ? cfg.darkColor : "var(--muted)",
-                    backgroundColor: active ? cfg.color + "15" : "transparent",
-                    opacity: 1,
-                    fontWeight: active ? 600 : 400,
-                  }}
+                  onClick={() => setActiveIndicators(ALL_INDICATOR_KEYS)}
+                  className="px-2.5 py-1 rounded-full text-xs border font-medium transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                  style={{ borderColor: "var(--border)", color: "var(--muted)" }}
                 >
-                  {cfg.label}
+                  全指標
                 </button>
-              );
-            })}
-          </div>
+                <button
+                  onClick={() => setActiveIndicators(["wage", "cpi"])}
+                  className="px-2.5 py-1 rounded-full text-xs border font-medium transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                  style={{ borderColor: "var(--border)", color: "var(--muted)" }}
+                >
+                  リセット
+                </button>
+              </div>
+            </div>
+            <p className="text-xs mt-2" style={{ color: "var(--muted)" }}>
+              最初は <strong>実質賃金 + 物価</strong> の 2 指標を表示しています。比べたい指標をクリックして追加できます（最大 9 指標）。
+            </p>
           </section>
         )}
 

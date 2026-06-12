@@ -4,6 +4,8 @@ import { DATA_YEARS } from "./constants";
 const ALL_INDICATOR_KEYS_PLACEHOLDER: IndicatorKey[] = [
   "wage", "cpi", "tax", "fx", "nikkei", "housing", "debt", "births", "insurance",
 ];
+/** 初回起動時のデフォルト指標。初心者が読みやすい 2 指標に絞る。 */
+export const DEFAULT_INDICATORS: IndicatorKey[] = ["wage", "cpi"];
 const ALL_CATEGORIES: EventCategory[] = ["税制", "経済", "経済政策"];
 
 /** 選択期間のデータをもとに自動解説文を生成 */
@@ -64,9 +66,10 @@ export function parseIndicators(
   param: string | null,
   allKeys: IndicatorKey[] = ALL_INDICATOR_KEYS_PLACEHOLDER,
 ): IndicatorKey[] {
-  if (!param) return allKeys;
+  // URL クエリ未指定時はデフォルト 2 指標（賃金+物価）に絞る
+  if (!param) return DEFAULT_INDICATORS.filter(k => allKeys.includes(k));
   const keys = param.split(",").filter(k => allKeys.includes(k as IndicatorKey)) as IndicatorKey[];
-  return keys.length > 0 ? keys : allKeys;
+  return keys.length > 0 ? keys : DEFAULT_INDICATORS.filter(k => allKeys.includes(k));
 }
 
 export function parseCategories(param: string | null): EventCategory[] {
