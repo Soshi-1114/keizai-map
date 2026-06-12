@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { Star, Library, Trash2, Clock } from "lucide-react";
 import {
   addBookmark,
   removeBookmark,
@@ -106,24 +107,30 @@ export function BookmarkPanel({ indicators, range, events }: Props) {
       <button
         onClick={handleToggleBookmark}
         aria-label={bookmarked ? "ブックマーク解除" : "この表示をブックマーク"}
-        className="px-3 py-1.5 rounded-full text-xs border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         style={{
           borderColor: bookmarked ? "var(--link)" : "var(--border)",
           color: bookmarked ? "var(--link)" : "var(--muted)",
           backgroundColor: bookmarked ? "#1d4ed815" : "transparent",
         }}
       >
-        {bookmarked ? "★ 保存済み" : "☆ ブックマーク"}
+        <Star
+          size={13}
+          aria-hidden
+          fill={bookmarked ? "currentColor" : "none"}
+        />
+        {bookmarked ? "保存済み" : "ブックマーク"}
       </button>
 
       <button
         onClick={() => setOpen(!open)}
         aria-label="保存した表示・履歴を開く"
         aria-expanded={open}
-        className="px-3 py-1.5 rounded-full text-xs border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         style={{ borderColor: "var(--border)", color: "var(--muted)" }}
       >
-        📚 履歴
+        <Library size={13} aria-hidden />
+        履歴
       </button>
 
       {/* エラートースト（5秒自動消去） */}
@@ -229,8 +236,12 @@ export function BookmarkPanel({ indicators, range, events }: Props) {
             </div>
 
             <section className="mb-6">
-              <h3 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>
-                ★ ブックマーク（{bookmarks.length}）
+              <h3
+                className="text-xs font-medium mb-2 inline-flex items-center gap-1"
+                style={{ color: "var(--muted)" }}
+              >
+                <Star size={12} aria-hidden fill="currentColor" />
+                ブックマーク（{bookmarks.length}）
               </h3>
               {bookmarks.length === 0 ? (
                 <p className="text-xs" style={{ color: "var(--muted)" }}>まだブックマークはありません。</p>
@@ -260,7 +271,7 @@ export function BookmarkPanel({ indicators, range, events }: Props) {
                         className="text-xs px-2 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                         style={{ color: "var(--muted)" }}
                       >
-                        🗑
+                        <Trash2 size={14} aria-hidden />
                       </button>
                     </div>
                   ))}
@@ -269,8 +280,12 @@ export function BookmarkPanel({ indicators, range, events }: Props) {
             </section>
 
             <section>
-              <h3 className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>
-                🕒 最近見た表示（{recent.length}）
+              <h3
+                className="text-xs font-medium mb-2 inline-flex items-center gap-1"
+                style={{ color: "var(--muted)" }}
+              >
+                <Clock size={12} aria-hidden />
+                最近見た表示（{recent.length}）
               </h3>
               {recent.length === 0 ? (
                 <p className="text-xs" style={{ color: "var(--muted)" }}>履歴がありません。</p>

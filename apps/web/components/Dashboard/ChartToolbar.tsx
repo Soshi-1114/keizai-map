@@ -1,6 +1,7 @@
 "use client";
 
 import { useId } from "react";
+import { Download, Table2 } from "lucide-react";
 import type { EventCategory, IndicatorKey } from "@/lib/types";
 import { RAW_DATA } from "@/lib/data";
 import { generateCSV, downloadCSV } from "@/lib/csv";
@@ -50,14 +51,15 @@ export function ChartToolbar({
       aria-label={`${yearRange[0]}年から${yearRange[1]}年の選択指標を CSV でダウンロード`}
       className={`${
         isPc ? "" : "w-full"
-      } px-3 py-1.5 rounded-full text-xs border font-medium transition-colors hover:bg-[var(--bg)] hover:border-[var(--link)] hover:text-[var(--link)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600`}
+      } inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full text-xs border font-medium transition-colors hover:bg-[var(--bg)] hover:border-[var(--link)] hover:text-[var(--link)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600`}
       style={{
         borderColor: "var(--border)",
         color: "var(--muted)",
         minHeight: isPc ? undefined : 44,
       }}
     >
-      📥 CSV
+      <Download size={13} aria-hidden />
+      CSV
     </button>
   );
 
@@ -76,7 +78,7 @@ export function ChartToolbar({
       title="キーボード/スクリーンリーダーで年次値を読みたい場合はこちら"
       className={`${
         isPc ? "" : "w-full"
-      } px-3 py-1.5 rounded-full text-xs border font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600`}
+      } inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full text-xs border font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600`}
       style={{
         borderColor: showDataTable ? "var(--link)" : "var(--border)",
         backgroundColor: showDataTable ? "#1d4ed815" : "transparent",
@@ -85,7 +87,8 @@ export function ChartToolbar({
         minHeight: isPc ? undefined : 44,
       }}
     >
-      📊 データ表{showDataTable ? "を閉じる" : ""}
+      <Table2 size={13} aria-hidden />
+      データ表{showDataTable ? "を閉じる" : ""}
     </button>
   );
 

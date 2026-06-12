@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Globe } from "lucide-react";
 import type { DataPoint, EventCategory, IndicatorKey } from "@/lib/types";
 import { ADMINISTRATIONS, EVENTS } from "@/lib/data";
 import { getComparisonData } from "@/lib/comparison-data";
@@ -48,7 +49,7 @@ export function ChartPanel({
             <button
               onClick={() => setShowComparison(!showComparison)}
               aria-pressed={showComparison}
-              className="px-3 py-1.5 rounded-full text-xs border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
               style={{
                 borderColor: showComparison ? "var(--link)" : "var(--border)",
                 color: showComparison ? "var(--link)" : "var(--muted)",
@@ -56,7 +57,8 @@ export function ChartPanel({
                 fontWeight: showComparison ? 600 : 400,
               }}
             >
-              🌍 G7平均と比較
+              <Globe size={13} aria-hidden />
+              G7平均と比較
             </button>
           )}
         </div>

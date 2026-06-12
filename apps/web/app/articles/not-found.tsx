@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Newspaper } from "lucide-react";
 
 export default function ArticleNotFound() {
   return (
@@ -8,7 +9,9 @@ export default function ArticleNotFound() {
     >
       <div className="max-w-md w-full rounded-xl border p-6 text-center space-y-4"
         style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
-        <p className="text-3xl" aria-hidden>📰</p>
+        <div className="flex justify-center" aria-hidden>
+          <Newspaper size={32} style={{ color: "var(--muted)" }} />
+        </div>
         <h1 className="text-lg font-bold">記事が見つかりません</h1>
         <p className="text-sm" style={{ color: "var(--muted)" }}>
           指定された解説記事は存在しないか、削除された可能性があります。

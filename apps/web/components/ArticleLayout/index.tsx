@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LineChart } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ARTICLES } from "@/lib/articles";
 
@@ -105,7 +106,8 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
             className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition-opacity hover:opacity-80"
             style={{ backgroundColor: "var(--accent-btn)", color: "#fff" }}
           >
-            📊 この記事の設定で KeizaiMap を開く
+            <LineChart size={16} aria-hidden />
+            この記事の設定で KeizaiMap を開く
           </Link>
         </div>
 

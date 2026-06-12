@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Newspaper } from "lucide-react";
 import type { IndicatorKey } from "@/lib/types";
 import { ARTICLES } from "@/lib/articles";
 
@@ -46,10 +47,11 @@ export function RelatedArticles({ activeIndicators, yearRange }: Props) {
       <div className="flex items-baseline justify-between mb-3 gap-2 flex-wrap">
         <h2
           id="related-articles-heading"
-          className="text-sm font-semibold"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold"
           style={{ color: "var(--text)" }}
         >
-          📰 この指標をもっと深く知る
+          <Newspaper size={14} aria-hidden />
+          この指標をもっと深く知る
         </h2>
         <Link
           href="/articles"
