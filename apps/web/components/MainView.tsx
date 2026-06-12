@@ -118,13 +118,16 @@ export function MainView({ initialParams }: MainViewProps) {
         {/* ファーストビューの読み解き — PC/SP 両方で表示 */}
         <HeroStory data={filteredData} yearRange={yearRange} />
 
-        {/* 指標トグル: PC では水平バー、モバイルではコンパクトトグル */}
-        <IndicatorToggleBar
-          variant={isMobile ? "mobile" : "pc"}
-          activeIndicators={activeIndicators}
-          onToggle={toggleIndicator}
-          onSetAll={setActiveIndicators}
-        />
+        {/* 指標トグル: PC では水平バー。
+            SP ではチャートカード内に統合表示するためここでは出さない（重複防止）。 */}
+        {!isMobile && (
+          <IndicatorToggleBar
+            variant="pc"
+            activeIndicators={activeIndicators}
+            onToggle={toggleIndicator}
+            onSetAll={setActiveIndicators}
+          />
+        )}
 
         {/* フィルターボタン（モバイル）— 上下2段組で主アクションを明示 */}
         {isMobile && (
@@ -224,6 +227,7 @@ export function MainView({ initialParams }: MainViewProps) {
               effectiveIndicators={activeIndicators}
               activeCategories={activeCategories}
               yearRange={yearRange}
+              onToggleIndicator={toggleIndicator}
             />
           ) : (
             <ComparisonView
@@ -234,6 +238,7 @@ export function MainView({ initialParams }: MainViewProps) {
               onChangePrimary={setPrimaryIndicator}
               yearRange={yearRange}
               activeCategories={activeCategories}
+              isMobile={isMobile}
             />
           )}
         </div>

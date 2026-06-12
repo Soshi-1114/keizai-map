@@ -9,6 +9,7 @@ import {
 } from "recharts";
 import type { EventCategory, IndicatorKey } from "@/lib/types";
 import { RAW_DATA, INDICATOR_CONFIGS } from "@/lib/data";
+import { IndicatorChipSelector } from "@/components/Dashboard/IndicatorChipSelector";
 
 // ─────────────────────────────────────────────────────────
 // 共通スタイル
@@ -72,73 +73,6 @@ function changePct(start: number, end: number): number {
 }
 
 // ─────────────────────────────────────────────────────────
-// 指標選択チップ（admin / shock / event で共通）
-// ─────────────────────────────────────────────────────────
-
-interface IndicatorChipSelectorProps {
-  /** "multi" は selected 配列に含まれる全指標、"single" は 1 指標のみ強調 */
-  mode: "multi" | "single";
-  selected: IndicatorKey[] | IndicatorKey;
-  onToggle: (key: IndicatorKey) => void;
-  /** disabled なら斜線 + クリック不可。データが無い等で表示できない指標を示す */
-  disabledKeys?: IndicatorKey[];
-  label?: string;
-}
-
-function IndicatorChipSelector({
-  mode,
-  selected,
-  onToggle,
-  disabledKeys = [],
-  label = "重ねて表示する指標",
-}: IndicatorChipSelectorProps) {
-  const isActive = (key: IndicatorKey) =>
-    mode === "multi"
-      ? (selected as IndicatorKey[]).includes(key)
-      : selected === key;
-
-  return (
-    <div className="mb-4">
-      <div className="text-xs mb-2" style={{ color: "var(--muted)" }}>{label}</div>
-      <div className="flex gap-1.5 flex-wrap" role="group" aria-label={label}>
-        {INDICATOR_CONFIGS.map(cfg => {
-          const active = isActive(cfg.key);
-          const disabled = disabledKeys.includes(cfg.key);
-          return (
-            <button
-              key={cfg.key}
-              onClick={() => !disabled && onToggle(cfg.key)}
-              disabled={disabled}
-              aria-pressed={active}
-              aria-disabled={disabled}
-              className="rounded-full text-xs transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-              style={{
-                minHeight: 44,
-                padding: "0 12px",
-                border: `1px solid ${active && !disabled ? cfg.color : "var(--border)"}`,
-                color: disabled
-                  ? "var(--muted)"
-                  : active
-                    ? cfg.darkColor
-                    : "var(--muted)",
-                backgroundColor: active && !disabled ? cfg.color + "15" : "transparent",
-                fontWeight: active ? 600 : 400,
-                cursor: disabled ? "not-allowed" : "pointer",
-                opacity: disabled ? 0.5 : 1,
-                textDecoration: disabled ? "line-through" : "none",
-              }}
-              title={disabled ? "このモードでは表示できません" : undefined}
-            >
-              {cfg.label}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────
 // 政権別パフォーマンス棒グラフ
 // ─────────────────────────────────────────────────────────
 
@@ -146,10 +80,12 @@ function AdminChart({
   activeIndicators,
   onToggleIndicator,
   yearRange,
+  isMobile,
 }: {
   activeIndicators: IndicatorKey[];
   onToggleIndicator: (key: IndicatorKey) => void;
   yearRange: [number, number];
+  isMobile: boolean;
 }) {
   const shown = INDICATOR_CONFIGS.filter(c => activeIndicators.includes(c.key));
   const [rangeStart, rangeEnd] = yearRange;
@@ -187,6 +123,7 @@ function AdminChart({
         mode="multi"
         selected={activeIndicators}
         onToggle={onToggleIndicator}
+        compact={isMobile}
       />
 
       {shown.length === 0 ? (
@@ -282,10 +219,12 @@ function ShockChart({
   primaryIndicator,
   onChangePrimary,
   yearRange,
+  isMobile,
 }: {
   primaryIndicator: IndicatorKey;
   onChangePrimary: (key: IndicatorKey) => void;
   yearRange: [number, number];
+  isMobile: boolean;
 }) {
   const [rangeStart, rangeEnd] = yearRange;
   // 期間内で発生したショックだけに絞る（発生時±2年が範囲に重なる場合）
@@ -327,6 +266,8 @@ function ShockChart({
         mode="single"
         selected={indicator}
         onToggle={onChangePrimary}
+        label="表示する指標を1つ選択"
+        compact={isMobile}
       />
 
       <p className="text-xs mb-4" style={{ color: "var(--muted)" }}>
@@ -393,10 +334,12 @@ function EventDetailChart({
   primaryIndicator,
   onChangePrimary,
   yearRange,
+  isMobile,
 }: {
   primaryIndicator: IndicatorKey;
   onChangePrimary: (key: IndicatorKey) => void;
   yearRange: [number, number];
+  isMobile: boolean;
 }) {
   const [rangeStart, rangeEnd] = yearRange;
   const visibleShocks = SHOCK_EVENTS.filter(
@@ -429,6 +372,8 @@ function EventDetailChart({
         mode="single"
         selected={selectedIndicator}
         onToggle={onChangePrimary}
+        label="表示する指標を1つ選択"
+        compact={isMobile}
       />
 
       <div className="mb-6">
@@ -505,6 +450,7 @@ interface Props {
   onChangePrimary: (key: IndicatorKey) => void;
   yearRange: [number, number];
   activeCategories?: EventCategory[];
+  isMobile?: boolean;
 }
 
 export function ComparisonView({
@@ -514,6 +460,7 @@ export function ComparisonView({
   primaryIndicator,
   onChangePrimary,
   yearRange,
+  isMobile = false,
 }: Props) {
   return (
     <>
@@ -522,18 +469,21 @@ export function ComparisonView({
           activeIndicators={activeIndicators}
           onToggleIndicator={onToggleIndicator}
           yearRange={yearRange}
+          isMobile={isMobile}
         />
       ) : mode === "shock" ? (
         <ShockChart
           primaryIndicator={primaryIndicator}
           onChangePrimary={onChangePrimary}
           yearRange={yearRange}
+          isMobile={isMobile}
         />
       ) : (
         <EventDetailChart
           primaryIndicator={primaryIndicator}
           onChangePrimary={onChangePrimary}
           yearRange={yearRange}
+          isMobile={isMobile}
         />
       )}
     </>

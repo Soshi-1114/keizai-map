@@ -7,6 +7,7 @@ import { ADMINISTRATIONS, EVENTS } from "@/lib/data";
 import { getComparisonData } from "@/lib/comparison-data";
 import { Chart } from "@/components/Chart";
 import { AdminBar } from "@/components/AdminBar";
+import { IndicatorChipSelector } from "./IndicatorChipSelector";
 
 interface Props {
   isMobile: boolean;
@@ -14,6 +15,8 @@ interface Props {
   effectiveIndicators: IndicatorKey[];
   activeCategories: EventCategory[];
   yearRange: [number, number];
+  /** SP では指標セレクタをチャートカード内に出すため、親から toggle ハンドラを受け取る */
+  onToggleIndicator?: (key: IndicatorKey) => void;
 }
 
 /**
@@ -27,6 +30,7 @@ export function ChartPanel({
   effectiveIndicators,
   activeCategories,
   yearRange,
+  onToggleIndicator,
 }: Props) {
   const [showComparison, setShowComparison] = useState(false);
   const [yAxisMode, setYAxisMode] = useState<"auto" | "fixed">("auto");
@@ -38,6 +42,16 @@ export function ChartPanel({
 
   return (
     <>
+      {/* SP では指標セレクタをチャートカード内に表示（PC では上部 IndicatorToggleBar を利用） */}
+      {isMobile && onToggleIndicator && (
+        <IndicatorChipSelector
+          mode="multi"
+          selected={effectiveIndicators}
+          onToggle={onToggleIndicator}
+          compact
+        />
+      )}
+
       {/* 推移ビュー固有の表示パラメータ（左: 比較線、右: 軸スケール） */}
       <div
         className="flex items-center gap-3 mb-3 flex-wrap"
