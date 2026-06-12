@@ -29,6 +29,7 @@ export function ChartPanel({
 }: Props) {
   const [showComparison, setShowComparison] = useState(false);
   const [showDataTable, setShowDataTable] = useState(false);
+  const [yAxisMode, setYAxisMode] = useState<"auto" | "fixed">("auto");
   const dataTableId = useId();
 
   const showG7Trigger =
@@ -43,7 +44,7 @@ export function ChartPanel({
 
   return (
     <>
-      {/* G7比較トグル + ブックマーク */}
+      {/* G7比較トグル + ブックマーク + Y軸レンジ切替 */}
       <div className="flex items-center gap-2 mb-3 flex-wrap">
         {showG7Trigger && (
           <button
@@ -65,6 +66,45 @@ export function ChartPanel({
           range={yearRange.join(",")}
           events={activeCategories.join(",")}
         />
+
+        {/* Y 軸レンジモードトグル */}
+        <div
+          className="ml-auto flex gap-0.5 rounded-full p-0.5 border"
+          style={{ borderColor: "var(--border)", backgroundColor: "var(--bg)" }}
+          role="group"
+          aria-label="Y軸レンジモード"
+        >
+          <button
+            type="button"
+            onClick={() => setYAxisMode("auto")}
+            aria-pressed={yAxisMode === "auto"}
+            title="選択中の指標にフィットして変化を強調"
+            className="px-2.5 py-1 rounded-full text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            style={{
+              backgroundColor: yAxisMode === "auto" ? "var(--card)" : "transparent",
+              color: yAxisMode === "auto" ? "var(--text)" : "var(--muted)",
+              fontWeight: yAxisMode === "auto" ? 600 : 400,
+              border: "none",
+            }}
+          >
+            自動
+          </button>
+          <button
+            type="button"
+            onClick={() => setYAxisMode("fixed")}
+            aria-pressed={yAxisMode === "fixed"}
+            title="100=1990 基準で固定（指標間の絶対比較に有効）"
+            className="px-2.5 py-1 rounded-full text-xs font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            style={{
+              backgroundColor: yAxisMode === "fixed" ? "var(--card)" : "transparent",
+              color: yAxisMode === "fixed" ? "var(--text)" : "var(--muted)",
+              fontWeight: yAxisMode === "fixed" ? 600 : 400,
+              border: "none",
+            }}
+          >
+            100基準
+          </button>
+        </div>
       </div>
 
       <Chart
@@ -75,6 +115,7 @@ export function ChartPanel({
         activeCategories={activeCategories}
         showComparison={showComparison}
         isSingleIndicator={isMobile && effectiveIndicators.length === 1}
+        yAxisMode={yAxisMode}
       />
 
       <div className={isMobile ? "pl-[42px] pr-[8px]" : "pl-[60px] pr-[12px]"}>

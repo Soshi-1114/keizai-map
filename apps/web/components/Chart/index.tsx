@@ -25,6 +25,12 @@ interface Props {
   activeCategories: string[];
   showComparison?: boolean;
   isSingleIndicator?: boolean;
+  /**
+   * Y軸レンジモード:
+   * - "auto": 表示中指標の min/max にフィットして変化を強調（デフォルト）
+   * - "fixed": 全データから min/max を取り、指標間の絶対比較に向く
+   */
+  yAxisMode?: "auto" | "fixed";
 }
 
 const TICK_STYLE = { fill: "var(--muted)", fontSize: 11 };
@@ -84,7 +90,7 @@ function normalizeData(data: DataPoint[]): Array<Record<string, number | null>> 
   });
 }
 
-export function Chart({ data, events, administrations, activeIndicators, activeCategories, showComparison, isSingleIndicator }: Props) {
+export function Chart({ data, events, administrations, activeIndicators, activeCategories, showComparison, isSingleIndicator, yAxisMode = "auto" }: Props) {
   const isMobile = useIsMobile();
   const visibleEvents = useMemo(
     () => events.filter(e => activeCategories.includes(e.category)),
@@ -113,6 +119,44 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
       .filter(d => Number(d.year) % step === 0 || d.year === minYear || d.year === maxYear)
       .map(d => Number(d.year));
   }, [normalized, isMobile, minYear, maxYear]);
+
+  /**
+   * Y軸 domain を計算。auto モードでは選択中指標の値だけで min/max を出して
+   * 変化を強調。fixed モードでは 100 基準で固定的に [85, max+padding]。
+   */
+  const yDomain = useMemo((): [number, number] | [number | string, number | string] => {
+    const activeKeys = activeConfigs.map(c => c.key);
+    if (activeKeys.length === 0) return [85, 140];
+
+    if (yAxisMode === "auto") {
+      const values: number[] = [];
+      for (const d of normalized) {
+        for (const k of activeKeys) {
+          const v = d[k];
+          if (typeof v === "number" && isFinite(v)) values.push(v);
+        }
+      }
+      if (values.length === 0) return [85, 140];
+      const lo = Math.min(...values);
+      const hi = Math.max(...values);
+      // 上下 8% パディング、最低でも 10 ポイント幅を確保
+      const span = Math.max(hi - lo, 10);
+      const pad = span * 0.08;
+      return [Math.floor(lo - pad), Math.ceil(hi + pad)];
+    }
+
+    // fixed: 1990=100 基準を視野に入れた全データの最大まで
+    const values: number[] = [];
+    for (const d of normalized) {
+      for (const k of activeKeys) {
+        const v = d[k];
+        if (typeof v === "number" && isFinite(v)) values.push(v);
+      }
+    }
+    if (values.length === 0) return [85, 140];
+    const hi = Math.max(...values, 105);
+    return [Math.min(85, Math.floor(Math.min(...values))), Math.ceil(hi * 1.05)];
+  }, [normalized, activeConfigs, yAxisMode]);
 
   const yAxisWidth = isMobile ? 42 : 60;
   const chartHeight = isMobile ? 260 : 360;
@@ -261,7 +305,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
           stroke="transparent"
           tick={isMobile ? TICK_STYLE_SM : TICK_STYLE}
           tickLine={false}
-          domain={["auto", "auto"]}
+          domain={yDomain}
           tickFormatter={(v) => `${v}`}
           label={isMobile ? undefined : { value: "指数（1990=100）", angle: -90, position: "insideLeft", fill: "var(--muted)", fontSize: 10, dx: -2 }}
         />
