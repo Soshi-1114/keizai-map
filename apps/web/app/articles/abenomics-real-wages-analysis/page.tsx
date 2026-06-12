@@ -69,14 +69,14 @@ export default function AbenomicsRealWagesPage() {
         <DataBox
           items={[
             { label: "実質賃金",    value: "▼0.9%",  note: "97.4→96.5", color: "#ef4444" },
-            { label: "名目賃金",    value: "▲3.1%",  note: "上昇したのに", color: "#22c55e" },
-            { label: "物価（CPI）", value: "▲5.8%",  note: "101.5→107.4", color: "#D97706" },
+            { label: "名目賃金",    value: "▲5.4%",  note: "物価上昇に届かず", color: "#22c55e" },
+            { label: "物価（CPI）", value: "▲6.4%",  note: "105.6→112.4", color: "#D97706" },
             { label: "消費税",      value: "5→8→10%", note: "2度の引き上げ", color: "#D97706" },
           ]}
         />
         <p>
-          ここに矛盾があります。名目賃金は3.1%上昇しているのに、実質賃金は0.9%低下しました。
-          これは物価上昇（5.8%）が名目賃金上昇（3.1%）を上回ったことを意味します。
+          ここに矛盾があります。名目賃金が上昇していても、実質賃金は0.9%低下しました。
+          これは物価上昇（6.4%）が名目賃金上昇を上回ったことを意味します。
         </p>
         <p>
           特に重要なのは、消費税が5%から8%、さらに10%へと段階的に引き上げられ、
@@ -87,13 +87,13 @@ export default function AbenomicsRealWagesPage() {
       <Section heading="矛盾の原因1：消費税増税による物価上昇">
         <DataBox
           items={[
-            { label: "2012年4月前", value: "101.5", note: "消費税 5%", color: "#D97706" },
-            { label: "2014年4月後", value: "107.9", note: "消費税 8%（+6.4pt上昇）", color: "#ef4444" },
-            { label: "2019年10月後", value: "109.7", note: "消費税 10%（+1.8pt上昇）", color: "#ef4444" },
+            { label: "2012年（5%）",  value: "105.6", note: "消費税 5%", color: "#D97706" },
+            { label: "2014年（8%）",  value: "109.2", note: "消費税 8%（+3.6pt上昇）", color: "#ef4444" },
+            { label: "2019年（10%）", value: "112.4", note: "消費税 10%（軽減税率8%）", color: "#ef4444" },
           ]}
         />
         <p>
-          2014年の消費税3→8%引き上げは、物価指数を6.4ポイント押し上げました。
+          2014年の消費税5→8%引き上げ前後で、物価指数は2012年比3.6ポイント上昇しました。
           この時期、企業の賃上げは限定的で、労働者の購買力は大きく圧迫されました。
         </p>
         <p>
@@ -106,7 +106,7 @@ export default function AbenomicsRealWagesPage() {
         <DataBox
           items={[
             { label: "2012年",   value: "79.8円",  note: "歴史的円高", color: "#22c55e" },
-            { label: "2014年",   value: "102.1円", note: "円安が急加速", color: "#D97706" },
+            { label: "2014年",   value: "105.9円", note: "円安が急加速", color: "#D97706" },
             { label: "2020年",   value: "106.8円", note: "さらに円安", color: "#ef4444" },
           ]}
         />

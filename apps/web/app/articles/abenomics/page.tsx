@@ -87,7 +87,7 @@ export default function AbenomicsPage() {
         <DataBox
           items={[
             { label: "実質賃金",    value: "▼0.9%",  note: "97.4→96.5",   color: "#ef4444" },
-            { label: "物価（CPI）", value: "＋5.8%",  note: "101.5→107.4", color: "#D97706" },
+            { label: "物価（CPI）", value: "＋6.4%",  note: "105.6→112.4", color: "#D97706" },
             { label: "税収",        value: "＋38.5%", note: "43.9→60.8兆円", color: "#22c55e" },
             { label: "円/ドル",     value: "＋33.8%", note: "79.8→106.8円（円安）", color: "#4FD9A0" },
           ]}

@@ -83,11 +83,11 @@ export default function ContactPage() {
                 一般的なお問い合わせ・ご意見はメールでご連絡ください。
               </p>
               <a
-                href="mailto:4649chopper@gmail.com"
+                href="mailto:keizai.map@gmail.com"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border transition-opacity hover:opacity-80"
                 style={{ borderColor: "var(--border)", color: "var(--link)", backgroundColor: "var(--bg)" }}
               >
-                4649chopper@gmail.com
+                keizai.map@gmail.com
               </a>
             </div>
 
@@ -183,7 +183,7 @@ export default function ContactPage() {
             </div>
             <div className="rounded-xl p-3 space-y-1" style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}>
               <div className="font-semibold" style={{ color: "var(--text)" }}>メールアドレス</div>
-              <div style={{ color: "var(--muted)" }}>4649chopper@gmail.com</div>
+              <div style={{ color: "var(--muted)" }}>keizai.map@gmail.com</div>
             </div>
             <div className="rounded-xl p-3 space-y-1" style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)" }}>
               <div className="font-semibold" style={{ color: "var(--text)" }}>返答目安</div>

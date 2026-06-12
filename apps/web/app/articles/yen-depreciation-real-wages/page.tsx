@@ -69,7 +69,7 @@ export default function YenDepreciationRealWagesPage() {
         <DataBox
           items={[
             { label: "2012年",   value: "79.8円",  note: "歴史的円高", color: "#22c55e" },
-            { label: "2014年",   value: "102.1円", note: "アベノミクス後2年", color: "#D97706" },
+            { label: "2014年",   value: "105.9円", note: "アベノミクス後2年", color: "#D97706" },
             { label: "2020年",   value: "106.8円", note: "COVID-19前", color: "#D97706" },
             { label: "2024年",   value: "151.8円", note: "34年ぶり円安", color: "#ef4444" },
           ]}
@@ -77,15 +77,15 @@ export default function YenDepreciationRealWagesPage() {
         <DataBox
           items={[
             { label: "2012年", value: "97.4",  note: "実質賃金", color: "#4F8EF7" },
-            { label: "2014年", value: "96.3",  note: "▼1.1%（円安加速期）", color: "#ef4444" },
+            { label: "2014年", value: "97.1",  note: "▼0.3%（円安加速期）", color: "#ef4444" },
             { label: "2020年", value: "96.5",  note: "横ばい", color: "#ef4444" },
             { label: "2024年", value: "99.2",  note: "回復傾向だが依然低い", color: "#ef4444" },
           ]}
         />
         <p>
-          円安が最も急速に進んだ2012年〜2014年に、実質賃金は大きく低下しました。
-          2014年には97.4から96.3へ1.1%低下しており、
-          この時期が「円安による家計圧迫」の最も顕著な期間だったのです。
+          円安が最も急速に進んだ2012年〜2014年に、実質賃金は低下しました。
+          2014年には97.4から97.1へ0.3%低下しており、
+          この時期が「円安による家計圧迫」の最初の局面だったといえます。
         </p>
       </Section>
 
@@ -106,15 +106,15 @@ export default function YenDepreciationRealWagesPage() {
       <Section heading="円安による物価上昇のデータ：2012→2024年">
         <DataBox
           items={[
-            { label: "2012年", value: "101.5", note: "CPI（消費者物価指数）", color: "#D97706" },
-            { label: "2015年", value: "103.8", note: "+2.3pt（円安定期）", color: "#D97706" },
-            { label: "2020年", value: "113.1", note: "COVID-19・エネルギー危機", color: "#ef4444" },
-            { label: "2024年", value: "119.9", note: "+18.4pt（全期間）", color: "#ef4444" },
+            { label: "2012年", value: "105.6", note: "CPI（消費者物価指数）", color: "#D97706" },
+            { label: "2015年", value: "110.4", note: "+4.8pt（消費税増税含む）", color: "#D97706" },
+            { label: "2020年", value: "112.4", note: "COVID-19・エネルギー危機", color: "#ef4444" },
+            { label: "2024年", value: "119.9", note: "+14.3pt（全期間）", color: "#ef4444" },
           ]}
         />
         <p>
-          2012年から2024年にかけて、物価は101.5から119.9へ18.4ポイント上昇しました。
-          特に2020年以降、ウクライナ戦争によるエネルギー価格上昇と、
+          2012年から2024年にかけて、物価は105.6から119.9へ14.3ポイント上昇しました。
+          特に2022年以降、ウクライナ戦争によるエネルギー価格上昇と、
           円安による輸入物価上昇が重なり、物価上昇が加速しました。
         </p>
         <p>
@@ -173,7 +173,7 @@ export default function YenDepreciationRealWagesPage() {
           「日米金利差」が拡大し、ドルが買われ続けました。
         </p>
         <p>
-          この「ハイパー円安」の結果、日本の物価は2020年の113.1から2024年の119.9へ上昇し、
+          この急速な円安の結果、日本の物価は2020年の112.4から2024年の119.9へ上昇し、
           輸入物価の上昇が加速しました。
         </p>
       </Section>
@@ -212,7 +212,7 @@ export default function YenDepreciationRealWagesPage() {
         <ul className="list-disc pl-5 space-y-1">
           <li>2012〜2024年の12年間で円安は90%進行（79.8円→151.8円）</li>
           <li>円安は輸出企業の利益を大幅に増加させた（法人税+121%）</li>
-          <li>一方で、輸入物価上昇により家計は圧迫された（物価+18.4pt）</li>
+          <li>一方で、輸入物価上昇により家計は圧迫された（物価+14.3pt）</li>
           <li>実質賃金は1.8%しか上昇せず、物価上昇に追い付かず</li>
           <li>企業利益の増加が労働者に還流しないメカニズム</li>
           <li>「強い企業」と「弱い家計」の格差拡大こそがアベノミクスの遺産</li>

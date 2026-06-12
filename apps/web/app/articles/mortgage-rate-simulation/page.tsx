@@ -188,7 +188,7 @@ export default function MortgageRateSimulationPage() {
         </Section>
 
         <Section heading="まとめ：金利のある世界に備える">
-          <ul className="list-disc pl-5 process-y-1 my-3 text-sm" style={{ color: "var(--text)" }}>
+          <ul className="list-disc pl-5 space-y-1 my-3 text-sm" style={{ color: "var(--text)" }}>
             <li>住宅ローン変動金利は30年で8.5% → 0.4%まで20倍下落</li>
             <li>2024年から利上げ局面入りし、すでに0.6%程度に上昇</li>
             <li>金利1.5%まで上がると月返済額は1.8〜2万円増</li>

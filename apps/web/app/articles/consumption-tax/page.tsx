@@ -128,10 +128,10 @@ export default function ConsumptionTaxPage() {
 
         <DataBox
           items={[
-            { label: "1996年（5%前）", value: "103.5", note: "CPI指数（1990=100）", color: "#D97706" },
-            { label: "1998年（5%後）", value: "106.4", note: "+2.8pt上昇", color: "#D97706" },
-            { label: "2012年（8%前）", value: "101.5", note: "CPI指数", color: "#D97706" },
-            { label: "2014年（8%後）", value: "107.9", note: "+6.4pt上昇", color: "#D97706" },
+            { label: "1996年（5%前）", value: "107.1", note: "CPI指数（1990=100）", color: "#D97706" },
+            { label: "1998年（5%後）", value: "109.7", note: "+2.6pt上昇", color: "#D97706" },
+            { label: "2012年（8%前）", value: "105.6", note: "CPI指数", color: "#D97706" },
+            { label: "2014年（8%後）", value: "109.2", note: "+3.6pt上昇", color: "#D97706" },
           ]}
         />
 
@@ -142,7 +142,7 @@ export default function ConsumptionTaxPage() {
         </p>
         <p>
           <strong>2014年（5→8%）</strong>：安倍政権下での引き上げ。
-          直前の2012年に比べ2014年のCPIは6.4ポイント上昇し、実質賃金への下押し圧力となりました。
+          直前の2012年に比べ2014年のCPIは3.6ポイント上昇し、実質賃金への下押し圧力となりました。
           消費の落ち込みは予想を超え、2015年に予定していた10%への引き上げを2年延期する要因のひとつとなりました。
         </p>
         <p>

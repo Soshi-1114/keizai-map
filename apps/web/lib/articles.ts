@@ -76,7 +76,7 @@ export const ARTICLES: ArticleMeta[] = [
     slug: "consumption-tax-wage-price",
     title: "消費税増税後の物価と賃金の変化【1997→2019】",
     description:
-      "消費税の4回の引き上げ（3→5→8→10%）で、物価はどう変わり、賃金はどう反応したのか。1997年の橋本増税と2019年の岸田増税を比較分析。",
+      "消費税の引き上げ（3→5→8→10%）で、物価はどう変わり、賃金はどう反応したのか。1997年の橋本増税・2014年の安倍増税・2019年の安倍増税（軽減税率導入）をデータで比較する。",
     readingTime: 6,
     tags: ["消費税", "物価", "賃金"],
     presetQuery: "?indicators=cpi,wage,tax&range=1989,2019&events=税制",
