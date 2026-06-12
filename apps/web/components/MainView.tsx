@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
 import { useIsMobile } from "@/lib/hooks";
@@ -59,6 +59,20 @@ export function MainView({ initialParams }: MainViewProps) {
   const [activeCategories, setActiveCategories] = useState<EventCategory[]>(() =>
     parseCategories(initialParams?.events ?? null),
   );
+
+  // 単一指標モード（ショック/イベント）で使う主指標。
+  // 推移/政権モードの activeIndicators[0] と同期させ、モード切替で
+  // 選択が失われないようにする。
+  const [primaryIndicator, setPrimaryIndicator] = useState<IndicatorKey>(() =>
+    activeIndicators[0] ?? "wage",
+  );
+
+  useEffect(() => {
+    if (activeIndicators.length === 0) return;
+    if (!activeIndicators.includes(primaryIndicator)) {
+      setPrimaryIndicator(activeIndicators[0]);
+    }
+  }, [activeIndicators, primaryIndicator]);
 
   const { filteredData, narrative } = useFilteredData(yearRange);
   useUrlSync(activeIndicators, yearRange, activeCategories);
@@ -179,6 +193,8 @@ export function MainView({ initialParams }: MainViewProps) {
               mode={viewMode}
               activeIndicators={activeIndicators}
               onToggleIndicator={toggleIndicator}
+              primaryIndicator={primaryIndicator}
+              onChangePrimary={setPrimaryIndicator}
               yearRange={yearRange}
               activeCategories={activeCategories}
             />
