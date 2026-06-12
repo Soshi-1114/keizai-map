@@ -80,26 +80,33 @@ export function ChartPanel({
       <div className={isMobile ? "pl-[42px] pr-[8px]" : "pl-[60px] pr-[12px]"}>
         <AdminBar administrations={ADMINISTRATIONS} yearRange={yearRange} />
 
-        {/* CSV / データ表 ボタン */}
-        <div className="mt-6 flex flex-wrap gap-2 justify-end">
+        {/* CSV / データ表 ボタン — モバイルでは縦並び・全幅、PC では右寄せ */}
+        <div className="mt-6 flex flex-col md:flex-row md:flex-wrap gap-2 md:justify-end">
           <button
             type="button"
             onClick={handleExportCSV}
-            className="px-3 py-2 md:px-4 rounded-md border text-sm font-medium transition-colors hover:bg-[var(--bg)] hover:border-[var(--link)] hover:text-[var(--link)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-            style={{ borderColor: "var(--border)", backgroundColor: "var(--card)", color: "var(--text)" }}
+            aria-label={`${yearRange[0]}年から${yearRange[1]}年の選択指標を CSV でダウンロード`}
+            className="px-3 py-3 md:py-2 md:px-4 rounded-md border text-sm font-medium transition-colors hover:bg-[var(--bg)] hover:border-[var(--link)] hover:text-[var(--link)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            style={{
+              borderColor: "var(--border)",
+              backgroundColor: "var(--card)",
+              color: "var(--text)",
+              minHeight: 44,
+            }}
           >
-            📥 CSVでエクスポート
+            📥 CSVでダウンロード
           </button>
           <button
             type="button"
             onClick={() => setShowDataTable(!showDataTable)}
             aria-expanded={showDataTable}
             aria-controls={dataTableId}
-            className="px-3 py-2 md:px-4 rounded-md border text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="px-3 py-3 md:py-2 md:px-4 rounded-md border text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             style={{
               borderColor: showDataTable ? "var(--link)" : "var(--border)",
               backgroundColor: showDataTable ? "var(--link)" : "var(--card)",
               color: showDataTable ? "#fff" : "var(--text)",
+              minHeight: 44,
             }}
           >
             📊 データを{showDataTable ? "閉じる" : "表で見る"}
