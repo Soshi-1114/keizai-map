@@ -1,50 +1,43 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useState } from "react";
 import type { DataPoint, EventCategory, IndicatorKey } from "@/lib/types";
-import { ADMINISTRATIONS, EVENTS, RAW_DATA } from "@/lib/data";
-import { generateCSV, downloadCSV } from "@/lib/csv";
+import { ADMINISTRATIONS, EVENTS } from "@/lib/data";
 import { getComparisonData } from "@/lib/comparison-data";
 import { Chart } from "@/components/Chart";
 import { AdminBar } from "@/components/AdminBar";
-import { DataTable } from "@/components/DataTable";
-import { BookmarkPanel } from "@/components/BookmarkPanel";
 
 interface Props {
   isMobile: boolean;
   filteredData: DataPoint[];
   effectiveIndicators: IndicatorKey[];
-  activeIndicators: IndicatorKey[];
   activeCategories: EventCategory[];
   yearRange: [number, number];
 }
 
+/**
+ * 推移ビュー専用のチャート描画パネル。
+ * ブックマーク・CSV・データ表はモード横断機能のため ChartToolbar に分離し、
+ * ここには「推移表示パラメータ」として G7 比較と Y 軸モードのみ残す。
+ */
 export function ChartPanel({
   isMobile,
   filteredData,
   effectiveIndicators,
-  activeIndicators,
   activeCategories,
   yearRange,
 }: Props) {
   const [showComparison, setShowComparison] = useState(false);
-  const [showDataTable, setShowDataTable] = useState(false);
   const [yAxisMode, setYAxisMode] = useState<"auto" | "fixed">("auto");
-  const dataTableId = useId();
 
   const showG7Trigger =
     effectiveIndicators.includes("wage") ||
     effectiveIndicators.includes("cpi") ||
     effectiveIndicators.includes("fx");
 
-  const handleExportCSV = () => {
-    const csv = generateCSV(RAW_DATA, activeIndicators, yearRange);
-    downloadCSV(csv, `keizai-map_${yearRange[0]}-${yearRange[1]}.csv`);
-  };
-
   return (
     <>
-      {/* G7比較トグル + ブックマーク + Y軸レンジ切替 */}
+      {/* G7比較トグル + Y軸レンジ切替（推移ビュー固有の表示パラメータ） */}
       <div className="flex items-center gap-2 mb-3 flex-wrap">
         {showG7Trigger && (
           <button
@@ -61,11 +54,6 @@ export function ChartPanel({
             🌍 G7平均と比較
           </button>
         )}
-        <BookmarkPanel
-          indicators={activeIndicators.join(",")}
-          range={yearRange.join(",")}
-          events={activeCategories.join(",")}
-        />
 
         {/* Y 軸レンジモードトグル（SP では差が出にくいので非表示） */}
         <div
@@ -120,46 +108,6 @@ export function ChartPanel({
 
       <div className={isMobile ? "pl-[42px] pr-[8px]" : "pl-[60px] pr-[12px]"}>
         <AdminBar administrations={ADMINISTRATIONS} yearRange={yearRange} />
-
-        {/* CSV / データ表 ボタン — SP/PC ともに横並び */}
-        <div className="mt-6 flex flex-row flex-wrap gap-2 md:justify-end">
-          <button
-            type="button"
-            onClick={handleExportCSV}
-            aria-label={`${yearRange[0]}年から${yearRange[1]}年の選択指標を CSV でダウンロード`}
-            className="flex-1 md:flex-initial px-3 py-3 md:py-2 md:px-4 rounded-md border text-sm font-medium transition-colors hover:bg-[var(--bg)] hover:border-[var(--link)] hover:text-[var(--link)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-            style={{
-              borderColor: "var(--border)",
-              backgroundColor: "var(--card)",
-              color: "var(--text)",
-              minHeight: 44,
-            }}
-          >
-            📥 CSVでダウンロード
-          </button>
-          <button
-            type="button"
-            onClick={() => setShowDataTable(!showDataTable)}
-            aria-expanded={showDataTable}
-            aria-controls={dataTableId}
-            className="flex-1 md:flex-initial px-3 py-3 md:py-2 md:px-4 rounded-md border text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-            style={{
-              borderColor: showDataTable ? "var(--link)" : "var(--border)",
-              backgroundColor: showDataTable ? "var(--link)" : "var(--card)",
-              color: showDataTable ? "#fff" : "var(--text)",
-              minHeight: 44,
-            }}
-          >
-            📊 データを{showDataTable ? "閉じる" : "表で見る"}
-          </button>
-        </div>
-
-        {/* データテーブル（アクセシビリティ用代替ビュー） */}
-        {showDataTable && (
-          <div id={dataTableId}>
-            <DataTable data={filteredData} activeIndicators={activeIndicators} />
-          </div>
-        )}
       </div>
     </>
   );
