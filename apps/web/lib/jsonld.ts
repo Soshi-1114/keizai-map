@@ -1,6 +1,14 @@
 import { BASE_URL } from "@/lib/constants";
 import { ARTICLES } from "@/lib/articles";
 
+/**
+ * "YYYY-MM-DD" を JST (+09:00) のISO 8601日時に変換する。
+ * Google構造化データで `datePublished`/`dateModified` のタイムゾーン警告を解消する。
+ */
+function toJstDateTime(date: string): string {
+  return `${date}T00:00:00+09:00`;
+}
+
 export function generateArticleJsonLd({
   title,
   description,
@@ -26,8 +34,8 @@ export function generateArticleJsonLd({
     url: articleUrl,
     image: `${baseUrl}/og/article?slug=${slug}`,
     ...(meta && {
-      datePublished: meta.publishedAt,
-      dateModified: meta.updatedAt,
+      datePublished: toJstDateTime(meta.publishedAt),
+      dateModified: toJstDateTime(meta.updatedAt),
     }),
     timeRequired: `PT${readingTime}M`,
     inLanguage: "ja",

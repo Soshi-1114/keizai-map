@@ -10,8 +10,8 @@ export function articleOpenGraph(slug: string): NonNullable<Metadata["openGraph"
   if (!meta) throw new Error(`articleOpenGraph: unknown slug "${slug}"`);
   return {
     type: "article",
-    publishedTime: meta.publishedAt,
-    modifiedTime: meta.updatedAt,
+    publishedTime: `${meta.publishedAt}T00:00:00+09:00`,
+    modifiedTime: `${meta.updatedAt}T00:00:00+09:00`,
     authors: ["KeizaiMap"],
     tags: meta.tags,
     images: [{ url: `/og/article?slug=${slug}` }],
