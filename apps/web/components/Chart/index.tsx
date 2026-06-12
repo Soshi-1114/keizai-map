@@ -13,7 +13,7 @@ import {
   ReferenceArea,
 } from "recharts";
 import type { DataPoint, EconomicEvent, IndicatorKey, Administration } from "@/lib/types";
-import { INDICATOR_CONFIGS } from "@/lib/data";
+import { INDICATOR_CONFIGS, BASELINE_1990 } from "@/lib/data";
 import { useIsMobile } from "@/lib/hooks";
 
 interface Props {
@@ -42,40 +42,82 @@ const STROKE_DASH: Record<IndicatorKey, string | undefined> = {
   insurance: undefined,  // 実線
 };
 
+/** 元の単位での表示文字列を生成 */
+function formatRawValue(key: IndicatorKey, raw: number): string {
+  switch (key) {
+    case "tax":
+    case "debt":
+      return `${raw.toFixed(1)}兆円`;
+    case "fx":
+      return `${raw.toFixed(1)}円`;
+    case "births":
+      return `${raw.toFixed(1)}万人`;
+    case "insurance":
+      return `${raw.toFixed(1)}%`;
+    default:
+      return `${raw.toFixed(1)}`;
+  }
+}
+
+/** データを 1990=100 の指数に正規化（実数指標を変換、既に指数の指標はそのまま） */
+function normalizeData(data: DataPoint[]): Array<Record<string, number | null>> {
+  return data.map(d => {
+    const out: Record<string, number | null> = { year: d.year };
+    for (const cfg of INDICATOR_CONFIGS) {
+      const raw = d[cfg.key];
+      if (raw == null) {
+        out[cfg.key] = null;
+        out[`${cfg.key}_raw`] = null;
+      } else {
+        const baseline = BASELINE_1990[cfg.key];
+        out[cfg.key] = (raw / baseline) * 100;
+        out[`${cfg.key}_raw`] = raw;
+      }
+    }
+    // G7 比較列があれば素通し
+    const dx = d as unknown as Record<string, number | undefined>;
+    if (dx.g7wage !== undefined) out.g7wage = dx.g7wage ?? null;
+    if (dx.g7cpi !== undefined) out.g7cpi = dx.g7cpi ?? null;
+    if (dx.g7fx !== undefined) out.g7fx = dx.g7fx ?? null;
+    return out;
+  });
+}
+
 export function Chart({ data, events, administrations, activeIndicators, activeCategories, showComparison, isSingleIndicator }: Props) {
   const isMobile = useIsMobile();
   const visibleEvents = events.filter(e => activeCategories.includes(e.category));
   const activeConfigs = INDICATOR_CONFIGS.filter(c => activeIndicators.includes(c.key));
 
-  const years = data.map(d => d.year);
+  // 1990=100 に正規化した表示用データ。元値は `${key}_raw` に保持。
+  const normalized = normalizeData(data);
+
+  const years = normalized.map(d => Number(d.year));
   const minYear = years[0] ?? 1990;
   const maxYear = years[years.length - 1] ?? 2025;
 
-  // モバイルでは4年おきに間引く
+  // モバイルでは10年おき、PCでは5年おきに目盛り
   const xTicks = isMobile
-    ? data.filter(d => d.year % 10 === 0 || d.year === minYear || d.year === maxYear).map(d => d.year)
-    : data.filter(d => d.year % 5 === 0 || d.year === minYear || d.year === maxYear).map(d => d.year);
+    ? normalized.filter(d => Number(d.year) % 10 === 0 || d.year === minYear || d.year === maxYear).map(d => Number(d.year))
+    : normalized.filter(d => Number(d.year) % 5 === 0 || d.year === minYear || d.year === maxYear).map(d => Number(d.year));
 
-  const yAxisWidth = isMobile ? 38 : 55;
+  const yAxisWidth = isMobile ? 42 : 60;
   const chartHeight = isMobile ? 260 : 360;
   const chartMargin = isMobile
-    ? { top: 8, right: 0, left: 0, bottom: 5 }
-    : { top: 36, right: 0, left: 0, bottom: 5 };
+    ? { top: 8, right: 8, left: 0, bottom: 5 }
+    : { top: 36, right: 12, left: 0, bottom: 5 };
 
-  // カスタム Tooltip：指標値 + 近傍イベント情報を統合表示
+  // カスタム Tooltip：指数値 + 元単位値 + 近傍イベント情報を統合表示
   function EventTooltip({ active, payload, label }: {
     active?: boolean;
-    payload?: Array<{ name: string; value: number; color: string; dataKey: string }>;
+    payload?: Array<{ name: string; value: number; color: string; dataKey: string; payload: Record<string, number | null> }>;
     label?: number;
   }) {
     if (!active || !payload?.length || label == null) return null;
 
-    // タップした年の ±1 年以内にあるイベントを取得（近い順）
     const nearEvents = visibleEvents
       .filter(e => Math.abs(e.year - label) <= 1)
       .sort((a, b) => Math.abs(a.year - label) - Math.abs(b.year - label));
 
-    // null/undefined 値と G7 系列を除いた実データ
     const dataItems = payload.filter(p => p.value != null && !String(p.dataKey).startsWith("g7"));
 
     return (
@@ -85,15 +127,13 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
         borderRadius: 8,
         padding: "8px 12px",
         fontSize: 12,
-        maxWidth: 220,
+        maxWidth: 260,
         boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
       }}>
-        {/* 年ヘッダー */}
         <div style={{ color: "var(--text)", fontWeight: "bold", marginBottom: nearEvents.length ? 6 : 4 }}>
           {label}年
         </div>
 
-        {/* 近傍イベント */}
         {nearEvents.length > 0 && (
           <div style={{
             marginBottom: 6,
@@ -111,20 +151,27 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
           </div>
         )}
 
-        {/* 指標値 */}
         {dataItems.map(entry => {
-          const cfg = INDICATOR_CONFIGS.find(c => c.label === entry.name);
+          const key = String(entry.dataKey) as IndicatorKey;
+          const cfg = INDICATOR_CONFIGS.find(c => c.key === key);
+          const rawVal = entry.payload[`${key}_raw`];
+          const rawDisplay = typeof rawVal === "number" ? formatRawValue(key, rawVal) : null;
           return (
-            <div key={entry.dataKey} style={{
+            <div key={String(entry.dataKey)} style={{
               display: "flex",
               justifyContent: "space-between",
               gap: 16,
               color: entry.color,
               lineHeight: "1.6",
             }}>
-              <span>{entry.name}</span>
+              <span>{cfg?.label ?? entry.name}</span>
               <span style={{ fontVariantNumeric: "tabular-nums", fontWeight: 600 }}>
-                {entry.value.toFixed(1)}{cfg?.unit ?? ""}
+                {entry.value.toFixed(1)}
+                {rawDisplay && (
+                  <span style={{ color: "var(--muted)", fontWeight: 400, marginLeft: 4 }}>
+                    （{rawDisplay}）
+                  </span>
+                )}
               </span>
             </div>
           );
@@ -133,7 +180,7 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
     );
   }
 
-  // 近接イベントのラベルを2レーンに振り分けて重なりを防ぐ（デスクトップのみ）
+  // 近接イベントのラベルを2レーンに振り分け（デスクトップのみ）
   const LANE_GAP_YEARS = 3;
   const laneMap = new Map<string, number>();
   if (!isMobile) {
@@ -149,17 +196,15 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
     }
   }
 
-  // アクセシビリティ用の説明テキストを生成
   const chartDescription = activeConfigs.length > 0
-    ? `${activeConfigs.map(c => c.label).join(', ')} の ${minYear}年から${maxYear}年までの推移`
+    ? `${activeConfigs.map(c => c.label).join(', ')} の ${minYear}年から${maxYear}年までの推移（1990=100指数）`
     : `経済指標の ${minYear}年から${maxYear}年までの推移`;
 
   return (
     <div role="img" aria-labelledby="chart-title" className="w-full">
       <h2 id="chart-title" className="sr-only">{chartDescription}</h2>
       <ResponsiveContainer width="100%" height={chartHeight}>
-      <ComposedChart data={data} margin={chartMargin}>
-        {/* Administration background bands */}
+      <ComposedChart data={normalized} margin={chartMargin}>
         {administrations
           .filter(a => a.end > minYear && a.start < maxYear)
           .map(admin => (
@@ -167,7 +212,6 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
               key={`${admin.name}-${admin.start}`}
               x1={Math.max(admin.start, minYear)}
               x2={Math.min(admin.end, maxYear)}
-              yAxisId="left"
               fill={admin.color}
               fillOpacity={0.05}
               stroke={admin.color}
@@ -188,24 +232,14 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
           tickLine={false}
         />
         <YAxis
-          yAxisId="left"
           orientation="left"
           width={yAxisWidth}
           stroke="transparent"
           tick={isMobile ? TICK_STYLE_SM : TICK_STYLE}
           tickLine={false}
-          domain={[85, 140]}
+          domain={["auto", "auto"]}
+          tickFormatter={(v) => `${v}`}
           label={isMobile ? undefined : { value: "指数（1990=100）", angle: -90, position: "insideLeft", fill: "var(--muted)", fontSize: 10, dx: -2 }}
-        />
-        <YAxis
-          yAxisId="right"
-          orientation="right"
-          width={yAxisWidth}
-          stroke="transparent"
-          tick={isMobile ? TICK_STYLE_SM : TICK_STYLE}
-          tickLine={false}
-          domain={[30, 170]}
-          label={isMobile ? undefined : { value: "税収（兆円）/ 為替（円）", angle: 90, position: "insideRight", fill: "var(--muted)", fontSize: 10, dx: 10 }}
         />
 
         <Tooltip content={<EventTooltip />} />
@@ -216,12 +250,10 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
           iconSize={isMobile ? 8 : 14}
         />
 
-        {/* イベント参照線：モバイルではラベル非表示 */}
         {visibleEvents.map(ev => (
           <ReferenceLine
             key={`${ev.year}-${ev.label}`}
             x={ev.year}
-            yAxisId="left"
             stroke={ev.color}
             strokeDasharray="4 3"
             strokeOpacity={0.7}
@@ -232,7 +264,6 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
           />
         ))}
 
-        {/* Data lines */}
         {activeConfigs.map(cfg => (
           <Line
             key={cfg.key}
@@ -244,11 +275,10 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             strokeDasharray={isSingleIndicator ? undefined : STROKE_DASH[cfg.key]}
             dot={{ fill: cfg.color, r: isMobile ? 2 : 3, strokeWidth: 0 }}
             activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--card)" }}
-            yAxisId={cfg.yAxis}
+            connectNulls={false}
           />
         ))}
 
-        {/* G7平均比較ライン */}
         {showComparison && activeIndicators.includes("wage") && (
           <Line
             type="monotone"
@@ -259,7 +289,6 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             strokeDasharray="3 3"
             strokeOpacity={0.5}
             dot={false}
-            yAxisId="left"
           />
         )}
         {showComparison && activeIndicators.includes("cpi") && (
@@ -272,7 +301,6 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             strokeDasharray="3 3"
             strokeOpacity={0.5}
             dot={false}
-            yAxisId="left"
           />
         )}
         {showComparison && activeIndicators.includes("fx") && (
@@ -285,7 +313,6 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
             strokeDasharray="3 3"
             strokeOpacity={0.5}
             dot={false}
-            yAxisId="right"
           />
         )}
       </ComposedChart>

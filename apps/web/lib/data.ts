@@ -1,4 +1,4 @@
-import type { DataPoint, Administration, EconomicEvent, IndicatorConfig } from "./types";
+import type { DataPoint, Administration, EconomicEvent, IndicatorConfig, IndicatorKey } from "./types";
 import generatedFile from "./data.generated.json";
 
 const { generatedAt, data: rawArray } = generatedFile as unknown as {
@@ -51,13 +51,27 @@ export const EVENTS: EconomicEvent[] = [
 
 export const INDICATOR_CONFIGS: IndicatorConfig[] = [
   // color: グラフ・ダーク背景用, darkColor: 薄背景チップ等でのWCAG AA対応テキスト色
-  { key: "wage",      label: "実質賃金",         color: "#4F8EF7", darkColor: "#1d4ed8", unit: "（1990=100）", yAxis: "left"  },
-  { key: "cpi",       label: "消費者物価（CPI）", color: "#D97706", darkColor: "#92400e", unit: "（1990=100）", yAxis: "left"  },
-  { key: "tax",       label: "税収",             color: "#E05C5C", darkColor: "#991b1b", unit: "（兆円）",      yAxis: "right" },
-  { key: "fx",        label: "USD/JPY",          color: "#4FD9A0", darkColor: "#065f46", unit: "（円）",        yAxis: "right" },
-  { key: "nikkei",    label: "日経平均",          color: "#8B5CF6", darkColor: "#5b21b6", unit: "（1990=100）", yAxis: "left"  },
-  { key: "housing",   label: "住宅価格",          color: "#EC4899", darkColor: "#9d174d", unit: "（1990=100）", yAxis: "left"  },
-  { key: "debt",      label: "国債残高",          color: "#06B6D4", darkColor: "#155e75", unit: "（兆円）",      yAxis: "right" },
-  { key: "births",    label: "出生数",            color: "#F59E0B", darkColor: "#78350f", unit: "（万人）",      yAxis: "left"  },
-  { key: "insurance", label: "社会保険料",        color: "#10B981", darkColor: "#065f46", unit: "（%）",         yAxis: "right" },
+  // 全指標を 1990=100 の指数に正規化し 1 軸で表示する
+  { key: "wage",      label: "実質賃金",         color: "#4F8EF7", darkColor: "#1d4ed8", unit: "（1990=100）", yAxis: "left" },
+  { key: "cpi",       label: "消費者物価（CPI）", color: "#D97706", darkColor: "#92400e", unit: "（1990=100）", yAxis: "left" },
+  { key: "tax",       label: "税収",             color: "#9333EA", darkColor: "#6b21a8", unit: "（兆円）",      yAxis: "left" },
+  { key: "fx",        label: "USD/JPY",          color: "#4FD9A0", darkColor: "#065f46", unit: "（円）",        yAxis: "left" },
+  { key: "nikkei",    label: "日経平均",          color: "#8B5CF6", darkColor: "#5b21b6", unit: "（1990=100）", yAxis: "left" },
+  { key: "housing",   label: "住宅価格",          color: "#EC4899", darkColor: "#9d174d", unit: "（1990=100）", yAxis: "left" },
+  { key: "debt",      label: "国債残高",          color: "#06B6D4", darkColor: "#155e75", unit: "（兆円）",      yAxis: "left" },
+  { key: "births",    label: "出生数",            color: "#F59E0B", darkColor: "#78350f", unit: "（万人）",      yAxis: "left" },
+  { key: "insurance", label: "社会保険料",        color: "#10B981", darkColor: "#065f46", unit: "（%）",         yAxis: "left" },
 ];
+
+/** 1990 年の基準値。実数指標を 1990=100 の指数に正規化するために使用 */
+export const BASELINE_1990: Record<IndicatorKey, number> = {
+  wage:      100,    // 既に 1990=100 指数
+  cpi:       100,    // 既に 1990=100 指数
+  nikkei:    100,    // 既に 1990=100 指数
+  housing:   100,    // 既に 1990=100 指数
+  tax:        60.1,  // 兆円
+  fx:        144.8,  // 円
+  debt:      180,    // 兆円
+  births:    121.1,  // 万人
+  insurance:  10.8,  // %
+};

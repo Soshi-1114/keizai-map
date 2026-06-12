@@ -326,7 +326,7 @@ export function MainView({ initialParams }: MainViewProps) {
                 showComparison={showComparison}
                 isSingleIndicator={isMobile}
               />
-              <div className={isMobile ? "pl-[38px] pr-[38px]" : "pl-[55px] pr-[55px]"}>
+              <div className={isMobile ? "pl-[42px] pr-[8px]" : "pl-[60px] pr-[12px]"}>
                 <AdminBar administrations={ADMINISTRATIONS} yearRange={yearRange} />
                 <div style={{ marginTop: "1.5rem", display: isMobile ? "none" : "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
                   <button
