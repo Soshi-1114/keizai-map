@@ -354,6 +354,10 @@ function ShockChart({
             stroke="transparent"
             tick={{ fill: "var(--muted)", fontSize: 11 }}
             tickLine={false}
+            // データレンジ+5%マージンで自動調整し、95〜107等の僅かな変動も視認可能に。
+            // 基準値100は ReferenceLine で常に描画されるため、領域外でも視覚的アンカーは維持。
+            domain={["dataMin - 5", "dataMax + 5"]}
+            allowDataOverflow={false}
           />
           <Tooltip
             {...TT}
@@ -368,7 +372,8 @@ function ShockChart({
           />
           <ReferenceLine
             y={100}
-            stroke="var(--border)"
+            stroke="var(--text)"
+            strokeOpacity={0.4}
             strokeDasharray="4 2"
             strokeWidth={1.5}
             label={{ value: "100", position: "right", fill: "var(--muted)", fontSize: 10 }}
