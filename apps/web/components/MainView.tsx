@@ -23,6 +23,7 @@ import { ChartPanel } from "./Dashboard/ChartPanel";
 import { ShareButton } from "./Dashboard/ShareButton";
 import { DashboardFooter } from "./Dashboard/DashboardFooter";
 import { RelatedArticles } from "./Dashboard/RelatedArticles";
+import { AboutAndFAQ } from "./Dashboard/AboutAndFAQ";
 
 const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key) as IndicatorKey[];
 
@@ -222,6 +223,8 @@ export function MainView({ initialParams }: MainViewProps) {
         )}
 
         <RelatedArticles activeIndicators={effectiveIndicators} yearRange={yearRange} />
+
+        <AboutAndFAQ />
 
         {isMobile && <ShareButton variant="block" />}
 
