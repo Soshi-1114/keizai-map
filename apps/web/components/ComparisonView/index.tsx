@@ -351,53 +351,53 @@ function EventDetailChart({
   const selectedEvData = chartData.find(d => d.name === selectedEvent.label);
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <div style={{ marginBottom: "1.5rem", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+    <div className="p-4">
+      <div className="mb-6 flex gap-4 flex-wrap">
         <div>
-          <label style={{ fontSize: "0.875rem", color: "var(--muted)", display: "block", marginBottom: "0.5rem" }}>
+          <label className="text-sm block mb-2" style={{ color: "var(--muted)" }}>
             イベント選択
           </label>
-          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-            {eventChoices.map(ev => (
-              <button
-                key={ev.label}
-                onClick={() => setSelectedEvent(ev)}
-                aria-pressed={selectedEvent.label === ev.label}
-                className="rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                style={{
-                  padding: "0.5rem 1rem",
-                  border: `1px solid ${selectedEvent.label === ev.label ? ev.color : "var(--border)"}`,
-                  backgroundColor: selectedEvent.label === ev.label ? `${ev.color}20` : "transparent",
-                  color: selectedEvent.label === ev.label ? ev.color : "var(--text)",
-                  cursor: "pointer",
-                  fontSize: "0.875rem",
-                  fontWeight: selectedEvent.label === ev.label ? 600 : 400,
-                  transition: "all 200ms",
-                }}
-              >
-                {ev.label}
-              </button>
-            ))}
+          <div className="flex gap-2 flex-wrap">
+            {eventChoices.map(ev => {
+              const active = selectedEvent.label === ev.label;
+              return (
+                <button
+                  key={ev.label}
+                  onClick={() => setSelectedEvent(ev)}
+                  aria-pressed={active}
+                  className="rounded-md px-4 py-2 text-sm transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                  style={{
+                    border: `1px solid ${active ? ev.color : "var(--border)"}`,
+                    backgroundColor: active ? `${ev.color}20` : "transparent",
+                    color: active ? ev.color : "var(--text)",
+                    fontWeight: active ? 600 : 400,
+                  }}
+                >
+                  {ev.label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
         <div>
-          <label style={{ fontSize: "0.875rem", color: "var(--muted)", display: "block", marginBottom: "0.5rem" }}>
+          <label
+            htmlFor="event-detail-indicator"
+            className="text-sm block mb-2"
+            style={{ color: "var(--muted)" }}
+          >
             指標選択
           </label>
           <select
+            id="event-detail-indicator"
             value={selectedIndicator}
             onChange={(e) => setSelectedIndicator(e.target.value as IndicatorKey)}
             aria-label="比較する指標を選択"
-            className="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            className="px-4 py-2 rounded-md border text-sm cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "0.375rem",
-              border: "1px solid var(--border)",
+              borderColor: "var(--border)",
               backgroundColor: "var(--card)",
               color: "var(--text)",
-              cursor: "pointer",
-              fontSize: "0.875rem",
             }}
           >
             {indicatorChoices.map(key => {
@@ -410,36 +410,29 @@ function EventDetailChart({
 
       {selectedEvData && (
         <div
-          style={{
-            backgroundColor: "var(--card)",
-            border: "1px solid var(--border)",
-            borderRadius: "0.75rem",
-            padding: "1.5rem",
-            marginBottom: "1.5rem",
-          }}
+          className="rounded-xl p-6 mb-6 border"
+          style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
         >
-          <h3 style={{ fontSize: "0.875rem", fontWeight: 600, marginBottom: "1rem", color: "var(--muted)" }}>
+          <h3 className="text-sm font-semibold mb-4" style={{ color: "var(--muted)" }}>
             {selectedEvent.label} 前後の {INDICATOR_CONFIGS.find(c => c.key === selectedIndicator)?.label}
           </h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(80px, 1fr))", gap: "0.75rem" }}>
+          <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(80px, 1fr))" }}>
             {[-2, -1, 0, 1, 2, 3, 4].map(offset => {
               const key = `y${offset}`;
               const value = selectedEvData[key];
               return (
                 <div
                   key={key}
+                  className="rounded-md p-3 text-center"
                   style={{
                     backgroundColor: offset === 0 ? `${selectedEvent.color}30` : "transparent",
                     border: offset === 0 ? `2px solid ${selectedEvent.color}` : "1px solid var(--border)",
-                    borderRadius: "0.375rem",
-                    padding: "0.75rem",
-                    textAlign: "center",
                   }}
                 >
-                  <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginBottom: "0.25rem" }}>
+                  <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>
                     {offset === 0 ? "発生時" : offset > 0 ? `+${offset}年` : `${offset}年`}
                   </div>
-                  <div className="tabular-nums" style={{ fontSize: "1rem", fontWeight: 600, color: "var(--text)" }}>
+                  <div className="text-base font-semibold tabular-nums" style={{ color: "var(--text)" }}>
                     {value !== undefined && typeof value === "number" ? value.toFixed(1) : "—"}
                   </div>
                 </div>
