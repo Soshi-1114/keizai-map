@@ -63,7 +63,12 @@ export function MainView({ initialParams }: MainViewProps) {
     parseCategories(initialParams?.events ?? null)
   );
 
-  const effectiveIndicators = isMobile ? [INDICATOR_CONFIGS[mobileIndicatorIndex].key] : activeIndicators;
+  // モバイルでも activeIndicators を尊重する。0 件の場合のみ MobileIndicatorNav の
+  // 選択指標にフォールバックして、必ず 1 本以上は表示する。
+  const mobileFallback = INDICATOR_CONFIGS[mobileIndicatorIndex]?.key;
+  const effectiveIndicators = isMobile
+    ? (activeIndicators.length > 0 ? activeIndicators : (mobileFallback ? [mobileFallback] : []))
+    : activeIndicators;
 
   const filteredData = RAW_DATA.filter(d => d.year >= yearRange[0] && d.year <= yearRange[1]);
   const narrative = generateNarrative(filteredData);
@@ -178,14 +183,45 @@ export function MainView({ initialParams }: MainViewProps) {
           </section>
         )}
 
-        {/* Mobile indicator nav */}
+        {/* Mobile indicator nav + 複数指標トグル */}
         {isMobile && (
-          <MobileIndicatorNav
-            currentIndex={mobileIndicatorIndex}
-            onIndexChange={setMobileIndicatorIndex}
-            filteredData={filteredData}
-            yearRange={yearRange}
-          />
+          <div className="space-y-3">
+            <MobileIndicatorNav
+              currentIndex={mobileIndicatorIndex}
+              onIndexChange={setMobileIndicatorIndex}
+              filteredData={filteredData}
+              yearRange={yearRange}
+            />
+            <section aria-labelledby="mobile-indicators-heading">
+              <h2 id="mobile-indicators-heading" className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>
+                重ねて表示する指標
+              </h2>
+              <div className="flex gap-1.5 flex-wrap" role="group" aria-labelledby="mobile-indicators-heading">
+                {INDICATOR_CONFIGS.map(cfg => {
+                  const active = activeIndicators.includes(cfg.key);
+                  return (
+                    <button
+                      key={cfg.key}
+                      onClick={() => toggleIndicator(cfg.key)}
+                      aria-pressed={active}
+                      style={{
+                        minHeight: 36,
+                        padding: "0 10px",
+                        borderRadius: 9999,
+                        border: `1px solid ${active ? cfg.color : "var(--border)"}`,
+                        color: active ? cfg.darkColor : "var(--muted)",
+                        backgroundColor: active ? cfg.color + "15" : "transparent",
+                        fontSize: 12,
+                        fontWeight: active ? 600 : 400,
+                      }}
+                    >
+                      {cfg.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          </div>
         )}
 
         {/* ヒーロー統計バー（PC のみ） */}
@@ -427,11 +463,11 @@ export function MainView({ initialParams }: MainViewProps) {
           )}
         </div>
 
-        {/* Insight cards（モバイルは選択中指標のみ、PCは全指標） */}
+        {/* Insight cards — モバイルでも複数指標を表示する */}
         <InsightCards
           data={filteredData}
           yearRange={yearRange}
-          focusedKey={isMobile ? INDICATOR_CONFIGS[mobileIndicatorIndex].key : undefined}
+          activeIndicators={effectiveIndicators}
         />
 
         {/* 自動解説：選択期間の傾向を文章で要約 */}

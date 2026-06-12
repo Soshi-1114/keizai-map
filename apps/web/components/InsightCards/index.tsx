@@ -4,10 +4,13 @@ import { INDICATOR_CONFIGS } from "@/lib/data";
 interface Props {
   data: DataPoint[];
   yearRange?: [number, number];
+  /** 表示する指標。指定がない場合は全指標。0 件なら何も描画しない。 */
+  activeIndicators?: IndicatorKey[];
+  /** 後方互換: 単一指標フォーカス（既存呼び出し向け） */
   focusedKey?: IndicatorKey;
 }
 
-export function InsightCards({ data, focusedKey }: Props) {
+export function InsightCards({ data, activeIndicators, focusedKey }: Props) {
   if (data.length < 2) return null;
 
   const start = data[0];
@@ -16,10 +19,14 @@ export function InsightCards({ data, focusedKey }: Props) {
 
   const configs = focusedKey
     ? INDICATOR_CONFIGS.filter(c => c.key === focusedKey)
-    : INDICATOR_CONFIGS;
+    : activeIndicators
+      ? INDICATOR_CONFIGS.filter(c => activeIndicators.includes(c.key))
+      : INDICATOR_CONFIGS;
+
+  if (configs.length === 0) return null;
 
   return (
-    <div className={focusedKey ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 md:grid-cols-4 gap-3"}>
+    <div className={configs.length === 1 ? "grid grid-cols-1 gap-3" : "grid grid-cols-2 md:grid-cols-4 gap-3"}>
       {configs.map(cfg => {
         const startVal = start[cfg.key] as number | null;
         const endVal   = end[cfg.key]   as number | null;
@@ -31,8 +38,10 @@ export function InsightCards({ data, focusedKey }: Props) {
         const deltaColor = delta >= 0 ? "#22c55e" : "#ef4444";
 
         const unitShort =
-          cfg.key === "tax" ? "兆円" :
-          cfg.key === "fx"  ? "円"   : "";
+          cfg.key === "tax" || cfg.key === "debt" ? "兆円" :
+          cfg.key === "fx"  ? "円"   :
+          cfg.key === "births" ? "万人" :
+          cfg.key === "insurance" ? "%" : "";
 
         return (
           <div
