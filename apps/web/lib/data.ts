@@ -84,3 +84,25 @@ export const BASELINE_1990: Record<IndicatorKey, number> = {
   births:    121.1,  // 万人
   insurance:  10.8,  // %
 };
+
+/**
+ * 指標ごとの「データが入っている最終年」。
+ * 自動指標 (CPI, 税収, 為替, 国債, 出生数) は月次更新で最新年が入る一方、
+ * 手動指標 (実質賃金, 日経, 住宅価格, 社会保険料) は年次更新で遅れる傾向。
+ * RAW_DATA から動的に算出することで、「最終更新: YYYY年」をフッターでは
+ * なく各指標カードに表示できる。
+ */
+export const INDICATOR_LAST_YEAR: Record<IndicatorKey, number> = (() => {
+  const result = {} as Record<IndicatorKey, number>;
+  for (const cfg of INDICATOR_CONFIGS) {
+    // 後ろから探して値が存在する最初の年を採用
+    const last = [...RAW_DATA]
+      .reverse()
+      .find(d => {
+        const v = d[cfg.key];
+        return typeof v === "number" && isFinite(v);
+      });
+    result[cfg.key] = last?.year ?? 1990;
+  }
+  return result;
+})();
