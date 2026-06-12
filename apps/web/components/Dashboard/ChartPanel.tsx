@@ -37,23 +37,29 @@ export function ChartPanel({
 
   return (
     <>
-      {/* G7比較トグル + Y軸レンジ切替（推移ビュー固有の表示パラメータ） */}
-      <div className="flex items-center gap-2 mb-3 flex-wrap">
-        {showG7Trigger && (
-          <button
-            onClick={() => setShowComparison(!showComparison)}
-            aria-pressed={showComparison}
-            className="px-3 py-1.5 rounded-full text-xs border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-            style={{
-              borderColor: showComparison ? "var(--link)" : "var(--border)",
-              color: showComparison ? "var(--link)" : "var(--muted)",
-              backgroundColor: showComparison ? "#1d4ed815" : "transparent",
-              fontWeight: showComparison ? 600 : 400,
-            }}
-          >
-            🌍 G7平均と比較
-          </button>
-        )}
+      {/* 推移ビュー固有の表示パラメータ（左: 比較線、右: 軸スケール） */}
+      <div
+        className="flex items-center gap-3 mb-3 flex-wrap"
+        role="toolbar"
+        aria-label="推移ビューの表示パラメータ"
+      >
+        <div role="group" aria-label="比較線" className="flex items-center">
+          {showG7Trigger && (
+            <button
+              onClick={() => setShowComparison(!showComparison)}
+              aria-pressed={showComparison}
+              className="px-3 py-1.5 rounded-full text-xs border transition-all font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              style={{
+                borderColor: showComparison ? "var(--link)" : "var(--border)",
+                color: showComparison ? "var(--link)" : "var(--muted)",
+                backgroundColor: showComparison ? "#1d4ed815" : "transparent",
+                fontWeight: showComparison ? 600 : 400,
+              }}
+            >
+              🌍 G7平均と比較
+            </button>
+          )}
+        </div>
 
         {/* Y 軸レンジモードトグル（SP では差が出にくいので非表示） */}
         <div
