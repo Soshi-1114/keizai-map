@@ -55,3 +55,24 @@ input[type="range"]::-webkit-slider-thumb {
 input[type="range"]::-moz-range-thumb {
   border: none;
 }
+
+/* スキップリンク：通常は視覚的に非表示、フォーカス時に表示（WCAG 2.4.1） */
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -40px;
+  z-index: 100;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background-color: var(--link);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+.skip-link:focus-visible {
+  top: 8px;
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}

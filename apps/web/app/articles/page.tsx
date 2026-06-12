@@ -28,6 +28,7 @@ export default function ArticlesPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
     <main
+      id="main"
       className="min-h-screen py-8 px-4 overflow-x-hidden"
       style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
     >

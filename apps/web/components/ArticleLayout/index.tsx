@@ -21,6 +21,7 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
     : [];
   return (
     <main
+      id="main"
       className="min-h-screen py-8 px-4 w-full min-w-0 overflow-x-hidden"
       style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}
     >

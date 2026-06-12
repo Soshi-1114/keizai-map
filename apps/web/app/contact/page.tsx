@@ -30,7 +30,7 @@ export default function ContactPage() {
   return (
     <>
       <Script id="breadcrumb-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
-    <main className="min-h-screen p-6 overflow-x-hidden" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
+    <main id="main" className="min-h-screen p-6 overflow-x-hidden" style={{ backgroundColor: "var(--bg)", color: "var(--text)" }}>
       <div className="mx-auto space-y-0 min-w-0" style={{ maxWidth: 720 }}>
 
         {/* Header */}
