@@ -279,10 +279,12 @@ function AdminChartBody({
 // ─────────────────────────────────────────────────────────
 
 function ShockChart({
-  activeIndicators,
+  primaryIndicator,
+  onChangePrimary,
   yearRange,
 }: {
-  activeIndicators: IndicatorKey[];
+  primaryIndicator: IndicatorKey;
+  onChangePrimary: (key: IndicatorKey) => void;
   yearRange: [number, number];
 }) {
   const [rangeStart, rangeEnd] = yearRange;
@@ -291,10 +293,7 @@ function ShockChart({
     ev => ev.year >= rangeStart - 2 && ev.year <= rangeEnd + 2,
   );
 
-  // 上位フィルタで選択中の指標を優先的に表示。なければ wage にフォールバック
-  const defaultIndicator: IndicatorKey =
-    activeIndicators.length > 0 ? activeIndicators[0] : "wage";
-  const [indicator, setIndicator] = useState<IndicatorKey>(defaultIndicator);
+  const indicator = primaryIndicator;
   const cfg = INDICATOR_CONFIGS.find(c => c.key === indicator)!;
 
   // ショック発生時=100 に正規化したデータを構築
@@ -327,7 +326,7 @@ function ShockChart({
       <IndicatorChipSelector
         mode="single"
         selected={indicator}
-        onToggle={setIndicator}
+        onToggle={onChangePrimary}
       />
 
       <p className="text-xs mb-4" style={{ color: "var(--muted)" }}>
@@ -391,10 +390,12 @@ function ShockChart({
 // ─────────────────────────────────────────────────────────
 
 function EventDetailChart({
-  activeIndicators,
+  primaryIndicator,
+  onChangePrimary,
   yearRange,
 }: {
-  activeIndicators: IndicatorKey[];
+  primaryIndicator: IndicatorKey;
+  onChangePrimary: (key: IndicatorKey) => void;
   yearRange: [number, number];
 }) {
   const [rangeStart, rangeEnd] = yearRange;
@@ -404,9 +405,7 @@ function EventDetailChart({
   const eventChoices = visibleShocks.length > 0 ? visibleShocks : SHOCK_EVENTS;
 
   const [selectedEvent, setSelectedEvent] = useState<typeof SHOCK_EVENTS[0]>(eventChoices[0]);
-  const [selectedIndicator, setSelectedIndicator] = useState<IndicatorKey>(
-    activeIndicators[0] ?? "wage",
-  );
+  const selectedIndicator = primaryIndicator;
 
   const chartData = SHOCK_EVENTS.map(ev => {
     const label = ev.label;
@@ -429,7 +428,7 @@ function EventDetailChart({
       <IndicatorChipSelector
         mode="single"
         selected={selectedIndicator}
-        onToggle={setSelectedIndicator}
+        onToggle={onChangePrimary}
       />
 
       <div className="mb-6">
@@ -502,11 +501,20 @@ interface Props {
   mode: "admin" | "shock" | "event";
   activeIndicators: IndicatorKey[];
   onToggleIndicator: (key: IndicatorKey) => void;
+  primaryIndicator: IndicatorKey;
+  onChangePrimary: (key: IndicatorKey) => void;
   yearRange: [number, number];
   activeCategories?: EventCategory[];
 }
 
-export function ComparisonView({ mode, activeIndicators, onToggleIndicator, yearRange }: Props) {
+export function ComparisonView({
+  mode,
+  activeIndicators,
+  onToggleIndicator,
+  primaryIndicator,
+  onChangePrimary,
+  yearRange,
+}: Props) {
   return (
     <>
       {mode === "admin" ? (
@@ -516,9 +524,17 @@ export function ComparisonView({ mode, activeIndicators, onToggleIndicator, year
           yearRange={yearRange}
         />
       ) : mode === "shock" ? (
-        <ShockChart activeIndicators={activeIndicators} yearRange={yearRange} />
+        <ShockChart
+          primaryIndicator={primaryIndicator}
+          onChangePrimary={onChangePrimary}
+          yearRange={yearRange}
+        />
       ) : (
-        <EventDetailChart activeIndicators={activeIndicators} yearRange={yearRange} />
+        <EventDetailChart
+          primaryIndicator={primaryIndicator}
+          onChangePrimary={onChangePrimary}
+          yearRange={yearRange}
+        />
       )}
     </>
   );
