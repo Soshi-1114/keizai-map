@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useState } from "react";
 import { useIsMobile } from "@/lib/hooks";
 
 interface Props {
@@ -9,20 +9,24 @@ interface Props {
   value: [number, number];
   onChange: (value: [number, number]) => void;
   step?: number;
+  "aria-label"?: string;
 }
 
-export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
+type Handle = "lo" | "hi";
+
+export function RangeSlider({ min, max, value, onChange, step = 1, ...rest }: Props) {
+  const ariaLabel = rest["aria-label"];
   const isMobile = useIsMobile();
   const [lo, hi] = value;
   const range = max - min;
   const loPct = ((lo - min) / range) * 100;
   const hiPct = ((hi - min) / range) * 100;
-  const handleSize = isMobile ? 24 : 16;
+  const handleSize = isMobile ? 28 : 20;
   const halfHandle = handleSize / 2;
 
   const trackRef = useRef<HTMLDivElement>(null);
-  // Which handle is being dragged: "lo" | "hi" | null
-  const dragging = useRef<"lo" | "hi" | null>(null);
+  const dragging = useRef<Handle | null>(null);
+  const [focused, setFocused] = useState<Handle | null>(null);
 
   /** ポインター X 座標からスナップ済み値を計算 */
   const xToValue = useCallback(
@@ -35,26 +39,29 @@ export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
     [min, range, step],
   );
 
+  const setHandle = useCallback(
+    (which: Handle, nextRaw: number) => {
+      if (which === "lo") {
+        onChange([Math.max(min, Math.min(nextRaw, hi - step)), hi]);
+      } else {
+        onChange([lo, Math.min(max, Math.max(nextRaw, lo + step))]);
+      }
+    },
+    [lo, hi, min, max, step, onChange],
+  );
+
   const handlePointerDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
       if (!trackRef.current) return;
       e.preventDefault();
       trackRef.current.setPointerCapture(e.pointerId);
-
       const val = xToValue(e.clientX);
       if (val === null) return;
-      // より近いハンドルを選択（同距離なら lo を優先）
       dragging.current =
         Math.abs(val - lo) <= Math.abs(val - hi) ? "lo" : "hi";
-
-      // クリック位置に即時移動
-      if (dragging.current === "lo") {
-        onChange([Math.max(min, Math.min(val, hi - step)), hi]);
-      } else {
-        onChange([lo, Math.min(max, Math.max(val, lo + step))]);
-      }
+      setHandle(dragging.current, val);
     },
-    [lo, hi, min, max, step, onChange, xToValue],
+    [lo, hi, xToValue, setHandle],
   );
 
   const handlePointerMove = useCallback(
@@ -62,18 +69,67 @@ export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
       if (!dragging.current) return;
       const val = xToValue(e.clientX);
       if (val === null) return;
-      if (dragging.current === "lo") {
-        onChange([Math.max(min, Math.min(val, hi - step)), hi]);
-      } else {
-        onChange([lo, Math.min(max, Math.max(val, lo + step))]);
-      }
+      setHandle(dragging.current, val);
     },
-    [lo, hi, min, max, step, onChange, xToValue],
+    [xToValue, setHandle],
   );
 
   const handlePointerUp = useCallback(() => {
     dragging.current = null;
   }, []);
+
+  /** キーボードでハンドルを操作（←→: ±step、PgUp/Dn: ±10年、Home/End: 端） */
+  const makeKeyHandler = (which: Handle) => (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const current = which === "lo" ? lo : hi;
+    const big = Math.max(step, Math.round(range / 10));
+    let next: number | null = null;
+    switch (e.key) {
+      case "ArrowLeft":
+      case "ArrowDown":
+        next = current - step;
+        break;
+      case "ArrowRight":
+      case "ArrowUp":
+        next = current + step;
+        break;
+      case "PageDown":
+        next = current - big;
+        break;
+      case "PageUp":
+        next = current + big;
+        break;
+      case "Home":
+        next = which === "lo" ? min : lo + step;
+        break;
+      case "End":
+        next = which === "lo" ? hi - step : max;
+        break;
+      default:
+        return;
+    }
+    e.preventDefault();
+    setHandle(which, next);
+  };
+
+  const handleStyle = (which: Handle, pct: number): React.CSSProperties => ({
+    position: "absolute",
+    top: "50%",
+    transform: "translateY(-50%)",
+    width: handleSize,
+    height: handleSize,
+    left: `calc(${pct}% - ${halfHandle}px)`,
+    backgroundColor: "#4F8EF7",
+    border: "2px solid var(--bg)",
+    borderRadius: "9999px",
+    boxShadow:
+      focused === which
+        ? "0 0 0 3px #1d4ed8, 0 1px 3px rgba(0,0,0,0.2)"
+        : "0 1px 3px rgba(0,0,0,0.2)",
+    outline: "none",
+    cursor: "grab",
+    touchAction: "none",
+    zIndex: focused === which ? 2 : 1,
+  });
 
   return (
     <div className="space-y-3">
@@ -90,6 +146,8 @@ export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
+        role="group"
+        aria-label={ariaLabel ?? `表示期間 ${lo}年から${hi}年`}
       >
         {/* トラック背景 */}
         <div
@@ -105,27 +163,34 @@ export function RangeSlider({ min, max, value, onChange, step = 1 }: Props) {
             backgroundColor: "#4F8EF7",
           }}
         />
+
         {/* lo ハンドル */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 rounded-full shadow pointer-events-none"
-          style={{
-            width: handleSize,
-            height: handleSize,
-            left: `calc(${loPct}% - ${halfHandle}px)`,
-            backgroundColor: "#4F8EF7",
-            border: "2px solid var(--bg)",
-          }}
+          role="slider"
+          tabIndex={0}
+          aria-label={`開始年（${min}〜${hi - step}）`}
+          aria-valuemin={min}
+          aria-valuemax={hi - step}
+          aria-valuenow={lo}
+          aria-valuetext={`${lo}年`}
+          onKeyDown={makeKeyHandler("lo")}
+          onFocus={() => setFocused("lo")}
+          onBlur={() => setFocused(null)}
+          style={handleStyle("lo", loPct)}
         />
         {/* hi ハンドル */}
         <div
-          className="absolute top-1/2 -translate-y-1/2 rounded-full shadow pointer-events-none"
-          style={{
-            width: handleSize,
-            height: handleSize,
-            left: `calc(${hiPct}% - ${halfHandle}px)`,
-            backgroundColor: "#4F8EF7",
-            border: "2px solid var(--bg)",
-          }}
+          role="slider"
+          tabIndex={0}
+          aria-label={`終了年（${lo + step}〜${max}）`}
+          aria-valuemin={lo + step}
+          aria-valuemax={max}
+          aria-valuenow={hi}
+          aria-valuetext={`${hi}年`}
+          onKeyDown={makeKeyHandler("hi")}
+          onFocus={() => setFocused("hi")}
+          onBlur={() => setFocused(null)}
+          style={handleStyle("hi", hiPct)}
         />
       </div>
     </div>
