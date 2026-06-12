@@ -1,14 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { EventCategory } from "@/lib/types";
-import { COLORS } from "@/lib/constants";
 import { DATA_YEARS } from "@/lib/constants";
 import { EraShortcuts } from "@/components/EraShortcuts";
 import { RangeSlider } from "@/components/RangeSlider";
 import { EventFilter } from "@/components/EventFilter";
 
 const ALL_CATEGORIES: EventCategory[] = ["税制", "経済", "経済政策"];
+
+// ドラッグでシートを下方向に閉じる閾値（px）
+const DRAG_CLOSE_THRESHOLD = 80;
 
 interface Props {
   yearRange: [number, number];
@@ -25,6 +27,10 @@ export function MobileFiltersSheet({
   onCategoryToggle,
   onClose,
 }: Props) {
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const dragStartY = useRef<number | null>(null);
+  const [dragOffset, setDragOffset] = useState(0);
+
   // Escape キーで閉じる
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -33,6 +39,44 @@ export function MobileFiltersSheet({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
+
+  // マウント時:
+  //  (a) Chart が見える位置までスクロール
+  //  (b) 背景の body スクロールをロック
+  useEffect(() => {
+    document.getElementById("chart-container")?.scrollIntoView({
+      block: "start",
+      behavior: "smooth",
+    });
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, []);
+
+  // ドラッグ操作（ハンドル領域から下方向にスワイプで閉じる）
+  const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    dragStartY.current = e.clientY;
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  }, []);
+
+  const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (dragStartY.current === null) return;
+    const delta = e.clientY - dragStartY.current;
+    setDragOffset(Math.max(0, delta));
+  }, []);
+
+  const onPointerUp = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (dragStartY.current === null) return;
+      const delta = e.clientY - dragStartY.current;
+      dragStartY.current = null;
+      setDragOffset(0);
+      if (delta > DRAG_CLOSE_THRESHOLD) onClose();
+    },
+    [onClose],
+  );
 
   return (
     <>
@@ -46,21 +90,54 @@ export function MobileFiltersSheet({
 
       {/* Sheet */}
       <div
+        ref={sheetRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="mobile-filters-title"
-        className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl p-6 space-y-4 max-h-[80vh] overflow-y-auto"
+        className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl pt-2 px-6 pb-6 space-y-4 max-h-[80vh] overflow-y-auto"
         style={{
           backgroundColor: "var(--card)",
           borderTop: "1px solid var(--border)",
-          animation: "slideUp 0.3s ease-out",
+          animation: dragOffset === 0 ? "slideUp 0.3s ease-out" : undefined,
+          transform: dragOffset > 0 ? `translateY(${dragOffset}px)` : undefined,
+          transition: dragOffset === 0 ? "transform 0.2s ease-out" : "none",
+          touchAction: "pan-y",
         }}
       >
-        <h2 id="mobile-filters-title" className="sr-only">フィルター設定</h2>
-        {/* Handle */}
-        <div className="flex justify-center mb-2" aria-hidden>
-          <div className="h-1 w-12 rounded-full" style={{ backgroundColor: "var(--border)" }} />
+        {/* ドラッグハンドル + 閉じるボタン */}
+        <div className="flex items-center justify-between sticky top-0 -mx-6 px-6 pb-2"
+          style={{ backgroundColor: "var(--card)" }}
+        >
+          <div className="w-10" aria-hidden />
+          <div
+            className="flex-1 flex justify-center py-2 cursor-grab active:cursor-grabbing"
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
+            role="button"
+            tabIndex={-1}
+            aria-label="シートをドラッグして閉じる"
+          >
+            <div className="h-1 w-12 rounded-full" style={{ backgroundColor: "var(--border)" }} />
+          </div>
+          <button
+            onClick={onClose}
+            aria-label="フィルターを閉じる"
+            className="flex items-center justify-center rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+            style={{
+              minWidth: 44,
+              minHeight: 44,
+              fontSize: 20,
+              color: "var(--muted)",
+              backgroundColor: "transparent",
+            }}
+          >
+            ✕
+          </button>
         </div>
+
+        <h2 id="mobile-filters-title" className="sr-only">フィルター設定</h2>
 
         {/* 注目の期間 */}
         <div>
@@ -94,17 +171,6 @@ export function MobileFiltersSheet({
             onToggle={onCategoryToggle}
           />
         </section>
-
-        {/* 閉じるボタン */}
-        <div className="pt-4 border-t" style={{ borderColor: "var(--border)" }}>
-          <button
-            onClick={onClose}
-            className="w-full px-4 py-2 rounded-lg text-sm font-medium transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-            style={{ backgroundColor: COLORS.PRIMARY, color: "#fff" }}
-          >
-            閉じる
-          </button>
-        </div>
       </div>
 
       <style>{`

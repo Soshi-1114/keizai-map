@@ -165,7 +165,8 @@ export function MainView({ initialParams }: MainViewProps) {
 
         {/* Chart / ComparisonView コンテナ */}
         <div
-          className="rounded-xl border p-4"
+          id="chart-container"
+          className="rounded-xl border p-4 scroll-mt-4"
           style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
         >
 

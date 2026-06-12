@@ -17,14 +17,14 @@ test.describe("モバイル表示", () => {
   });
 
   test("フィルターボタンでボトムシートが開く", async ({ page }) => {
-    await page.getByRole("button", { name: /フィルター/ }).click();
-    await expect(page.getByRole("button", { name: "閉じる" })).toBeVisible();
+    await page.getByRole("button", { name: /^フィルター$/ }).click();
+    await expect(page.getByRole("button", { name: "フィルターを閉じる" })).toBeVisible();
   });
 
   test("ボトムシートを閉じられる", async ({ page }) => {
-    await page.getByRole("button", { name: /フィルター/ }).click();
-    await page.getByRole("button", { name: "閉じる" }).click();
-    await expect(page.getByRole("button", { name: "閉じる" })).not.toBeVisible();
+    await page.getByRole("button", { name: /^フィルター$/ }).click();
+    await page.getByRole("button", { name: "フィルターを閉じる" }).click();
+    await expect(page.getByRole("button", { name: "フィルターを閉じる" })).not.toBeVisible();
   });
 
   test("Xシェアボタンがフッターに表示される", async ({ page }) => {
