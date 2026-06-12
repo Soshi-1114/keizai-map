@@ -1,3 +1,6 @@
+"use client";
+
+import { memo } from "react";
 import type { DataPoint } from "@/lib/types";
 
 interface Props {
@@ -40,7 +43,7 @@ function highlightFor(
 const BAD_COLOR = "#dc2626";   // red-600
 const GOOD_COLOR = "#16a34a";  // green-600
 
-export function HeroStory({ data, yearRange }: Props) {
+function HeroStoryImpl({ data, yearRange }: Props) {
   const span = yearRange[1] - yearRange[0];
 
   if (data.length < 2) {
@@ -110,3 +113,6 @@ export function HeroStory({ data, yearRange }: Props) {
     </section>
   );
 }
+
+export const HeroStory = memo(HeroStoryImpl);
+

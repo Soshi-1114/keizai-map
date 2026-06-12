@@ -1,3 +1,6 @@
+"use client";
+
+import { memo } from "react";
 import Link from "next/link";
 import { Newspaper } from "lucide-react";
 import type { IndicatorKey } from "@/lib/types";
@@ -22,7 +25,7 @@ const INDICATOR_TAGS: Record<IndicatorKey, string[]> = {
   insurance: ["社会保険料", "手取り", "可処分所得", "老後資金"],
 };
 
-export function RelatedArticles({ activeIndicators, yearRange }: Props) {
+function RelatedArticlesImpl({ activeIndicators, yearRange }: Props) {
   if (activeIndicators.length === 0) return null;
 
   // 各記事のスコア = アクティブ指標タグとの一致数 + 期間オーバーラップ補正
@@ -91,3 +94,6 @@ export function RelatedArticles({ activeIndicators, yearRange }: Props) {
     </section>
   );
 }
+
+export const RelatedArticles = memo(RelatedArticlesImpl);
+

@@ -111,11 +111,16 @@ export function ChartPanel({
         activeCategories={activeCategories}
         showComparison={showComparison}
         isSingleIndicator={isMobile && effectiveIndicators.length === 1}
+        isMobile={isMobile}
         yAxisMode={yAxisMode}
       />
 
       <div className={isMobile ? "pl-[42px] pr-[8px]" : "pl-[60px] pr-[12px]"}>
-        <AdminBar administrations={ADMINISTRATIONS} yearRange={yearRange} />
+        <AdminBar
+          administrations={ADMINISTRATIONS}
+          yearRange={yearRange}
+          isMobile={isMobile}
+        />
       </div>
     </>
   );

@@ -148,6 +148,7 @@ export function MainView({ initialParams }: MainViewProps) {
             activeCategories={activeCategories}
             onYearRangeChange={setYearRange}
             onCategoryToggle={toggleCategory}
+            isMobile={isMobile}
           />
         )}
 

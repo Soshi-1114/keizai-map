@@ -1,3 +1,6 @@
+"use client";
+
+import { memo } from "react";
 import type { DataPoint, IndicatorKey } from "@/lib/types";
 import { INDICATOR_CONFIGS } from "@/lib/data";
 
@@ -26,7 +29,7 @@ function unitShortOf(key: IndicatorKey): string {
   }
 }
 
-export function InsightCards({ data, activeIndicators, focusedKey }: Props) {
+function InsightCardsImpl({ data, activeIndicators, focusedKey }: Props) {
   if (data.length < 1) return null;
 
   const start = data[0];
@@ -111,3 +114,6 @@ export function InsightCards({ data, activeIndicators, focusedKey }: Props) {
     </div>
   );
 }
+
+export const InsightCards = memo(InsightCardsImpl);
+
