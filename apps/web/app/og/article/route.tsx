@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { ARTICLES } from "@/lib/articles";
+import { loadNotoSansJP } from "@/lib/og-font";
 
 export const runtime = "edge";
 
@@ -26,6 +27,14 @@ export async function GET(request: Request) {
 
   const accentColor = tags.map((t) => TAG_COLORS[t]).find(Boolean) ?? "#4F8EF7";
 
+  const text = `KEIZAIMAP${title}${tags.join("")}keizaimap.jp/articles`;
+  let fonts: { name: string; data: ArrayBuffer; weight: 700; style: "normal" }[] = [];
+  try {
+    fonts = [{ name: "Noto Sans JP", data: await loadNotoSansJP(text), weight: 700, style: "normal" }];
+  } catch {
+    // フォント取得失敗時はデフォルトフォントで描画（日本語は欠ける可能性あり）
+  }
+
   return new ImageResponse(
     (
       <div
@@ -37,7 +46,7 @@ export async function GET(request: Request) {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "56px 72px",
-          fontFamily: "sans-serif",
+          fontFamily: '"Noto Sans JP", sans-serif',
           position: "relative",
         }}
       >
@@ -102,6 +111,6 @@ export async function GET(request: Request) {
         </div>
       </div>
     ),
-    { width: 1200, height: 630 }
+    { width: 1200, height: 630, fonts: fonts.length > 0 ? fonts : undefined }
   );
 }

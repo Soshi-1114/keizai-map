@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
+import { loadNotoSansJP } from "@/lib/og-font";
 
 export const runtime = "edge";
 
@@ -54,6 +55,17 @@ export async function GET(request: NextRequest) {
     ? `${range[0]}〜${range[1]}年の経済指標を一画面で重ね見`
     : "賃金・物価・税収・為替の推移を政権帯とともに可視化";
 
+  const text =
+    `JAPAN ECONOMIC INDICATORS数字で見る、日本の30年${subtitle}keizaimap.jp` +
+    stats.map((s) => `${s.label}${s.value}${s.unit}`).join("");
+
+  let fonts: { name: string; data: ArrayBuffer; weight: 700; style: "normal" }[] = [];
+  try {
+    fonts = [{ name: "Noto Sans JP", data: await loadNotoSansJP(text), weight: 700, style: "normal" }];
+  } catch {
+    // フォント取得失敗時はデフォルトフォントで描画（日本語は欠ける可能性あり）
+  }
+
   return new ImageResponse(
     (
       <div
@@ -66,7 +78,7 @@ export async function GET(request: NextRequest) {
           alignItems: "flex-start",
           justifyContent: "center",
           padding: "60px 80px",
-          fontFamily: "sans-serif",
+          fontFamily: '"Noto Sans JP", sans-serif',
           position: "relative",
         }}
       >
@@ -142,6 +154,7 @@ export async function GET(request: NextRequest) {
     {
       width: 1200,
       height: 630,
+      fonts: fonts.length > 0 ? fonts : undefined,
       headers: {
         // CDN で 24 時間キャッシュ、再検証可
         "Cache-Control": "public, immutable, max-age=86400, stale-while-revalidate=86400",
