@@ -88,7 +88,7 @@ export function AdminBar({ administrations, yearRange }: Props) {
           >
             {!isMobile && width > 4 && (
               <span
-                className="text-[9px] font-bold leading-tight px-0.5 w-full text-center overflow-hidden"
+                className="text-micro font-bold px-0.5 w-full text-center overflow-hidden"
                 style={{ color: admin.color }}
                 aria-hidden
               >
@@ -97,7 +97,7 @@ export function AdminBar({ administrations, yearRange }: Props) {
             )}
             {!isMobile && width > 8 && (
               <span
-                className="text-[8px] leading-tight px-0.5 w-full text-center overflow-hidden"
+                className="text-micro px-0.5 w-full text-center overflow-hidden"
                 style={{ color: admin.color }}
                 aria-hidden
               >
@@ -108,7 +108,7 @@ export function AdminBar({ administrations, yearRange }: Props) {
             {/* モバイル：政党名を常に表示 */}
             {isMobile && width > 6 && (
               <span
-                className="text-[7px] font-bold leading-tight px-0.5 w-full text-center overflow-hidden truncate"
+                className="text-micro font-bold px-0.5 w-full text-center overflow-hidden truncate"
                 style={{ color: admin.color }}
                 aria-hidden
               >

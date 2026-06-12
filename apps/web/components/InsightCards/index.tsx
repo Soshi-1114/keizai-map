@@ -70,7 +70,7 @@ export function InsightCards({ data, activeIndicators, focusedKey }: Props) {
                 {endVal.toFixed(1)}
                 {unit && <span className="text-base ml-0.5 font-medium">{unit}</span>}
               </div>
-              <div className="mt-3 text-[11px]" style={{ color: "var(--muted)" }}>
+              <div className="mt-3 text-tiny" style={{ color: "var(--muted)" }}>
                 {start.year}年 単年値
               </div>
             </div>
@@ -98,10 +98,10 @@ export function InsightCards({ data, activeIndicators, focusedKey }: Props) {
               {sign}{deltaPct.toFixed(1)}%
             </div>
             <div className="mt-2 space-y-0.5">
-              <div className="text-[11px]" style={{ color: "var(--muted)" }}>
+              <div className="text-tiny" style={{ color: "var(--muted)" }}>
                 {start.year}年 → {end.year}年
               </div>
-              <div className="text-[11px] tabular-nums" style={{ color: "var(--muted)" }}>
+              <div className="text-tiny tabular-nums" style={{ color: "var(--muted)" }}>
                 {startVal.toFixed(1)}{unit} → {endVal.toFixed(1)}{unit}
               </div>
             </div>

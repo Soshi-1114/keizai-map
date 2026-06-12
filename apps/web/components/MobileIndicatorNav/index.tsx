@@ -63,7 +63,7 @@ export function MobileIndicatorNav({ currentIndex, onIndexChange, filteredData, 
           ) : (
             <span className="text-xs" style={{ color: "var(--muted)" }}>—</span>
           )}
-          <span className="text-[10px]" style={{ color: "var(--muted)" }}>
+          <span className="text-tiny" style={{ color: "var(--muted)" }}>
             {yearRange[0]}–{yearRange[1]}
           </span>
         </div>
