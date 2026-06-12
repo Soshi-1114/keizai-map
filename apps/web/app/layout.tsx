@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 // next/font で Noto Sans JP を最適ロード。CSS 変数 --font-sans で参照
 const notoSansJP = Noto_Sans_JP({
@@ -83,6 +84,7 @@ export default function RootLayout({
           `}
         </Script>
         <ThemeProvider>{children}</ThemeProvider>
+        <ServiceWorkerRegister />
       </body>
     </html>
   );
