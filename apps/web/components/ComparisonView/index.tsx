@@ -4,11 +4,13 @@ import { useState } from "react";
 import {
   BarChart, Bar,
   LineChart, Line,
+  LabelList,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ReferenceLine, ResponsiveContainer,
 } from "recharts";
 import type { EventCategory, IndicatorKey } from "@/lib/types";
 import { RAW_DATA, INDICATOR_CONFIGS } from "@/lib/data";
+import { IndicatorChipSelector } from "@/components/Dashboard/IndicatorChipSelector";
 
 // ─────────────────────────────────────────────────────────
 // 共通スタイル
@@ -72,73 +74,6 @@ function changePct(start: number, end: number): number {
 }
 
 // ─────────────────────────────────────────────────────────
-// 指標選択チップ（admin / shock / event で共通）
-// ─────────────────────────────────────────────────────────
-
-interface IndicatorChipSelectorProps {
-  /** "multi" は selected 配列に含まれる全指標、"single" は 1 指標のみ強調 */
-  mode: "multi" | "single";
-  selected: IndicatorKey[] | IndicatorKey;
-  onToggle: (key: IndicatorKey) => void;
-  /** disabled なら斜線 + クリック不可。データが無い等で表示できない指標を示す */
-  disabledKeys?: IndicatorKey[];
-  label?: string;
-}
-
-function IndicatorChipSelector({
-  mode,
-  selected,
-  onToggle,
-  disabledKeys = [],
-  label = "重ねて表示する指標",
-}: IndicatorChipSelectorProps) {
-  const isActive = (key: IndicatorKey) =>
-    mode === "multi"
-      ? (selected as IndicatorKey[]).includes(key)
-      : selected === key;
-
-  return (
-    <div className="mb-4">
-      <div className="text-xs mb-2" style={{ color: "var(--muted)" }}>{label}</div>
-      <div className="flex gap-1.5 flex-wrap" role="group" aria-label={label}>
-        {INDICATOR_CONFIGS.map(cfg => {
-          const active = isActive(cfg.key);
-          const disabled = disabledKeys.includes(cfg.key);
-          return (
-            <button
-              key={cfg.key}
-              onClick={() => !disabled && onToggle(cfg.key)}
-              disabled={disabled}
-              aria-pressed={active}
-              aria-disabled={disabled}
-              className="rounded-full text-xs transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-              style={{
-                minHeight: 44,
-                padding: "0 12px",
-                border: `1px solid ${active && !disabled ? cfg.color : "var(--border)"}`,
-                color: disabled
-                  ? "var(--muted)"
-                  : active
-                    ? cfg.darkColor
-                    : "var(--muted)",
-                backgroundColor: active && !disabled ? cfg.color + "15" : "transparent",
-                fontWeight: active ? 600 : 400,
-                cursor: disabled ? "not-allowed" : "pointer",
-                opacity: disabled ? 0.5 : 1,
-                textDecoration: disabled ? "line-through" : "none",
-              }}
-              title={disabled ? "このモードでは表示できません" : undefined}
-            >
-              {cfg.label}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────
 // 政権別パフォーマンス棒グラフ
 // ─────────────────────────────────────────────────────────
 
@@ -146,10 +81,12 @@ function AdminChart({
   activeIndicators,
   onToggleIndicator,
   yearRange,
+  isMobile,
 }: {
   activeIndicators: IndicatorKey[];
   onToggleIndicator: (key: IndicatorKey) => void;
   yearRange: [number, number];
+  isMobile: boolean;
 }) {
   const shown = INDICATOR_CONFIGS.filter(c => activeIndicators.includes(c.key));
   const [rangeStart, rangeEnd] = yearRange;
@@ -165,7 +102,7 @@ function AdminChart({
     const s = atOrAfter(sYear);
     const e = atOrBefore(eYear);
     if (!s || !e || s.year === e.year) return null;
-    const row: Record<string, string | number> = {
+    const row: Record<string, string | number | boolean> = {
       name:      `${admin.name}\n(${admin.party})`,
       startYear: s.year,
       endYear:   e.year,
@@ -176,6 +113,10 @@ function AdminChart({
       const ev = e[cfg.key];
       if (typeof sv === "number" && typeof ev === "number" && sv !== 0) {
         row[cfg.key] = changePct(sv, ev);
+      } else {
+        // 欠損データ: バーは0で描画し、N/A ラベルで明示
+        row[cfg.key] = 0;
+        row[`${cfg.key}__na`] = true;
       }
     }
     return row;
@@ -187,6 +128,7 @@ function AdminChart({
         mode="multi"
         selected={activeIndicators}
         onToggle={onToggleIndicator}
+        compact={isMobile}
       />
 
       {shown.length === 0 ? (
@@ -208,7 +150,7 @@ function AdminChartBody({
   data,
   shown,
 }: {
-  data: Array<Record<string, string | number>>;
+  data: Array<Record<string, string | number | boolean>>;
   shown: typeof INDICATOR_CONFIGS;
 }) {
   return (
@@ -216,6 +158,9 @@ function AdminChartBody({
       <p className="text-xs mb-4" style={{ color: "var(--muted)" }}>
         各政権の就任期間中における指標変化率（%）。2年ごとの最近接データから算出。
         正の値が必ずしも「良い」とは限りません。
+        <span className="ml-1" style={{ color: "var(--muted)" }}>
+          欠損は <em style={{ fontStyle: "italic" }}>N/A</em> 表記。
+        </span>
       </p>
       <ResponsiveContainer width="100%" height={Math.max(300, data.length * 64)}>
         <BarChart
@@ -248,10 +193,15 @@ function AdminChartBody({
               const d = payload?.[0]?.payload;
               return d ? `${d.name.replace(/\n/g, " ")}（${d.startYear}→${d.endYear}年）` : "";
             }}
-            formatter={(v: number, name: string) => [
-              `${v > 0 ? "+" : ""}${v.toFixed(1)}%`,
-              name,
-            ]}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            formatter={(v: number, name: string, item: any) => {
+              const payload = item?.payload;
+              const dataKey = item?.dataKey;
+              if (payload && dataKey && payload[`${dataKey}__na`]) {
+                return ["N/A（データなし）", name];
+              }
+              return [`${v > 0 ? "+" : ""}${v.toFixed(1)}%`, name];
+            }}
           />
           <Legend
             wrapperStyle={{ paddingTop: 12 }}
@@ -266,7 +216,60 @@ function AdminChartBody({
               fill={cfg.color}
               radius={2}
               maxBarSize={16}
-            />
+            >
+              {/* 欠損 → N/A、ゼロ → 0% のラベルで欠損と実値を区別 */}
+              <LabelList
+                dataKey={cfg.key}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                content={(props: any) => {
+                  const { x, y, width, height, index } = props;
+                  if (
+                    typeof index !== "number" ||
+                    !data[index]
+                  ) {
+                    return null;
+                  }
+                  const row = data[index];
+                  const isNa = Boolean(row[`${cfg.key}__na`]);
+                  const value = row[cfg.key] as number;
+                  const xNum = Number(x ?? 0);
+                  const yNum = Number(y ?? 0);
+                  const widthNum = Number(width ?? 0);
+                  const heightNum = Number(height ?? 0);
+                  // N/A は0位置の右に薄字で表示
+                  if (isNa) {
+                    return (
+                      <text
+                        x={xNum + widthNum + 4}
+                        y={yNum + heightNum / 2}
+                        dy=".32em"
+                        fontSize={10}
+                        fontStyle="italic"
+                        fill="var(--muted)"
+                      >
+                        N/A
+                      </text>
+                    );
+                  }
+                  // 0% は同じ位置に「0%」と明示してN/Aと区別
+                  if (Math.abs(value) < 0.05) {
+                    return (
+                      <text
+                        x={xNum + widthNum + 4}
+                        y={yNum + heightNum / 2}
+                        dy=".32em"
+                        fontSize={10}
+                        fill="var(--text)"
+                        fontWeight={600}
+                      >
+                        0%
+                      </text>
+                    );
+                  }
+                  return null;
+                }}
+              />
+            </Bar>
           ))}
         </BarChart>
       </ResponsiveContainer>
@@ -282,10 +285,12 @@ function ShockChart({
   primaryIndicator,
   onChangePrimary,
   yearRange,
+  isMobile,
 }: {
   primaryIndicator: IndicatorKey;
   onChangePrimary: (key: IndicatorKey) => void;
   yearRange: [number, number];
+  isMobile: boolean;
 }) {
   const [rangeStart, rangeEnd] = yearRange;
   // 期間内で発生したショックだけに絞る（発生時±2年が範囲に重なる場合）
@@ -327,6 +332,8 @@ function ShockChart({
         mode="single"
         selected={indicator}
         onToggle={onChangePrimary}
+        label="表示する指標を1つ選択"
+        compact={isMobile}
       />
 
       <p className="text-xs mb-4" style={{ color: "var(--muted)" }}>
@@ -347,6 +354,10 @@ function ShockChart({
             stroke="transparent"
             tick={{ fill: "var(--muted)", fontSize: 11 }}
             tickLine={false}
+            // データレンジ+5%マージンで自動調整し、95〜107等の僅かな変動も視認可能に。
+            // 基準値100は ReferenceLine で常に描画されるため、領域外でも視覚的アンカーは維持。
+            domain={["dataMin - 5", "dataMax + 5"]}
+            allowDataOverflow={false}
           />
           <Tooltip
             {...TT}
@@ -361,7 +372,8 @@ function ShockChart({
           />
           <ReferenceLine
             y={100}
-            stroke="var(--border)"
+            stroke="var(--text)"
+            strokeOpacity={0.4}
             strokeDasharray="4 2"
             strokeWidth={1.5}
             label={{ value: "100", position: "right", fill: "var(--muted)", fontSize: 10 }}
@@ -393,10 +405,12 @@ function EventDetailChart({
   primaryIndicator,
   onChangePrimary,
   yearRange,
+  isMobile,
 }: {
   primaryIndicator: IndicatorKey;
   onChangePrimary: (key: IndicatorKey) => void;
   yearRange: [number, number];
+  isMobile: boolean;
 }) {
   const [rangeStart, rangeEnd] = yearRange;
   const visibleShocks = SHOCK_EVENTS.filter(
@@ -429,6 +443,8 @@ function EventDetailChart({
         mode="single"
         selected={selectedIndicator}
         onToggle={onChangePrimary}
+        label="表示する指標を1つ選択"
+        compact={isMobile}
       />
 
       <div className="mb-6">
@@ -505,6 +521,7 @@ interface Props {
   onChangePrimary: (key: IndicatorKey) => void;
   yearRange: [number, number];
   activeCategories?: EventCategory[];
+  isMobile?: boolean;
 }
 
 export function ComparisonView({
@@ -514,6 +531,7 @@ export function ComparisonView({
   primaryIndicator,
   onChangePrimary,
   yearRange,
+  isMobile = false,
 }: Props) {
   return (
     <>
@@ -522,18 +540,21 @@ export function ComparisonView({
           activeIndicators={activeIndicators}
           onToggleIndicator={onToggleIndicator}
           yearRange={yearRange}
+          isMobile={isMobile}
         />
       ) : mode === "shock" ? (
         <ShockChart
           primaryIndicator={primaryIndicator}
           onChangePrimary={onChangePrimary}
           yearRange={yearRange}
+          isMobile={isMobile}
         />
       ) : (
         <EventDetailChart
           primaryIndicator={primaryIndicator}
           onChangePrimary={onChangePrimary}
           yearRange={yearRange}
+          isMobile={isMobile}
         />
       )}
     </>

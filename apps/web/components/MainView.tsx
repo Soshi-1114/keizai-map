@@ -118,13 +118,16 @@ export function MainView({ initialParams }: MainViewProps) {
         {/* ファーストビューの読み解き — PC/SP 両方で表示 */}
         <HeroStory data={filteredData} yearRange={yearRange} />
 
-        {/* 指標トグル: PC では水平バー、モバイルではコンパクトトグル */}
-        <IndicatorToggleBar
-          variant={isMobile ? "mobile" : "pc"}
-          activeIndicators={activeIndicators}
-          onToggle={toggleIndicator}
-          onSetAll={setActiveIndicators}
-        />
+        {/* 指標トグル: PC では水平バー。
+            SP ではチャートカード内に統合表示するためここでは出さない（重複防止）。 */}
+        {!isMobile && (
+          <IndicatorToggleBar
+            variant="pc"
+            activeIndicators={activeIndicators}
+            onToggle={toggleIndicator}
+            onSetAll={setActiveIndicators}
+          />
+        )}
 
         {/* フィルターボタン（モバイル）— 上下2段組で主アクションを明示 */}
         {isMobile && (
@@ -195,20 +198,11 @@ export function MainView({ initialParams }: MainViewProps) {
           {!isMobile && <ShareButton variant="inline" />}
         </div>
 
-        {/* モード横断ツールバー（ブックマーク・CSV・データ表）— どのビューモードでも操作可 */}
-        <ChartToolbar
-          variant={isMobile ? "mobile" : "pc"}
-          activeIndicators={activeIndicators}
-          activeCategories={activeCategories}
-          yearRange={yearRange}
-          showDataTable={showDataTable}
-          onToggleDataTable={() => setShowDataTable(v => !v)}
-          dataTableContainerId={dataTableContainerId}
-        />
-
         {/* Chart / ComparisonView コンテナ
             SP: 横余白を最小化 + 画面端まで広げる (-mx-2) ことで描画幅 +24px
-            ARIA: role="tabpanel" で ViewModeTabs と紐付け */}
+            ARIA: role="tabpanel" で ViewModeTabs と紐付け
+            タブ切替の結果（グラフ）を1スクロール以内で見せるため、
+            ブックマーク/CSV/データ表 のツールバーはチャートカードの後ろへ移動。 */}
         <div
           id="chart-container"
           className="rounded-xl border p-2 md:p-4 -mx-2 md:mx-0 scroll-mt-4"
@@ -224,6 +218,7 @@ export function MainView({ initialParams }: MainViewProps) {
               effectiveIndicators={activeIndicators}
               activeCategories={activeCategories}
               yearRange={yearRange}
+              onToggleIndicator={toggleIndicator}
             />
           ) : (
             <ComparisonView
@@ -234,9 +229,21 @@ export function MainView({ initialParams }: MainViewProps) {
               onChangePrimary={setPrimaryIndicator}
               yearRange={yearRange}
               activeCategories={activeCategories}
+              isMobile={isMobile}
             />
           )}
         </div>
+
+        {/* モード横断ツールバー（ブックマーク・CSV・データ表）— 二次機能としてチャート後方に配置 */}
+        <ChartToolbar
+          variant={isMobile ? "mobile" : "pc"}
+          activeIndicators={activeIndicators}
+          activeCategories={activeCategories}
+          yearRange={yearRange}
+          showDataTable={showDataTable}
+          onToggleDataTable={() => setShowDataTable(v => !v)}
+          dataTableContainerId={dataTableContainerId}
+        />
 
         {/* データテーブル（モード横断のアクセシビリティ用代替ビュー） */}
         {showDataTable && (
