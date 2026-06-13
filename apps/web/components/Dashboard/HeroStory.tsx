@@ -52,18 +52,15 @@ function HeroStoryImpl({ data, yearRange }: Props) {
     if (!d) return null;
     return (
       <section
-        className="rounded-xl border p-5 md:p-6 space-y-2"
+        className="rounded-xl border p-4 md:p-6 space-y-1.5 md:space-y-2"
         style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
         aria-label="ファーストビューの解説"
       >
-        <p className="text-xs font-medium" style={{ color: "var(--link)" }}>
-          1990年=100で見る、日本経済
-        </p>
-        <h2 className="text-xl md:text-2xl font-bold leading-tight">
+        <h2 className="text-lg md:text-2xl font-bold leading-tight">
           {d.year}年の状況 — 実質賃金 {d.wage.toFixed(1)}、物価 {d.cpi.toFixed(1)}
         </h2>
-        <p className="text-sm" style={{ color: "var(--muted)" }}>
-          ↓ 下のチャートで全9指標を重ねて見られます。
+        <p className="text-xs" style={{ color: "var(--muted)" }}>
+          1990年=100
         </p>
       </section>
     );
@@ -84,14 +81,11 @@ function HeroStoryImpl({ data, yearRange }: Props) {
 
   return (
     <section
-      className="rounded-xl border p-5 md:p-6 space-y-3"
+      className="rounded-xl border p-4 md:p-6 space-y-1.5 md:space-y-3"
       style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
       aria-label="ファーストビューの解説"
     >
-      <p className="text-xs font-medium" style={{ color: "var(--link)" }}>
-        1990年=100で見る、日本の{span}年（{start.year}→{end.year}）
-      </p>
-      <h2 className="text-2xl md:text-3xl font-bold leading-tight tracking-tight">
+      <h2 className="text-xl md:text-3xl font-bold leading-tight tracking-tight">
         {highlights.map((h, i) => {
           const color = h.bad ? BAD_COLOR : GOOD_COLOR;
           const isLast = i === highlights.length - 1;
@@ -107,8 +101,8 @@ function HeroStoryImpl({ data, yearRange }: Props) {
           );
         })}
       </h2>
-      <p className="text-sm" style={{ color: "var(--muted)" }}>
-        ↓ 下のチャートで全9指標を重ねて見られます。すべて 1990 年の値を 100 として揃えています。
+      <p className="text-xs" style={{ color: "var(--muted)" }}>
+        日本の{span}年（{start.year}→{end.year}）／1990年=100
       </p>
     </section>
   );
