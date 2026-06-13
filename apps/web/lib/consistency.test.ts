@@ -168,7 +168,7 @@ describe("整合性: /og 既定エンドポイントの LATEST_VALUES が data �
     expect(match, "/og/route.tsx に LATEST_VALUES 定義が見つからない").not.toBeNull();
     const block = match![1];
 
-    const pairs = [...block.matchAll(/(\w+):\s*"([\d.]+)"/g)];
+    const pairs = Array.from(block.matchAll(/(\w+):\s*"([\d.]+)"/g));
     const claimed: Record<string, number> = {};
     for (const [, key, value] of pairs) claimed[key] = Number(value);
 
