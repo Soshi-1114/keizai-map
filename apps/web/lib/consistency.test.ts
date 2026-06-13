@@ -3,6 +3,7 @@ import { join, resolve } from "path";
 import { describe, expect, it } from "vitest";
 import { dataYearRangeLabel, derive, latestYear } from "./derived";
 import { ADMINISTRATIONS, RAW_DATA } from "./data";
+import { ARTICLES } from "./articles";
 
 /**
  * 数値整合性のCIゲート。data.generated.json と FAQ/About/コンポーネント側の
@@ -138,6 +139,37 @@ describe("整合性: 派生統計のスナップショット", () => {
       }
     `);
   });
+});
+
+describe("整合性: 記事タイトルの単一ソース化", () => {
+  // page.tsx 内の `export const metadata` ブロックから title を抽出。
+  // 同じ slug の lib/articles.ts エントリと一致しなければビルドを落とす。
+  const ARTICLES_DIR = resolve(APP_DIR, "articles");
+
+  function pageMetadataTitle(slug: string): string | null {
+    const pagePath = join(ARTICLES_DIR, slug, "page.tsx");
+    try {
+      const text = readFileSync(pagePath, "utf-8");
+      const block = text.match(/export const metadata[^{]*\{([\s\S]*?)\n\};/);
+      if (!block) return null;
+      const titleMatch = block[1].match(/title:\s*"([^"]+)"/);
+      return titleMatch ? titleMatch[1] : null;
+    } catch {
+      return null;
+    }
+  }
+
+  for (const article of ARTICLES) {
+    it(`${article.slug}: lib/articles.ts の title と page.tsx metadata.title が一致`, () => {
+      const pageTitle = pageMetadataTitle(article.slug);
+      // page.tsx が無い記事はスキップ（テンプレ的記事のみ）。
+      // 実在しないファイルは別テストで担保すべきだが、本ケースは現状全記事に存在。
+      if (pageTitle === null) {
+        expect.fail(`page.tsx not found or metadata.title not parseable for slug "${article.slug}"`);
+      }
+      expect(pageTitle).toBe(article.title);
+    });
+  }
 });
 
 describe("整合性: data.generated.json の論理整合", () => {

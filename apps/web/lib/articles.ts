@@ -15,10 +15,10 @@ export const ARTICLES: ArticleMeta[] = [
     slug: "real-wages",
     publishedAt: "2026-06-11",
     updatedAt: "2026-06-12",
-    title: "実質賃金とは？名目賃金との違いと日本の30年",
+    title: "実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか",
     description:
-      "実質賃金と名目賃金の違いを解説。1990年を100とした場合、2024年の実質賃金は99.2と横ばいである一方、物価は約20%上昇した。日本の賃金停滞の実態をデータで確認する。",
-    readingTime: 4,
+      "実質賃金とは、物価変動を考慮した賃金です。給料が10%増えても物価が20%上がれば、実際に買える商品は減ってしまいます。日本の実質賃金の推移を確認します。",
+    readingTime: 3,
     tags: ["賃金", "物価", "生活水準"],
     presetQuery: "?indicators=wage,cpi&range=1990,2024&events=税制",
   },
