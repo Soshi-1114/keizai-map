@@ -141,6 +141,46 @@ describe("整合性: 派生統計のスナップショット", () => {
   });
 });
 
+describe("整合性: 全記事ページが articleOpenGraph を使う", () => {
+  // 個別 OG 画像（/og/article?slug=…）を漏れなく付ける運用を CI で担保。
+  // page.tsx 側で openGraph 定義を忘れるとデフォルト OG にフォールバックする。
+  const APP_ARTICLES_DIR = resolve(APP_DIR, "articles");
+
+  for (const article of ARTICLES) {
+    it(`${article.slug}: page.tsx が articleOpenGraph("${article.slug}") を呼んでいる`, () => {
+      const text = readFileSync(`${APP_ARTICLES_DIR}/${article.slug}/page.tsx`, "utf-8");
+      expect(text).toMatch(/openGraph:\s*articleOpenGraph\(/);
+      expect(text).toContain(`articleOpenGraph("${article.slug}")`);
+    });
+  }
+});
+
+describe("整合性: /og 既定エンドポイントの LATEST_VALUES が data と一致", () => {
+  // /og/route.tsx は edge runtime のため lib/data を import せず、ハードコード
+  // された LATEST_VALUES 辞書を持っている。data.generated.json と乖離した場合
+  // OG 画像と本サイトの数値が食い違うので CI で突合する。
+  const OG_ROUTE_PATH = resolve(APP_DIR, "og", "route.tsx");
+
+  it("各指標で /og/route.tsx の LATEST_VALUES が data.generated.json 最新年と一致", () => {
+    const latest = RAW_DATA[RAW_DATA.length - 1];
+    const text = readFileSync(OG_ROUTE_PATH, "utf-8");
+    const match = text.match(/const LATEST_VALUES[^=]*=\s*\{([\s\S]*?)\};/);
+    expect(match, "/og/route.tsx に LATEST_VALUES 定義が見つからない").not.toBeNull();
+    const block = match![1];
+
+    const pairs = [...block.matchAll(/(\w+):\s*"([\d.]+)"/g)];
+    const claimed: Record<string, number> = {};
+    for (const [, key, value] of pairs) claimed[key] = Number(value);
+
+    for (const key of ["wage", "cpi", "tax", "fx", "nikkei", "housing", "debt", "births", "insurance"] as const) {
+      expect(
+        claimed[key],
+        `/og/route.tsx の LATEST_VALUES.${key} (${claimed[key]}) と data.generated.json 最新年 (${latest[key]}) が乖離`,
+      ).toBe(latest[key]);
+    }
+  });
+});
+
 describe("整合性: 記事タイトルの単一ソース化", () => {
   // page.tsx 内の `export const metadata` ブロックから title を抽出。
   // 同じ slug の lib/articles.ts エントリと一致しなければビルドを落とす。
