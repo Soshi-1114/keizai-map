@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+
+      - name: pnpm セットアップ
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Node.js セットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+
+      - name: 依存関係インストール
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check (apps/web)
+        run: pnpm --filter web exec tsc --noEmit
+
+      - name: Unit tests
+        run: pnpm --filter web test
+
+      - name: Build
+        run: pnpm build
+
+  e2e:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+
+      - name: pnpm セットアップ
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Node.js セットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+
+      - name: 依存関係インストール
+        run: pnpm install --frozen-lockfile
+
+      - name: Playwright ブラウザインストール
+        run: pnpm --filter web exec playwright install --with-deps chromium
+
+      - name: E2E テスト
+        run: pnpm --filter web test:e2e
+
+      - name: Playwright レポートアップロード
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report/
+          retention-days: 7
