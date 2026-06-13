@@ -1,12 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Check } from "lucide-react";
 import type { IndicatorKey } from "@/lib/types";
 import { INDICATOR_CONFIGS } from "@/lib/data";
-
-/** SPで常時表示する主要4指標。残り5指標は details で折りたたむ */
-const PRIMARY_INDICATORS: IndicatorKey[] = ["wage", "cpi", "tax", "fx"];
 
 interface Props {
   /** "multi" は selected 配列に含まれる全指標、"single" は 1 指標のみ強調 */
@@ -16,7 +13,10 @@ interface Props {
   /** disabled なら斜線 + クリック不可。データが無い等で表示できない指標を示す */
   disabledKeys?: IndicatorKey[];
   label?: string;
-  /** true の場合、主要4指標を常時表示・残り5指標を details で折りたたむ */
+  /**
+   * true の場合、すべての指標チップを単一ボタン「+ 他の指標を重ねる」に畳む。
+   * SP のチャートカード内で利用。「重なり」を差別化として言語化しつつFVを軽くする。
+   */
   compact?: boolean;
 }
 
@@ -32,30 +32,16 @@ export function IndicatorChipSelector({
   label = "重ねて表示する指標",
   compact = false,
 }: Props) {
-  const restConfigs = INDICATOR_CONFIGS.filter(
-    c => !PRIMARY_INDICATORS.includes(c.key),
-  );
-  const restActiveKey = (() => {
-    if (mode === "multi") {
-      return restConfigs.some(c => (selected as IndicatorKey[]).includes(c.key));
-    }
-    return restConfigs.some(c => (selected as IndicatorKey) === c.key);
-  })();
-  // 展開/折りたたみ。初期値: 「もっと見る」内に選択中があれば開く
-  const [expanded, setExpanded] = useState(restActiveKey);
-  const restActiveCount = (() => {
-    if (mode === "multi") {
-      return restConfigs.filter(c =>
-        (selected as IndicatorKey[]).includes(c.key),
-      ).length;
-    }
-    return restConfigs.filter(c => (selected as IndicatorKey) === c.key).length;
-  })();
+  const panelId = useId();
+  const [expanded, setExpanded] = useState(false);
 
   const isActive = (key: IndicatorKey) =>
     mode === "multi"
       ? (selected as IndicatorKey[]).includes(key)
       : selected === key;
+
+  const activeCount = INDICATOR_CONFIGS.filter(c => isActive(c.key)).length;
+  const totalCount = INDICATOR_CONFIGS.length;
 
   const renderChip = (cfg: (typeof INDICATOR_CONFIGS)[number]) => {
     const active = isActive(cfg.key);
@@ -111,46 +97,54 @@ export function IndicatorChipSelector({
     );
   }
 
-  // compact: 主要4 + details で折りたたみ
-  const primaryConfigs = INDICATOR_CONFIGS.filter(c =>
-    PRIMARY_INDICATORS.includes(c.key),
-  );
+  // compact: 全チップを単一ボタンに畳む。デフォルト2指標が重なったチャートが
+  // 既に見えている状態を前提に、追加の指標は触りたい人だけが展開する。
+  // multi: 「他の指標を重ねる」(X/9 表示中)
+  // single: 「指標を切り替え」(現在の指標名) — 「重ねる」表現は単一選択モードに合わない
+  const isSingleMode = mode === "single";
+  const currentSingleLabel = isSingleMode
+    ? INDICATOR_CONFIGS.find(c => c.key === (selected as IndicatorKey))?.label ?? ""
+    : "";
+
+  const buttonClosedLabel = isSingleMode ? "指標を切り替え" : "他の指標を重ねる";
 
   return (
     <div className="mb-3">
-      <div className="text-xs mb-2" style={{ color: "var(--muted)" }}>
-        {label}
-      </div>
-      <div className="flex gap-1.5 flex-wrap" role="group" aria-label={label}>
-        {primaryConfigs.map(renderChip)}
-      </div>
-      <div className="mt-2">
-        <button
-          type="button"
-          onClick={() => setExpanded(v => !v)}
-          aria-expanded={expanded}
-          className="text-xs cursor-pointer inline-flex items-center gap-1 rounded-full px-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-          style={{
-            minHeight: 44,
-            color: "var(--muted)",
-            border: "1px dashed var(--border)",
-            backgroundColor: "transparent",
-          }}
-        >
+      <button
+        type="button"
+        onClick={() => setExpanded(v => !v)}
+        aria-expanded={expanded}
+        aria-controls={panelId}
+        className="w-full text-sm cursor-pointer inline-flex items-center justify-between gap-2 rounded-full px-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        style={{
+          minHeight: 44,
+          color: expanded ? "var(--text)" : "var(--link)",
+          border: "1px dashed var(--border)",
+          backgroundColor: expanded ? "var(--bg)" : "transparent",
+          fontWeight: 600,
+        }}
+      >
+        <span className="inline-flex items-center gap-1.5">
           <span aria-hidden>{expanded ? "−" : "＋"}</span>
-          {expanded ? "閉じる" : "もっと見る"} ({restConfigs.length}指標
-          {restActiveCount > 0 && ` / ${restActiveCount}選択中`})
-        </button>
-        {expanded && (
-          <div
-            className="flex gap-1.5 flex-wrap mt-2"
-            role="group"
-            aria-label="追加の指標"
-          >
-            {restConfigs.map(renderChip)}
-          </div>
-        )}
-      </div>
+          {expanded ? "指標選択を閉じる" : buttonClosedLabel}
+        </span>
+        <span
+          className="text-xs tabular-nums"
+          style={{ color: "var(--muted)", fontWeight: 400 }}
+        >
+          {isSingleMode ? currentSingleLabel : `${activeCount}/${totalCount} 表示中`}
+        </span>
+      </button>
+      {expanded && (
+        <div
+          id={panelId}
+          className="flex gap-1.5 flex-wrap mt-3"
+          role="group"
+          aria-label={label}
+        >
+          {INDICATOR_CONFIGS.map(renderChip)}
+        </div>
+      )}
     </div>
   );
 }
