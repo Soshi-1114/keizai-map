@@ -4,6 +4,7 @@ import { Database } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { generatePageBreadcrumbJsonLd, generateOrganizationJsonLd, generatePersonJsonLd, generateWebSiteJsonLd } from "@/lib/jsonld";
 import { BASE_URL } from "@/lib/constants";
+import { dataYearRangeLabel, derive, formatIndex, latestYear } from "@/lib/derived";
 
 export const metadata: Metadata = {
   title: "KeizaiMapについて — データソース・運営体制",
@@ -136,7 +137,7 @@ export default function AboutPage() {
             </table>
           </div>
           <p className="text-xs" style={{ color: "var(--muted)" }}>
-            ※ 1990〜2024年の<strong>年次</strong>データを掲載しています。
+            ※ {dataYearRangeLabel()}年の<strong>年次</strong>データを掲載しています。
             🟢 自動指標は GitHub Actions により月次でデータソースから取得しています。
             🟡 手動指標は公開API非対応のため、四半期ごとに公開資料から人手で更新しています。
           </p>
@@ -230,6 +231,17 @@ export default function AboutPage() {
                 月次・四半期データの追加は現在検討中です。
               </p>
             </div>
+            <div>
+              <div className="font-semibold mb-1" style={{ color: "var(--text)" }}>📐 確定値の定義</div>
+              <p style={{ color: "var(--muted)" }}>
+                KeizaiMap で表示する <strong>{latestYear()}年までの値</strong>は、
+                各統計機関が公表した直近の年次値です。
+                自動指標（CPI・税収・USD/JPY・国債残高・出生数）は公的 API・CSV から
+                取得した最新確定値、手動指標（実質賃金・日経平均・住宅価格・社会保険料）は
+                公的機関の年次確定値発表後に反映しています。
+                公表後に統計機関側で改定された場合は、次回更新時に追従します。
+              </p>
+            </div>
           </div>
         </Section>
 
@@ -256,6 +268,8 @@ export default function AboutPage() {
           </p>
           <div className="space-y-2 mt-2">
             {[
+              { date: "2026年06月", label: "訂正", desc: `FAQ／About本文の数値ハードコードを派生統計モジュール（lib/derived.ts）由来に動的化。誤記「税収は+125%」「税収は約2.3倍」（正値: ${formatIndex(derive("tax")!.pctChange, 1)}% / ${formatIndex(derive("tax")!.ratio, 2)}倍）と「1990〜2024年の年次データ」（正: ${dataYearRangeLabel()}年）を訂正` },
+              { date: "2026年06月", label: "データ拡張", desc: `データ範囲を${latestYear()}年まで拡張。実質賃金・CPI・税収・USD/JPY・日経・住宅・国債・出生・社会保険料の全9指標で${latestYear()}年確定値を反映` },
               { date: "2026年06月", label: "自動取得", desc: "CPI・出生数・税収（72.1兆円）・USD/JPY（151.8円）・国債残高（1,170.3兆円）を更新（2024年確定値）" },
               { date: "2026年06月", label: "記事追加", desc: "SEO強化記事 第2弾9本追加（21本→30本）。内部リンク・FAQPage構造化データを全記事に整備" },
               { date: "2026年05月", label: "記事追加", desc: "SEO強化記事5本追加（16本→21本）" },
@@ -273,8 +287,18 @@ export default function AboutPage() {
                   <span
                     className="inline-block text-tiny font-semibold px-1.5 py-0.5 rounded mr-2"
                     style={{
-                      backgroundColor: label === "自動取得" ? "#16653420" : label === "記事追加" ? "#1d4ed820" : "#92400e20",
-                      color: label === "自動取得" ? "#166534" : label === "記事追加" ? "#1d4ed8" : "#92400e",
+                      backgroundColor:
+                        label === "自動取得" ? "#16653420" :
+                        label === "記事追加" ? "#1d4ed820" :
+                        label === "訂正" ? "#b91c1c20" :
+                        label === "データ拡張" ? "#16653420" :
+                        "#92400e20",
+                      color:
+                        label === "自動取得" ? "#166534" :
+                        label === "記事追加" ? "#1d4ed8" :
+                        label === "訂正" ? "#b91c1c" :
+                        label === "データ拡張" ? "#166534" :
+                        "#92400e",
                     }}
                   >
                     {label}

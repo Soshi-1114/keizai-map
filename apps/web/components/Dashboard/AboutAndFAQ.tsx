@@ -1,5 +1,21 @@
 import Link from "next/link";
 import { generateFaqPageJsonLd } from "@/lib/jsonld";
+import {
+  derive,
+  formatIndex,
+  formatPct,
+  formatRatio,
+  latestYear,
+} from "@/lib/derived";
+
+// data.generated.json から派生統計を生成。
+// 静的テキストの数値ハードコードを禁止し、「json と一致」の編集方針を技術的に強制する。
+const WAGE = derive("wage")!;
+const CPI = derive("cpi")!;
+const TAX = derive("tax")!;
+const INSURANCE = derive("insurance")!;
+const LATEST_YEAR = latestYear();
+const SPAN_YEARS = LATEST_YEAR - 1990;
 
 const FAQS = [
   {
@@ -20,7 +36,7 @@ const FAQS = [
   {
     question: "1990年を100とする指数化は何のためですか？",
     answer:
-      "賃金（円）・物価（指数）・為替（円/ドル）など単位が異なる9指標を同じグラフで比較するため、1990年の値を全指標で100に揃えています。これにより「賃金は1990年比で-0.8%に対し、物価は+20%、税収は+125%」のように、長期の相対変化を一目で比較できます。",
+      `賃金（円）・物価（指数）・為替（円/ドル）など単位が異なる9指標を同じグラフで比較するため、1990年の値を全指標で100に揃えています。これにより「賃金は1990年比で${formatPct(WAGE.pctChange)}に対し、物価は${formatPct(CPI.pctChange)}、税収は${formatPct(TAX.pctChange)}」のように、長期の相対変化を一目で比較できます。`,
   },
   {
     question: "政治的に中立ですか？",
@@ -48,7 +64,7 @@ export function AboutAndFAQ() {
             <strong>KeizaiMap</strong> は、日本経済の主要9指標（賃金・物価・税収・為替・日経平均・住宅価格・国債残高・出生数・社会保険料）を <strong>1990年=100の指数</strong> で揃えて重ね見できる経済データダッシュボードです。
           </p>
           <p>
-            実質賃金は34年でほぼ横ばい（99.2）の一方、消費者物価は約20%上昇、税収は約2.3倍、社会保険料負担率は10.8%→18.5%へ上昇。
+            実質賃金は{SPAN_YEARS}年で{formatPct(WAGE.pctChange)}（{formatIndex(WAGE.endValue)}）の一方、消費者物価は{formatPct(CPI.pctChange)}上昇、税収は{formatRatio(TAX.ratio)}、社会保険料負担率は{formatIndex(INSURANCE.startValue)}%→{formatIndex(INSURANCE.endValue)}%へ上昇。
             「なぜ給料が上がっても生活が楽にならないのか」を、政権帯・税制改正・経済ショックと重ねて数字で確認できます。
           </p>
           <p>
