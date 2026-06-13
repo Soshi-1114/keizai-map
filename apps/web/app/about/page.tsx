@@ -231,6 +231,17 @@ export default function AboutPage() {
                 月次・四半期データの追加は現在検討中です。
               </p>
             </div>
+            <div>
+              <div className="font-semibold mb-1" style={{ color: "var(--text)" }}>📐 確定値の定義</div>
+              <p style={{ color: "var(--muted)" }}>
+                KeizaiMap で表示する <strong>{latestYear()}年までの値</strong>は、
+                各統計機関が公表した直近の年次値です。
+                自動指標（CPI・税収・USD/JPY・国債残高・出生数）は公的 API・CSV から
+                取得した最新確定値、手動指標（実質賃金・日経平均・住宅価格・社会保険料）は
+                公的機関の年次確定値発表後に反映しています。
+                公表後に統計機関側で改定された場合は、次回更新時に追従します。
+              </p>
+            </div>
           </div>
         </Section>
 
