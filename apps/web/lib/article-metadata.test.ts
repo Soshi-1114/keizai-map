@@ -7,7 +7,7 @@ describe("articleOpenGraph", () => {
 
   it("returns type=article with JST publishedTime/modifiedTime", () => {
     const og = articleOpenGraph(known.slug);
-    expect(og.type).toBe("article");
+    expect((og as { type: string }).type).toBe("article");
     expect((og as { publishedTime: string }).publishedTime).toBe(`${known.publishedAt}T00:00:00+09:00`);
     expect((og as { modifiedTime: string }).modifiedTime).toBe(`${known.updatedAt}T00:00:00+09:00`);
   });
@@ -34,7 +34,7 @@ describe("articleOpenGraph", () => {
   it("works for every article registered in ARTICLES (smoke)", () => {
     for (const a of ARTICLES) {
       const og = articleOpenGraph(a.slug);
-      expect(og.type).toBe("article");
+      expect((og as { type: string }).type).toBe("article");
       expect((og as { tags: string[] }).tags).toEqual(a.tags);
     }
   });
