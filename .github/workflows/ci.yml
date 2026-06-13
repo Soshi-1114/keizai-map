@@ -46,6 +46,51 @@ jobs:
       - name: Build
         run: pnpm build
 
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+
+      - name: pnpm セットアップ
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Node.js セットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: 'pnpm'
+
+      - name: 依存関係インストール
+        run: pnpm install --frozen-lockfile
+
+      - name: 依存関係セキュリティ監査
+        shell: bash
+        run: |
+          set -uo pipefail
+          # フェーズ B (Next.js 14 → 15) 完了までは既知の Next.js 14 系
+          # HIGH 5 件を許容する。フェーズ B 完了後はこのリストを空にして
+          # 厳格化する。grep の OR パターン (パイプ区切り)。
+          KNOWN='GHSA-h25m-26qc-wcjf|GHSA-q4gf-8mx6-v5v3|GHSA-8h8q-6873-q5fj|GHSA-c4j6-fc7j-m34r|GHSA-36qx-fr4f-26g5'
+
+          pnpm audit --prod --json > audit.json || true
+
+          SUMMARY=$(jq -r '.metadata.vulnerabilities | "low=\(.low) moderate=\(.moderate) high=\(.high) critical=\(.critical)"' audit.json)
+          echo "サマリー: $SUMMARY"
+
+          UNKNOWN=$(jq -r '.advisories | to_entries[] | .value | select(.severity == "high" or .severity == "critical") | .url' audit.json | grep -vE "$KNOWN" || true)
+
+          if [ -n "$UNKNOWN" ]; then
+            echo "::error::未対応の HIGH/CRITICAL 脆弱性が検出されました:"
+            echo "$UNKNOWN"
+            exit 1
+          fi
+          echo "✅ 既知の許容済み HIGH を除き、新規 HIGH/CRITICAL なし"
+
   e2e:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
