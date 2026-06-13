@@ -1,4 +1,4 @@
-import { rebaseTo100 } from "./utils";
+import { fetchWithTimeout, rebaseTo100 } from "./utils";
 
 const BASE_URL = "https://api.e-stat.go.jp/rest/3.0/app/json/getStatsData";
 
@@ -14,7 +14,7 @@ async function estatFetch(params: Record<string, string>): Promise<unknown> {
   url.searchParams.set("lang", "J");
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, v);
 
-  const res = await fetch(url.toString());
+  const res = await fetchWithTimeout(url.toString());
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
   const json = await res.json() as any;
