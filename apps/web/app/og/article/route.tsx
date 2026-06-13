@@ -9,8 +9,11 @@ export async function GET(request: Request) {
   const slug = searchParams.get("slug") ?? "";
 
   const article = ARTICLES.find((a) => a.slug === slug);
-  const title = article?.title ?? "KeizaiMap 解説記事";
-  const tags = article?.tags ?? [];
+  if (!article) {
+    return new Response("Not Found", { status: 404 });
+  }
+  const title = article.title;
+  const tags = article.tags ?? [];
 
   const TAG_COLORS: Record<string, string> = {
     "賃金": "#4F8EF7", "実質賃金": "#4F8EF7", "手取り": "#4F8EF7",

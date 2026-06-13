@@ -9,6 +9,15 @@ function toJstDateTime(date: string): string {
   return `${date}T00:00:00+09:00`;
 }
 
+/**
+ * JSON-LD 内の文字列値に含まれる `<` を `<` へエスケープして
+ * `<script type="application/ld+json">…</script>` 埋め込み時の終了タグ偽装を防ぐ。
+ * 現状は静的データのみだが、将来 CMS / 外部入力を受け入れた際の XSS 保険。
+ */
+function safe(value: string): string {
+  return value.replace(/</g, "\\u003c");
+}
+
 export function generateArticleJsonLd({
   title,
   description,
@@ -29,8 +38,8 @@ export function generateArticleJsonLd({
   return {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: title,
-    description: description,
+    headline: safe(title),
+    description: safe(description),
     url: articleUrl,
     image: `${baseUrl}/og/article?slug=${slug}`,
     ...(meta && {
@@ -57,7 +66,7 @@ export function generateArticleJsonLd({
       "@type": "WebPage",
       "@id": articleUrl,
     },
-    ...(tags && tags.length > 0 && { keywords: tags.join(", ") }),
+    ...(tags && tags.length > 0 && { keywords: safe(tags.join(", ")) }),
   };
 }
 

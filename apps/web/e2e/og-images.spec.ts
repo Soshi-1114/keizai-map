@@ -44,10 +44,9 @@ test.describe("OG 画像エンドポイント", () => {
     expect(buf.byteLength).toBeGreaterThan(5_000);
   });
 
-  test("/og/article?slug=unknown も 200（既定タイトルにフォールバック）", async ({ request }) => {
+  test("/og/article?slug=unknown は 404 を返す（未知 slug への Edge 計算誘発を防止）", async ({ request }) => {
     const res = await request.get("/og/article?slug=zzz-no-such-slug");
-    expect(res.status()).toBe(200);
-    expect(res.headers()["content-type"]).toMatch(/^image\/png/);
+    expect(res.status()).toBe(404);
   });
 });
 

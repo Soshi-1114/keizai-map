@@ -46,9 +46,27 @@ export function rebaseTo100(data: Map<number, number>, baseYear: number): Map<nu
   return result;
 }
 
+/**
+ * AbortController + setTimeout で fetch をラップ。
+ * 外部 API（e-Stat / BOJ / MOF）が応答しないままビルドがハングするのを防ぐ。
+ */
+export async function fetchWithTimeout(
+  url: string,
+  init: RequestInit = {},
+  timeoutMs = 20_000,
+): Promise<Response> {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...init, signal: ctrl.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 /** Shift-JIS 含む可能性のあるレスポンスを decode（fetch + 文字コード判定） */
 export async function fetchText(url: string, encoding: "utf-8" | "shift_jis" = "utf-8"): Promise<string> {
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url, {
     headers: { "User-Agent": "Mozilla/5.0 (KeizaiMap data fetcher)" },
   });
   if (!res.ok) throw new Error(`HTTP ${res.status} from ${url}`);
