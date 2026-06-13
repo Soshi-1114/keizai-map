@@ -40,15 +40,15 @@ test.describe("SP UI improvements zoom (390px)", () => {
     });
   });
 
-  test("zoom: もっと見る展開時", async ({ page }) => {
+  test("zoom: 指標セレクタ展開時", async ({ page }) => {
     await page.locator("#chart-container").scrollIntoViewIfNeeded();
-    const moreBtn = page
+    const trigger = page
       .getByRole("tabpanel")
-      .getByRole("button", { name: /もっと見る/ });
-    await moreBtn.click();
+      .getByRole("button", { name: /他の指標を重ねる/ });
+    await trigger.click();
     await page.waitForTimeout(300);
     await page.screenshot({
-      path: "test-results/sp-zoom-more-expanded.png",
+      path: "test-results/sp-zoom-indicators-expanded.png",
       clip: { x: 0, y: 0, width: 390, height: 844 },
     });
   });

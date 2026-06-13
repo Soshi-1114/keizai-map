@@ -7,22 +7,26 @@ test.describe("モバイル表示", () => {
     await page.goto("/");
   });
 
-  test("指標トグルバーが表示される", async ({ page }) => {
-    // 「重ねて表示する指標」セクションが存在する
-    await expect(page.getByRole("group", { name: "重ねて表示する指標" }).first()).toBeVisible();
+  test("指標セレクタの折りたたみトリガーが表示される", async ({ page }) => {
+    // SP では「他の指標を重ねる」ボタン1つに畳まれている (段階的開示)
+    await expect(
+      page.getByRole("button", { name: /他の指標を重ねる/ }),
+    ).toBeVisible();
   });
 
   test("フィルターボタンが表示される", async ({ page }) => {
-    await expect(page.getByRole("button", { name: /フィルター/ })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /フィルター 表示期間/ }),
+    ).toBeVisible();
   });
 
   test("フィルターボタンでボトムシートが開く", async ({ page }) => {
-    await page.getByRole("button", { name: /^フィルター$/ }).click();
+    await page.getByRole("button", { name: /フィルター 表示期間/ }).click();
     await expect(page.getByRole("button", { name: "フィルターを閉じる" })).toBeVisible();
   });
 
   test("ボトムシートを閉じられる", async ({ page }) => {
-    await page.getByRole("button", { name: /^フィルター$/ }).click();
+    await page.getByRole("button", { name: /フィルター 表示期間/ }).click();
     await page.getByRole("button", { name: "フィルターを閉じる" }).click();
     await expect(page.getByRole("button", { name: "フィルターを閉じる" })).not.toBeVisible();
   });
@@ -53,8 +57,13 @@ test.describe("モバイル表示", () => {
     expect(visibleCount).toBeGreaterThan(0);
   });
 
-  test("指標トグルの主要4指標が常に表示される", async ({ page }) => {
-    const group = page.getByRole("group", { name: "重ねて表示する指標" }).first();
+  test("指標セレクタを展開すると全9指標が見える", async ({ page }) => {
+    // 折りたたみ状態から展開し、主要4指標が全て出てくることを検証
+    await page
+      .getByRole("tabpanel")
+      .getByRole("button", { name: /他の指標を重ねる/ })
+      .click();
+    const group = page.getByRole("group", { name: "重ねて表示する指標" });
     await expect(group).toBeVisible();
     for (const label of ["実質賃金", "消費者物価（CPI）", "税収", "USD/JPY"]) {
       await expect(
