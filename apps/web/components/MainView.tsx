@@ -105,6 +105,146 @@ export function MainView({ initialParams }: MainViewProps) {
       prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat],
     );
 
+  const chartContainer = (
+    <div
+      id="chart-container"
+      className="rounded-xl border p-2 md:p-4 -mx-2 md:mx-0 scroll-mt-4"
+      style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+      role="tabpanel"
+      aria-label={VIEW_MODE_DESCRIPTIONS[viewMode]}
+    >
+      {viewMode === "chart" ? (
+        <ChartPanel
+          isMobile={isMobile}
+          filteredData={filteredData}
+          effectiveIndicators={activeIndicators}
+          activeCategories={activeCategories}
+          yearRange={yearRange}
+          onToggleIndicator={toggleIndicator}
+        />
+      ) : (
+        <ComparisonView
+          mode={viewMode}
+          activeIndicators={activeIndicators}
+          onToggleIndicator={toggleIndicator}
+          primaryIndicator={primaryIndicator}
+          onChangePrimary={setPrimaryIndicator}
+          yearRange={yearRange}
+          activeCategories={activeCategories}
+          isMobile={isMobile}
+        />
+      )}
+    </div>
+  );
+
+  const dataTableBlock = showDataTable && (
+    <div
+      id={dataTableContainerId}
+      className="rounded-xl border p-4"
+      style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+    >
+      <DataTable data={filteredData} activeIndicators={activeIndicators} />
+    </div>
+  );
+
+  const narrativeBlock = narrative.paragraphs.length > 0 && (
+    <div
+      className="rounded-xl border px-5 py-4 space-y-2"
+      style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+      aria-labelledby="narrative-heading"
+    >
+      <p
+        id="narrative-heading"
+        className="text-xs font-medium"
+        style={{ color: "var(--link)" }}
+      >
+        この期間のポイント
+      </p>
+      {narrative.paragraphs.map((p, i) => (
+        <p
+          key={i}
+          className="text-sm leading-relaxed"
+          style={{ color: "var(--text)" }}
+        >
+          {p}
+        </p>
+      ))}
+      {narrative.insight && (
+        <p
+          className="text-sm leading-relaxed font-semibold mt-3 pl-3 border-l-2"
+          style={{ color: "var(--link)", borderColor: "var(--link)" }}
+        >
+          {narrative.insight}
+        </p>
+      )}
+    </div>
+  );
+
+  const insightCardsBlock = (
+    <InsightCards
+      data={filteredData}
+      yearRange={yearRange}
+      activeIndicators={activeIndicators}
+    />
+  );
+
+  // SP のフィルター呼び出しボタン
+  const filterButton = (
+    <button
+      onClick={() => setShowFiltersSheet(true)}
+      className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+      style={{
+        minHeight: 56,
+        borderColor: "var(--border)",
+        backgroundColor: "var(--card)",
+      }}
+      aria-haspopup="dialog"
+      aria-expanded={showFiltersSheet}
+    >
+      <span className="flex flex-col items-start">
+        <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>
+          フィルター
+        </span>
+        <span className="text-xs tabular-nums" style={{ color: "var(--muted)" }}>
+          表示期間: {yearRange[0]}–{yearRange[1]}年
+        </span>
+      </span>
+      <span style={{ color: "var(--muted)", fontSize: 18 }} aria-hidden>›</span>
+    </button>
+  );
+
+  // 分析モードタブ + 現在モードの説明。SP はチャート直下に降ろす。
+  const viewModeBlock = (
+    <div className={`flex items-center gap-2 ${isMobile ? "flex-col items-stretch" : ""}`}>
+      <ViewModeTabs
+        viewMode={viewMode}
+        onChange={setViewMode}
+        isMobile={isMobile}
+        tabpanelId={tabpanelId}
+      />
+      <p
+        className={`text-xs ${isMobile ? "text-center" : ""}`}
+        style={{ color: "var(--muted)" }}
+      >
+        {VIEW_MODE_DESCRIPTIONS[viewMode]}
+      </p>
+      {!isMobile && <div className="flex-1" />}
+      {!isMobile && <ShareButton variant="inline" />}
+    </div>
+  );
+
+  const chartToolbar = (
+    <ChartToolbar
+      variant={isMobile ? "mobile" : "pc"}
+      activeIndicators={activeIndicators}
+      activeCategories={activeCategories}
+      yearRange={yearRange}
+      showDataTable={showDataTable}
+      onToggleDataTable={() => setShowDataTable(v => !v)}
+      dataTableContainerId={dataTableContainerId}
+    />
+  );
+
   return (
     <main
       id="main"
@@ -118,57 +258,7 @@ export function MainView({ initialParams }: MainViewProps) {
         {/* ファーストビューの読み解き — PC/SP 両方で表示 */}
         <HeroStory data={filteredData} yearRange={yearRange} />
 
-        {/* 指標トグル: PC では水平バー。
-            SP ではチャートカード内に統合表示するためここでは出さない（重複防止）。 */}
-        {!isMobile && (
-          <IndicatorToggleBar
-            variant="pc"
-            activeIndicators={activeIndicators}
-            onToggle={toggleIndicator}
-            onSetAll={setActiveIndicators}
-          />
-        )}
-
-        {/* フィルターボタン（モバイル）— 上下2段組で主アクションを明示 */}
-        {isMobile && (
-          <button
-            onClick={() => setShowFiltersSheet(true)}
-            className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-            style={{
-              minHeight: 56,
-              borderColor: "var(--border)",
-              backgroundColor: "var(--card)",
-            }}
-            aria-haspopup="dialog"
-            aria-expanded={showFiltersSheet}
-          >
-            <span className="flex flex-col items-start">
-              <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>
-                フィルター
-              </span>
-              <span className="text-xs tabular-nums" style={{ color: "var(--muted)" }}>
-                表示期間: {yearRange[0]}–{yearRange[1]}年
-              </span>
-            </span>
-            <span style={{ color: "var(--muted)", fontSize: 18 }} aria-hidden>›</span>
-          </button>
-        )}
-
-        {/* フィルターセクション（PC、xl未満のみ。xl以上は Sidebar に移動） */}
-        {!isMobile && (
-          <div className="xl:hidden">
-            <FilterSection
-              yearRange={yearRange}
-              activeCategories={activeCategories}
-              onYearRangeChange={setYearRange}
-              onYearRangeCommit={setCommittedYearRange}
-              onCategoryToggle={toggleCategory}
-              isMobile={isMobile}
-            />
-          </div>
-        )}
-
-        {/* ボトムシート（モバイル） */}
+        {/* ボトムシート（モバイル） — DOM 位置は固定で fixed 配置のため上に置く */}
         {isMobile && showFiltersSheet && (
           <MobileFiltersSheet
             yearRange={yearRange}
@@ -180,130 +270,59 @@ export function MainView({ initialParams }: MainViewProps) {
           />
         )}
 
-        {/* ビューモードを上位レベルに昇格 + 現在モードの説明（SP/PC両方で表示） */}
-        <div className={`flex items-center gap-2 ${isMobile ? "flex-col items-stretch" : ""}`}>
-          <ViewModeTabs
-            viewMode={viewMode}
-            onChange={setViewMode}
-            isMobile={isMobile}
-            tabpanelId={tabpanelId}
-          />
-          <p
-            className={`text-xs ${isMobile ? "text-center" : ""}`}
-            style={{ color: "var(--muted)" }}
-          >
-            {VIEW_MODE_DESCRIPTIONS[viewMode]}
-          </p>
-          {!isMobile && <div className="flex-1" />}
-          {!isMobile && <ShareButton variant="inline" />}
-        </div>
-
-        {/* Chart / ComparisonView コンテナ
-            SP: 横余白を最小化 + 画面端まで広げる (-mx-2) ことで描画幅 +24px
-            ARIA: role="tabpanel" で ViewModeTabs と紐付け
-            タブ切替の結果（グラフ）を1スクロール以内で見せるため、
-            ブックマーク/CSV/データ表 のツールバーはチャートカードの後ろへ移動。 */}
-        <div
-          id="chart-container"
-          className="rounded-xl border p-2 md:p-4 -mx-2 md:mx-0 scroll-mt-4"
-          style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
-          role="tabpanel"
-          aria-label={VIEW_MODE_DESCRIPTIONS[viewMode]}
-        >
-
-          {viewMode === "chart" ? (
-            <ChartPanel
-              isMobile={isMobile}
-              filteredData={filteredData}
-              effectiveIndicators={activeIndicators}
-              activeCategories={activeCategories}
-              yearRange={yearRange}
-              onToggleIndicator={toggleIndicator}
-            />
-          ) : (
-            <ComparisonView
-              mode={viewMode}
+        {isMobile ? (
+          /* SP レイアウト: 段階的開示
+             1. Hero（上で描画済み）
+             2. チャート ← FV にチャートを上げる
+             3. フィルター（期間調整）
+             4. 分析モードタブ ← チャート直下に下げる
+             5. 解説 / インサイトカード / 関連記事
+             6. ツールバー（CSV/データ表/ブックマーク/履歴） ← 第3層へ */
+          <>
+            {chartContainer}
+            {filterButton}
+            {viewModeBlock}
+            {narrativeBlock}
+            {insightCardsBlock}
+            <RelatedArticles activeIndicators={activeIndicators} yearRange={yearRange} />
+            <AboutAndFAQ />
+            {chartToolbar}
+            {dataTableBlock}
+            <ShareButton variant="block" />
+          </>
+        ) : (
+          /* PC レイアウト: 従来の縦並びを維持 */
+          <>
+            <IndicatorToggleBar
+              variant="pc"
               activeIndicators={activeIndicators}
-              onToggleIndicator={toggleIndicator}
-              primaryIndicator={primaryIndicator}
-              onChangePrimary={setPrimaryIndicator}
-              yearRange={yearRange}
-              activeCategories={activeCategories}
-              isMobile={isMobile}
+              onToggle={toggleIndicator}
+              onSetAll={setActiveIndicators}
             />
-          )}
-        </div>
-
-        {/* モード横断ツールバー（ブックマーク・CSV・データ表）— 二次機能としてチャート後方に配置 */}
-        <ChartToolbar
-          variant={isMobile ? "mobile" : "pc"}
-          activeIndicators={activeIndicators}
-          activeCategories={activeCategories}
-          yearRange={yearRange}
-          showDataTable={showDataTable}
-          onToggleDataTable={() => setShowDataTable(v => !v)}
-          dataTableContainerId={dataTableContainerId}
-        />
-
-        {/* データテーブル（モード横断のアクセシビリティ用代替ビュー） */}
-        {showDataTable && (
-          <div
-            id={dataTableContainerId}
-            className="rounded-xl border p-4"
-            style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
-          >
-            <DataTable data={filteredData} activeIndicators={activeIndicators} />
-          </div>
+            {/* フィルターセクション（PC、xl未満のみ。xl以上は Sidebar に移動） */}
+            <div className="xl:hidden">
+              <FilterSection
+                yearRange={yearRange}
+                activeCategories={activeCategories}
+                onYearRangeChange={setYearRange}
+                onYearRangeCommit={setCommittedYearRange}
+                onCategoryToggle={toggleCategory}
+                isMobile={isMobile}
+              />
+            </div>
+            {viewModeBlock}
+            {chartContainer}
+            {chartToolbar}
+            {dataTableBlock}
+            {narrativeBlock}
+            {insightCardsBlock}
+            {/* 関連記事は xl 以上では Sidebar に集約。xl 未満ではここに表示 */}
+            <div className="xl:hidden">
+              <RelatedArticles activeIndicators={activeIndicators} yearRange={yearRange} />
+            </div>
+            <AboutAndFAQ />
+          </>
         )}
-
-        {/* 自動解説（チャート直下に昇格）— 段落ごとに <p>、insight は強調枠 */}
-        {narrative.paragraphs.length > 0 && (
-          <div
-            className="rounded-xl border px-5 py-4 space-y-2"
-            style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
-            aria-labelledby="narrative-heading"
-          >
-            <p
-              id="narrative-heading"
-              className="text-xs font-medium"
-              style={{ color: "var(--link)" }}
-            >
-              この期間のポイント
-            </p>
-            {narrative.paragraphs.map((p, i) => (
-              <p
-                key={i}
-                className="text-sm leading-relaxed"
-                style={{ color: "var(--text)" }}
-              >
-                {p}
-              </p>
-            ))}
-            {narrative.insight && (
-              <p
-                className="text-sm leading-relaxed font-semibold mt-3 pl-3 border-l-2"
-                style={{ color: "var(--link)", borderColor: "var(--link)" }}
-              >
-                {narrative.insight}
-              </p>
-            )}
-          </div>
-        )}
-
-        <InsightCards
-          data={filteredData}
-          yearRange={yearRange}
-          activeIndicators={activeIndicators}
-        />
-
-        {/* 関連記事は xl 以上では Sidebar に集約。xl 未満ではここに表示 */}
-        <div className="xl:hidden">
-          <RelatedArticles activeIndicators={activeIndicators} yearRange={yearRange} />
-        </div>
-
-        <AboutAndFAQ />
-
-        {isMobile && <ShareButton variant="block" />}
 
         <DashboardFooter />
         </div>

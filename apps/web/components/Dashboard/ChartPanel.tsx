@@ -42,16 +42,6 @@ export function ChartPanel({
 
   return (
     <>
-      {/* SP では指標セレクタをチャートカード内に表示（PC では上部 IndicatorToggleBar を利用） */}
-      {isMobile && onToggleIndicator && (
-        <IndicatorChipSelector
-          mode="multi"
-          selected={effectiveIndicators}
-          onToggle={onToggleIndicator}
-          compact
-        />
-      )}
-
       {/* 推移ビュー固有の表示パラメータ（左: 比較線、右: 軸スケール） */}
       <div
         className="flex items-center gap-3 mb-3 flex-wrap"
@@ -136,6 +126,19 @@ export function ChartPanel({
           isMobile={isMobile}
         />
       </div>
+
+      {/* SP では指標セレクタをチャート＋政権帯の直下に配置（PC では上部 IndicatorToggleBar を利用）。
+          デフォルト2指標が重なったチャートを先に見せ、追加は触りたい人だけが展開する段階的開示。 */}
+      {isMobile && onToggleIndicator && (
+        <div className="mt-3">
+          <IndicatorChipSelector
+            mode="multi"
+            selected={effectiveIndicators}
+            onToggle={onToggleIndicator}
+            compact
+          />
+        </div>
+      )}
     </>
   );
 }

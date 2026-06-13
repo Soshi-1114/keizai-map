@@ -9,32 +9,47 @@ test.describe("SP UI improvements (390px)", () => {
     await page.waitForLoadState("networkidle");
   });
 
-  test("P0-1: 指標セレクタは1箇所だけ（チャートカード内）", async ({ page }) => {
-    // ページ上部の IndicatorToggleBar は SP では出さない (重複防止)
-    // 「重ねて表示する指標」グループはチャートカード内に1つだけ存在
-    const groups = page.getByRole("group", { name: "重ねて表示する指標" });
-    await expect(groups).toHaveCount(1);
+  test("P0-1: 指標セレクタは初期状態で折りたたまれている（チャートカード内に1つだけ）", async ({ page }) => {
+    // SP では初期状態でチップ群は畳まれ「他の指標を重ねる」ボタンのみ
+    const tabpanel = page.getByRole("tabpanel");
+    const trigger = tabpanel.getByRole("button", { name: /他の指標を重ねる/ });
+    await expect(trigger).toBeVisible();
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
 
-    // そのグループがチャートカード (tabpanel) の子孫であることを確認
-    const groupInChart = page
-      .getByRole("tabpanel")
-      .getByRole("group", { name: "重ねて表示する指標" });
-    await expect(groupInChart).toBeVisible();
+    // 折りたたみ状態では「重ねて表示する指標」グループは表示されない
+    await expect(
+      page.getByRole("group", { name: "重ねて表示する指標" }),
+    ).toHaveCount(0);
   });
 
-  test("P0-1: 指標を選ぶと即時にチェックアイコンが付く", async ({ page }) => {
-    // tax (税収) を選択して aria-pressed=true になることを確認
-    const taxBtn = page
-      .getByRole("tabpanel")
-      .getByRole("button", { name: "税収" });
+  test("P0-1: 展開して指標を選ぶと即時にチェックアイコンが付く", async ({ page }) => {
+    const tabpanel = page.getByRole("tabpanel");
+    // 「他の指標を重ねる」ボタンを押して全9指標を展開
+    await tabpanel.getByRole("button", { name: /他の指標を重ねる/ }).click();
+    const taxBtn = tabpanel.getByRole("button", { name: "税収" });
     const initial = await taxBtn.getAttribute("aria-pressed");
     await taxBtn.click();
     const next = await taxBtn.getAttribute("aria-pressed");
     expect(initial).not.toBe(next);
   });
 
-  test("P0-2: タブとグラフの距離 - チャートカードがタブ直下に来る", async ({ page }) => {
-    // ViewModeTabs の bottom と chart-container の top が近い (1スクロール以内)
+  test("P0-1 (FV): デフォルト2指標が選択された状態でチャートがFVに見える", async ({ page }) => {
+    // 「2/9 表示中」がトリガーボタンに表示されることで、デフォルト2指標が
+    // 重なって描画されていることを検証
+    const tabpanel = page.getByRole("tabpanel");
+    const trigger = tabpanel.getByRole("button", { name: /他の指標を重ねる/ });
+    await expect(trigger).toContainText("2/9");
+
+    // チャートカードがビューポート上端から FV (844px) 内に入っている
+    const chartBox = await page.locator("#chart-container").boundingBox();
+    expect(chartBox).not.toBeNull();
+    if (chartBox) {
+      expect(chartBox.y).toBeLessThan(844);
+    }
+  });
+
+  test("P1-2: 分析モードタブがチャートカードの直下に配置される", async ({ page }) => {
+    // SP では tabs が chart-container の下に来る
     const tabsBox = await page
       .getByRole("tablist", { name: "分析モードを選択" })
       .boundingBox();
@@ -42,51 +57,47 @@ test.describe("SP UI improvements (390px)", () => {
     expect(tabsBox).not.toBeNull();
     expect(chartBox).not.toBeNull();
     if (tabsBox && chartBox) {
-      // タブ下端からチャート上端までの距離
-      const gap = chartBox.y - (tabsBox.y + tabsBox.height);
-      // タブ説明文(1行)分の余白程度に収まるはず — 100px以下
-      expect(gap).toBeLessThan(100);
+      // タブはチャートの下端より下にある
+      expect(tabsBox.y).toBeGreaterThan(chartBox.y + chartBox.height - 4);
     }
   });
 
-  test("P0-2: ChartToolbar はチャートカードの後ろにある", async ({ page }) => {
+  test("P0-3: ChartToolbar (CSV) は第3層 — 解説記事より下にある", async ({ page }) => {
     const chartBox = await page.locator("#chart-container").boundingBox();
     const csvBtn = page.getByRole("button", { name: /CSV/ });
     const csvBox = await csvBtn.first().boundingBox();
     expect(chartBox).not.toBeNull();
     expect(csvBox).not.toBeNull();
     if (chartBox && csvBox) {
-      // CSV ボタンはチャートカードの下端より下にある
-      expect(csvBox.y).toBeGreaterThan(chartBox.y + chartBox.height - 4);
+      // CSV ボタンはチャートカードの下端よりずっと下にある
+      expect(csvBox.y).toBeGreaterThan(chartBox.y + chartBox.height);
     }
   });
 
-  test("P1-1: 選択中チップに ✓ アイコンが付く", async ({ page }) => {
-    // 「実質賃金」はデフォルト選択なのでチェックアイコンが見える
-    const wageBtn = page
-      .getByRole("tabpanel")
-      .getByRole("button", { name: "実質賃金" });
+  test("P1-1: 展開後、選択中チップに ✓ アイコンが付く", async ({ page }) => {
+    const tabpanel = page.getByRole("tabpanel");
+    await tabpanel.getByRole("button", { name: /他の指標を重ねる/ }).click();
+    const wageBtn = tabpanel.getByRole("button", { name: "実質賃金" });
     await expect(wageBtn).toHaveAttribute("aria-pressed", "true");
-    // lucide-react の Check は <svg class="lucide-check">
     const svg = wageBtn.locator("svg.lucide-check");
     await expect(svg).toBeVisible();
   });
 
-  test("P2-1: もっと見るは展開/折りたたみがトグルできる", async ({ page }) => {
+  test("P0-2: 「他の指標を重ねる」は展開/折りたたみがトグルできる", async ({ page }) => {
     const tabpanel = page.getByRole("tabpanel");
-    // 折りたたみ状態: 「もっと見る」ボタンが存在
-    const moreBtn = tabpanel.getByRole("button", { name: /もっと見る/ });
-    await expect(moreBtn).toBeVisible();
-    await expect(moreBtn).toHaveAttribute("aria-expanded", "false");
-    await moreBtn.click();
-    // 展開後はラベルが「閉じる」になる
-    const closeBtn = tabpanel.getByRole("button", { name: /閉じる/ });
+    // 折りたたみ状態: 「他の指標を重ねる」ボタンが存在
+    const trigger = tabpanel.getByRole("button", { name: /他の指標を重ねる/ });
+    await expect(trigger).toBeVisible();
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await trigger.click();
+    // 展開後はラベルが「指標選択を閉じる」になる
+    const closeBtn = tabpanel.getByRole("button", { name: /指標選択を閉じる/ });
     await expect(closeBtn).toBeVisible();
     await expect(closeBtn).toHaveAttribute("aria-expanded", "true");
     // もう一度押すと折りたたまれる
     await closeBtn.click();
     await expect(
-      tabpanel.getByRole("button", { name: /もっと見る/ }),
+      tabpanel.getByRole("button", { name: /他の指標を重ねる/ }),
     ).toHaveAttribute("aria-expanded", "false");
   });
 
