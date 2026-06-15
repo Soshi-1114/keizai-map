@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/articles/shunto-2025-real-impact" },
   title: articleSeoTitle(SLUG),
   description:
-    "2025年春闘の平均賃上げ率は5%超。33年ぶりの高水準だが、物価上昇と社会保険料増加でどれだけ手取りに反映されるのか。過去30年の賃上げ率と実質賃金の関係をデータで検証する。",
+    "2025年春闘の平均賃上げ率は5.25%。33年ぶりの高水準だが、CPIが123.7まで上昇し、実質賃金は2024年の99.2から2025年の97.9へ低下。物価と社会保険料が賃上げを打ち消した実態をデータで検証する。",
   openGraph: articleOpenGraph("shunto-2025-real-impact"),
 };
 
@@ -27,15 +27,15 @@ export default function Shunto2025Page() {
   const faqJsonLd = generateFaqPageJsonLd([
     {
       question: "2025年春闘の賃上げ率はいくらですか？",
-      answer: "連合がまとめた2025年春闘の平均賃上げ率は5.46%（5月最終集計、5,000円以上）で、前年（5.10%）に続き2年連続で5%超えを達成しました。これは1991年（5.66%）以来、約34年ぶりの高水準です。",
+      answer: "連合がまとめた2025年春闘の平均賃上げ率は5.25%（最終集計）で、前年（5.10%）に続き2年連続で5%超えを達成しました。これは1991年（5.66%）以来、約34年ぶりの高水準です。",
     },
     {
-      question: "賃上げが実質賃金にどれだけ反映されますか？",
-      answer: "2025年は春闘5.46%、CPI上昇率は約+2.5%予測のため、実質賃金ベースでは約+2.5%増の見込みです。ただし社会保険料率も毎年上昇しており、実際に家計に届く正味の手取り改善は1.5〜2%程度にとどまる可能性が高いです。",
+      question: "賃上げが実質賃金にどれだけ反映されましたか？",
+      answer: "2025年は春闘5.25%でしたが、CPIは119.9→123.7（+3.2%）と上昇し、実質賃金指数は2024年99.2から2025年97.9へ低下しました。社会保険料率の上昇（18.5%→18.6%）も加わり、賃上げが手取りベースでほぼ打ち消されたのが実態です。",
     },
     {
       question: "中小企業や非正規労働者にも賃上げは波及していますか？",
-      answer: "連合データは主に労組のある大企業（5.46%）の数字です。中小企業は約4.5%、非正規労働者は約3〜4%、公務員（人事院勧告）は約2.7%とされ、雇用者の約7割を占める中小企業や約4割の非正規労働者への満額反映が今後の焦点です。",
+      answer: "連合データは主に労組のある大企業（5.25%）の数字です。中小企業は約4.5%、非正規労働者は約3〜4%、公務員（人事院勧告）は約2.7%とされ、雇用者の約7割を占める中小企業や約4割の非正規労働者への満額反映が今後の焦点です。",
     },
     {
       question: "この賃上げの流れはいつまで続きますか？",
@@ -52,19 +52,19 @@ export default function Shunto2025Page() {
       <ArticleLayout
         slug={SLUG}
         title="2025年 春闘・賃上げの実態 ─ 過去30年で最高水準だが家計に届くか"
-        description="2025年春闘の平均賃上げ率は5%超。33年ぶりの高水準だが、物価上昇と社会保険料増加でどれだけ手取りに反映されるのか。過去30年の賃上げ率と実質賃金の関係をデータで検証する。"
+        description="2025年春闘の平均賃上げ率は5.25%。33年ぶりの高水準だが、CPIが123.7まで上昇し、実質賃金は2024年の99.2から2025年の97.9へ低下。物価と社会保険料が賃上げを打ち消した実態をデータで検証する。"
         readingTime={6}
         tags={["春闘", "賃上げ", "実質賃金"]}
       >
         <Section heading="33年ぶりの大型賃上げ、その実態">
           <p>
-            連合がまとめた2025年春闘の平均賃上げ率は<strong>5.46%</strong>（5月最終集計、5,000円以上）。
+            連合がまとめた2025年春闘の平均賃上げ率は<strong>5.25%</strong>（最終集計）。
             前年（5.10%）に続き、<strong>2年連続で5%超え</strong>を達成した。
             これは1991年（5.66%）以来、約34年ぶりの高水準だ。
           </p>
           <p>
-            一見、明るいニュースだが「実質的に家計に届くか」は別問題。
-            物価上昇・社会保険料増・税負担増を差し引いた<strong>実質手取りベース</strong>で、本当に増えているのか検証する。
+            一見、明るいニュースだが「実質的に家計に届いたか」を見ると、実質賃金指数は2024年の99.2から2025年の97.9へ低下した。
+            物価上昇・社会保険料増・税負担増が、せっかくの賃上げを打ち消した実態を検証する。
           </p>
         </Section>
 
@@ -76,7 +76,7 @@ export default function Shunto2025Page() {
               { label: "2013年", value: "1.80%", note: "アベノミクス開始",    color: "#D97706" },
               { label: "2020年", value: "2.00%", note: "コロナ直前",          color: "#D97706" },
               { label: "2024年", value: "5.10%", note: "33年ぶり高水準",      color: "#22c55e" },
-              { label: "2025年", value: "5.46%", note: "2年連続5%超え",       color: "#22c55e" },
+              { label: "2025年", value: "5.25%", note: "2年連続5%超え",       color: "#22c55e" },
             ]}
           />
           <p>
@@ -106,7 +106,7 @@ export default function Shunto2025Page() {
                   { y: 2022, sh: "2.20%", cpi: "+2.5%", rw: "97.8（+0.7）" },
                   { y: 2023, sh: "3.58%", cpi: "+3.0%", rw: "98.5（+0.7）" },
                   { y: 2024, sh: "5.10%", cpi: "+2.7%", rw: "99.2（+0.7）" },
-                  { y: 2025, sh: "5.46%", cpi: "+2.5%予測", rw: "≒100.0（+0.8予測）" },
+                  { y: 2025, sh: "5.25%", cpi: "+3.2%", rw: "97.9（▲1.3）" },
                 ].map((r) => (
                   <tr key={r.y} className="border-b last:border-0" style={{ borderColor: "var(--border)" }}>
                     <td className="p-3 font-medium" style={{ color: "var(--text)" }}>{r.y}年</td>
@@ -119,8 +119,9 @@ export default function Shunto2025Page() {
             </table>
           </div>
           <p>
-            5%の賃上げから2.5%の物価上昇を引いて、実質では+2.5%程度になる計算。
-            しかし<strong>春闘の対象は大企業中心</strong>であり、中小企業や非正規労働者には満額反映されないことが多い。
+            春闘5.25%に対しCPIは3.2%上昇したため、実質賃金ベースでは1〜2%程度の伸びが期待されたが、
+            実際の実質賃金指数は2024年99.2から2025年97.9へと低下した。
+            <strong>春闘の対象は大企業中心</strong>で、中小企業や非正規労働者には満額反映されにくい構造的な格差が、マクロ平均を下押ししている。
           </p>
         </Section>
 
@@ -148,7 +149,7 @@ export default function Shunto2025Page() {
           </p>
           <div className="rounded-xl border p-4 space-y-3 my-4" style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}>
             {[
-              { title: "大企業（労組あり）", val: "5.46%", note: "連合データ" },
+              { title: "大企業（労組あり）", val: "5.25%", note: "連合データ" },
               { title: "中小企業",          val: "≒4.5%",  note: "日商の見通し" },
               { title: "非正規労働者",      val: "≒3〜4%",  note: "最低賃金引上げと連動" },
               { title: "公務員（人事院勧告）", val: "≒2.7%", note: "やや低めに連動" },
@@ -192,9 +193,9 @@ export default function Shunto2025Page() {
 
         <Section heading="まとめ">
           <ul className="list-disc pl-5 space-y-1 my-3 text-sm" style={{ color: "var(--text)" }}>
-            <li>2025年春闘の賃上げ率5.46%は33年ぶりの高水準</li>
-            <li>物価上昇分を引いた実質賃金は約2.5%増の見込み</li>
-            <li>社会保険料の上昇で正味の手取り改善は1.5〜2%程度</li>
+            <li>2025年春闘の賃上げ率5.25%は33年ぶりの高水準</li>
+            <li>しかし実質賃金指数は99.2→97.9へ低下、物価上昇が賃上げを打ち消した</li>
+            <li>社会保険料率も18.5%→18.6%へ上昇し、手取りベースの改善は限定的</li>
             <li>中小企業・非正規労働者への波及度合いが今後の焦点</li>
             <li>持続性は人手不足・物価動向によって変動する</li>
           </ul>
@@ -202,8 +203,8 @@ export default function Shunto2025Page() {
         <Section heading="関連記事">
           <ul className="list-disc pl-5 space-y-1">
             <li><Link href="/articles/real-wages" className="underline" style={{ color: "var(--link)" }}>実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか</Link></li>
-            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料30年の増加</Link></li>
-            <li><Link href="/articles/inflation-cycles-japan" className="underline" style={{ color: "var(--link)" }}>物価高はいつまで続く？─ 過去30年の4つのインフレ局面を分析</Link></li>
+            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料35年の増加</Link></li>
+            <li><Link href="/articles/inflation-cycles-japan" className="underline" style={{ color: "var(--link)" }}>物価高はいつまで続く？─ 過去35年の4つのインフレ局面を分析</Link></li>
           </ul>
         </Section>
       </ArticleLayout>

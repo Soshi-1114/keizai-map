@@ -9,14 +9,14 @@ const SLUG = "declining-birthrate-economy";
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/declining-birthrate-economy" },
   title: articleSeoTitle(SLUG),
-  description: "1990年に121万人いた出生数は2024年に73万人台へ激減。人口減少は労働力不足を招き、社会保険料の上昇と国債残高の膨張を加速させる。少子化が経済に与える連鎖をデータで追う。",
+  description: "1990年に121万人いた出生数は2025年に70.6万人へ激減。人口減少は労働力不足を招き、社会保険料の上昇と国債残高の膨張を加速させる。少子化が経済に与える連鎖をデータで追う。",
   openGraph: articleOpenGraph("declining-birthrate-economy"),
 };
 
 export default function DecliningBirthrateEconomyPage() {
   const articleJsonLd = generateArticleJsonLd({
     title: "少子化と経済の悪循環 ─ 出生数激減が家計と社会保障に与える影響",
-    description: "1990年に121万人いた出生数は2024年に73万人台へ激減。少子化が経済に与える連鎖をデータで追う。",
+    description: "1990年に121万人いた出生数は2025年に70.6万人へ激減。少子化が経済に与える連鎖をデータで追う。",
     slug: SLUG,
     readingTime: 6,
     tags: ["少子化", "出生数", "社会保障"],
@@ -25,12 +25,12 @@ export default function DecliningBirthrateEconomyPage() {
   const organizationJsonLd = generateOrganizationJsonLd();
   const faqJsonLd = generateFaqPageJsonLd([
     {
-      question: "日本の出生数は34年でどれくらい減りましたか？",
-      answer: "1990年に約121万人だった出生数は、2024年には73万人台にまで落ち込み、34年間でおよそ40%減少しました。2016年に初めて100万人を割り込み、その後も減少が加速しており、過去最少記録が更新され続けています。",
+      question: "日本の出生数は35年でどれくらい減りましたか？",
+      answer: "1990年に約121万人だった出生数は、2025年には70.6万人にまで落ち込み、35年間でおよそ42%減少しました。2016年に初めて100万人を割り込み、その後も減少が加速しており、過去最少記録が更新され続けています。",
     },
     {
       question: "少子化は経済にどんな影響を与えますか？",
-      answer: "①労働力不足で経済全体のアウトプットが縮小、②支える側（現役世代）が減って社会保険料負担が増加（1990年10.8%→2024年18.5%）、③社会保障費を国債発行で補填するため国債残高が膨張（1990年180兆円→2024年1,170兆円超）、という3つの連鎖が起きます。",
+      answer: "①労働力不足で経済全体のアウトプットが縮小、②支える側（現役世代）が減って社会保険料負担が増加（1990年10.8%→2025年18.6%）、③社会保障費を国債発行で補填するため国債残高が膨張（1990年180兆円→2025年度末1,128兆円）、という3つの連鎖が起きます。",
     },
     {
       question: "少子化の原因は何ですか？",
@@ -38,7 +38,7 @@ export default function DecliningBirthrateEconomyPage() {
     },
     {
       question: "少子化と社会保障・財政の関係はどうなっていますか？",
-      answer: "出生数▼40%、社会保険料負担率+7.7pt、国債残高+550%という3つの数字は独立した問題ではなく、少子化を共通の根とする現象です。財政悪化が社会保険料引き上げを招き、子育てコストが上がってさらに少子化が進む悪循環が形成されている可能性があります。",
+      answer: "出生数▼42%、社会保険料負担率+7.8pt、国債残高+527%という3つの数字は独立した問題ではなく、少子化を共通の根とする現象です。財政悪化が社会保険料引き上げを招き、子育てコストが上がってさらに少子化が進む悪循環が形成されている可能性があります。",
     },
   ]);
 
@@ -51,14 +51,14 @@ export default function DecliningBirthrateEconomyPage() {
       <ArticleLayout
         slug={SLUG}
         title="少子化と経済の悪循環 ─ 出生数激減が家計と社会保障に与える影響"
-        description="1990年に121万人いた出生数は2024年に73万人台へ激減。人口減少は労働力不足を招き、社会保険料の上昇と国債残高の膨張を加速させる。少子化が経済に与える連鎖をデータで追う。"
+        description="1990年に121万人いた出生数は2025年に70.6万人へ激減。人口減少は労働力不足を招き、社会保険料の上昇と国債残高の膨張を加速させる。少子化が経済に与える連鎖をデータで追う。"
         readingTime={6}
         tags={["少子化", "出生数", "社会保障"]}
       >
-        <Section heading="出生数の激減：34年で4割減">
+        <Section heading="出生数の激減：35年で4割減">
           <p>
             1990年、日本で生まれた子どもは約121万人だった。
-            それが2024年には73万人台にまで落ち込み、34年間でおよそ40%減少した。
+            それが2025年には70.6万人にまで落ち込み、35年間でおよそ42%減少した。
           </p>
 
           <DataBox
@@ -66,13 +66,14 @@ export default function DecliningBirthrateEconomyPage() {
               { label: "1990年", value: "121万人", color: "#F59E0B" },
               { label: "2000年", value: "119万人", color: "#F59E0B" },
               { label: "2010年", value: "107万人", color: "#D97706" },
-              { label: "2024年", value: "73万人台", color: "#ef4444" },
+              { label: "2024年", value: "73.0万人", color: "#ef4444" },
+              { label: "2025年", value: "70.6万人", note: "過去最少", color: "#ef4444" },
             ]}
           />
 
           <p>
             2016年には初めて100万人を割り込み、その後も減少が加速している。
-            2022年の出生数は77.1万人、2024年には73万人台へ落ち込み、過去最少記録が更新され続けている。
+            2022年の出生数は77.1万人、2024年に73.0万人、2025年には70.6万人へ落ち込み、過去最少記録が更新され続けている。
           </p>
         </Section>
 
@@ -93,12 +94,12 @@ export default function DecliningBirthrateEconomyPage() {
               {
                 num: "②",
                 title: "社会保険料の上昇 → 手取りの減少",
-                desc: "支える側（現役世代）が減り、受け取る側（高齢者）が増えると、一人当たりの社会保険料負担が増加する。1990年の10.8%→2024年の18.5%はその結果だ。",
+                desc: "支える側（現役世代）が減り、受け取る側（高齢者）が増えると、一人当たりの社会保険料負担が増加する。1990年の10.8%→2025年の18.6%はその結果だ。",
               },
               {
                 num: "③",
                 title: "国債残高の膨張 → 将来世代への負担",
-                desc: "社会保障費の増大を税収だけで賄えない場合、国債発行で補填することになる。国債残高は1990年の180兆円から2024年には1,170兆円を超えた。",
+                desc: "社会保障費の増大を税収だけで賄えない場合、国債発行で補填することになる。国債残高は1990年の180兆円から2025年度末には1,128兆円規模に達した。",
               },
             ].map(({ num, title, desc }) => (
               <div key={num} className="flex gap-3">
@@ -120,9 +121,9 @@ export default function DecliningBirthrateEconomyPage() {
           </p>
           <DataBox
             items={[
-              { label: "出生数減少率", value: "▼40%", note: "121→73万人（1990→2024）", color: "#ef4444" },
-              { label: "社会保険料増加", value: "+7.7pt", note: "10.8→18.5%", color: "#ef4444" },
-              { label: "国債残高増加", value: "+550%", note: "180→1,170兆円", color: "#ef4444" },
+              { label: "出生数減少率", value: "▼42%", note: "121→70.6万人（1990→2025）", color: "#ef4444" },
+              { label: "社会保険料増加", value: "+7.8pt", note: "10.8→18.6%", color: "#ef4444" },
+              { label: "国債残高増加", value: "+527%", note: "180→1,128兆円", color: "#ef4444" },
             ]}
           />
           <p>
@@ -157,8 +158,8 @@ export default function DecliningBirthrateEconomyPage() {
         </Section>
         <Section heading="関連記事">
           <ul className="list-disc pl-5 space-y-1">
-            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料30年の増加</Link></li>
-            <li><Link href="/articles/national-debt-1000trillion" className="underline" style={{ color: "var(--link)" }}>国債残高1,000兆円超 ─ 日本の財政赤字をデータで理解する</Link></li>
+            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料35年の増加</Link></li>
+            <li><Link href="/articles/national-debt-1000trillion" className="underline" style={{ color: "var(--link)" }}>国債残高1,100兆円超 ─ 日本の財政赤字をデータで理解する</Link></li>
             <li><Link href="/articles/generation-economic-comparison" className="underline" style={{ color: "var(--link)" }}>氷河期世代 vs Z世代 ─ 経済指標で見る「生まれた時代の不公平」</Link></li>
           </ul>
         </Section>

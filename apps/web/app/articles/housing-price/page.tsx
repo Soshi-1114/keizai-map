@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function HousingPricePage() {
   const articleJsonLd = generateArticleJsonLd({
-    title: "なぜ若者は家を買えないのか ─ 住宅価格と賃金の34年をデータで見る",
+    title: "なぜ若者は家を買えないのか ─ 住宅価格と賃金の35年をデータで見る",
     description: "バブル崩壊で一度は下落した住宅価格は、アベノミクス以降に再上昇。実質賃金は横ばいのまま。住宅価格指数と賃金の動きをデータで読み解く。",
     slug: SLUG,
     readingTime: 5,
@@ -27,7 +27,7 @@ export default function HousingPricePage() {
   const faqJsonLd = generateFaqPageJsonLd([
     {
       question: "バブル崩壊後、住宅価格はどう変動しましたか？",
-      answer: "1991年のバブル崩壊から2012年頃にかけて、住宅価格指数は1990年比で約36%下落しました（指数100→64.2）。その後、アベノミクスによる低金利・都市再開発・外国人投資家の流入で、特に都市部を中心に価格が回復傾向に転じています。",
+      answer: "1991年のバブル崩壊から2012年頃にかけて、住宅価格指数は1990年比で約36%下落しました（指数100→63.7）。その後、アベノミクスによる低金利・都市再開発・外国人投資家の流入で、特に都市部を中心に価格が回復し、2025年は指数68.8まで戻しています。",
     },
     {
       question: "なぜ若者は家を買いにくいのですか？",
@@ -51,12 +51,12 @@ export default function HousingPricePage() {
       <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
-        title="なぜ若者は家を買えないのか ─ 住宅価格と賃金の34年をデータで見る"
+        title="なぜ若者は家を買えないのか ─ 住宅価格と賃金の35年をデータで見る"
         description="バブル崩壊で一度は下落した住宅価格は、アベノミクス以降に再上昇。一方で実質賃金は横ばいのまま。住宅価格指数と賃金・金利の動きを重ねてデータで読み解く。"
         readingTime={5}
         tags={["住宅価格", "不動産", "賃金"]}
       >
-        <Section heading="住宅価格指数の34年間">
+        <Section heading="住宅価格指数の35年間">
           <p>
             KeizaiMapでは国土交通省「不動産価格指数」をもとに、1990年を100とした住宅価格指数を確認できる。
             バブル崩壊後の急落から、アベノミクス期以降の回復まで、
@@ -68,14 +68,14 @@ export default function HousingPricePage() {
               { year: 1990, key: "housing", label: "1990年（バブル）" },
               { year: 2000, key: "housing", label: "2000年" },
               { year: 2012, key: "housing", label: "2012年（底値圏）" },
-              { year: 2024, key: "housing", label: "2024年" },
+              { year: 2025, key: "housing", label: "2025年（最新）" },
             ]}
           />
 
           <p>
-            バブル崩壊（1991年）から2012年頃にかけて、住宅価格指数は1990年比で約36%下落した（指数 100→64.2）。
+            バブル崩壊（1991年）から2012年頃にかけて、住宅価格指数は1990年比で約36%下落した（指数 100→63.7）。
             その後、アベノミクスによる低金利・都市再開発・外国人投資家の流入などを背景に、
-            特に都市部（東京・大阪）を中心に価格が回復傾向に転じた。
+            特に都市部（東京・大阪）を中心に価格が回復し、2025年は指数68.8まで戻している。
           </p>
         </Section>
 
@@ -87,9 +87,9 @@ export default function HousingPricePage() {
           <LiveDataBox
             items={[
               { year: 1990, key: "wage", label: "賃金 1990年" },
-              { year: 2024, key: "wage", label: "賃金 2024年" },
+              { year: 2025, key: "wage", label: "賃金 2025年" },
               { year: 1990, key: "housing", label: "住宅 1990年" },
-              { year: 2024, key: "housing", label: "住宅 2024年" },
+              { year: 2025, key: "housing", label: "住宅 2025年" },
             ]}
           />
 

@@ -35,7 +35,7 @@ export default function AverageIncomeTrapPage() {
     },
     {
       question: "日本の平均年収はピークからどれくらい下がっていますか？",
-      answer: "平均年収は2000年の約461万円がピークで、25年経ってもその水準を超えていません。2010年のリーマン後には約412万円まで下落し、2023年は458万円とピーク未回復のままです。これが「給料が上がらない国」と呼ばれる根拠の一つです。",
+      answer: "平均年収は2000年の約461万円がピークで、25年経ってもその水準を超えていません。2010年のリーマン後には約412万円まで下落し、2024年は約460万円と賃上げを受けて回復し、ピーク並みまで戻ってきました。ただし物価で実質化すると依然1990年水準を下回ります。",
     },
     {
       question: "なぜメディアは中央値ではなく平均値を報道するのですか？",
@@ -85,7 +85,7 @@ export default function AverageIncomeTrapPage() {
           </div>
         </Section>
 
-        <Section heading="日本の所得分布（2023年）">
+        <Section heading="日本の所得分布（2024年）">
           <p>
             国税庁「民間給与実態統計調査」のデータをもとに、3つの統計量を比較する。
           </p>
@@ -154,12 +154,13 @@ export default function AverageIncomeTrapPage() {
               { label: "1990年 平均年収", value: "≒425万円", color: "#4F8EF7" },
               { label: "2000年 平均年収", value: "≒461万円", note: "ピーク",   color: "#4F8EF7" },
               { label: "2010年 平均年収", value: "≒412万円", note: "リーマン後", color: "#ef4444" },
-              { label: "2023年 平均年収", value: "458万円",   note: "ピーク未回復", color: "#D97706" },
+              { label: "2024年 平均年収", value: "≒460万円", note: "ピーク水準まで戻る", color: "#D97706" },
             ]}
           />
           <p>
-            <strong>平均年収は2000年がピーク</strong>で、25年経ってもその水準を超えていない。
-            これが「給料が上がらない国」と呼ばれる根拠の一つだ。
+            名目の<strong>平均年収は2024年に2000年のピーク水準まで回復</strong>した。
+            しかしCPIが100→123.7まで上昇しているため、実質では1990年水準を依然下回る。
+            これが「給料は名目で増えたが、生活が楽にならない」と感じる根拠だ。
           </p>
         </Section>
 
@@ -188,8 +189,8 @@ export default function AverageIncomeTrapPage() {
         </Section>
         <Section heading="関連記事">
           <ul className="list-disc pl-5 space-y-1">
-            <li><Link href="/articles/income-inequality-japan" className="underline" style={{ color: "var(--link)" }}>格差は本当に広がっているのか？─ ジニ係数と所得分布で見る30年</Link></li>
-            <li><Link href="/articles/real-take-home-pay-30years" className="underline" style={{ color: "var(--link)" }}>年収500万でも30年前の年収300万に負けている？─ 実質手取りで見る30年</Link></li>
+            <li><Link href="/articles/income-inequality-japan" className="underline" style={{ color: "var(--link)" }}>格差は本当に広がっているのか？─ ジニ係数と所得分布で見る35年</Link></li>
+            <li><Link href="/articles/real-take-home-pay-30years" className="underline" style={{ color: "var(--link)" }}>年収500万でも30年前の年収300万に負けている？─ 実質手取りで見る35年</Link></li>
             <li><Link href="/articles/generation-economic-comparison" className="underline" style={{ color: "var(--link)" }}>氷河期世代 vs Z世代 ─ 経済指標で見る「生まれた時代の不公平」</Link></li>
           </ul>
         </Section>

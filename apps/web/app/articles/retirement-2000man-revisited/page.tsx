@@ -10,14 +10,14 @@ export const metadata: Metadata = {
   alternates: { canonical: "/articles/retirement-2000man-revisited" },
   title: articleSeoTitle(SLUG),
   description:
-    "2019年に話題となった「老後2,000万円問題」。報告書から5年経った2024年、物価上昇と社会保険料増加を反映すると、必要額はいくらまで膨らんでいるのか。データで再試算する。",
+    "2019年に話題となった「老後2,000万円問題」。報告書から6年経った2025年、CPIが112.4→123.7（+10%）、社会保険料率も17.5%→18.6%へ上昇。必要額はいくらまで膨らんでいるのか、データで再試算する。",
   openGraph: articleOpenGraph("retirement-2000man-revisited"),
 };
 
 export default function Retirement2000ManPage() {
   const articleJsonLd = generateArticleJsonLd({
     title: "老後2,000万円問題は今いくら必要？─ 物価で再計算してみた",
-    description: "2019年の試算を2024年物価で再計算。",
+    description: "2019年の試算を2025年物価で再計算。CPI +10%・社保 +1.1pt 反映で約2,500万円必要。",
     slug: SLUG,
     readingTime: 7,
     tags: ["老後資金", "年金", "老後2000万円"],
@@ -30,12 +30,12 @@ export default function Retirement2000ManPage() {
       answer: "2019年の金融庁報告書「高齢社会における資産形成・管理」で示された試算です。夫65歳以上・妻60歳以上の無職世帯モデルで、月の実収入20.9万円・実支出26.4万円・不足5.5万円となり、30年で約1,980万円不足するという計算が一人歩きしました。",
     },
     {
-      question: "2024年に再計算するといくら必要ですか？",
-      answer: "2017年からのCPI上昇分（約7%）と社会保険料増、マクロ経済スライドによる年金抑制を反映すると、月収入21.5万円・月支出28.2万円・月不足6.7万円、30年で約2,400万円が必要という計算になります。5年で約400万円増加しました。",
+      question: "2025年に再計算するといくら必要ですか？",
+      answer: "2017年からのCPI上昇分（約10%）と社会保険料増、マクロ経済スライドによる年金抑制を反映すると、月収入21.7万円・月支出29.0万円・月不足7.3万円、30年で約2,600万円が必要という計算になります。6年で約600万円増加しました。",
     },
     {
-      question: "2,400万円を貯めるには毎月いくら積み立てればよいですか？",
-      answer: "運用利回りで大きく変わります。0%（預金）で月6.7万円、1%（債券）で月5.7万円、3%（バランス型）で月4.0万円、5%（株式中心）で月2.9万円、7%（S&P500想定）で月2.0万円。運用利回りで月積立額は3倍以上変わります。",
+      question: "2,600万円を貯めるには毎月いくら積み立てればよいですか？",
+      answer: "運用利回りで大きく変わります。0%（預金）で月7.3万円、1%（債券）で月6.2万円、3%（バランス型）で月4.3万円、5%（株式中心）で月3.1万円、7%（S&P500想定）で月2.2万円。運用利回りで月積立額は3倍以上変わります。",
     },
     {
       question: "老後資金で注意すべき落とし穴は？",
@@ -52,7 +52,7 @@ export default function Retirement2000ManPage() {
       <ArticleLayout
         slug={SLUG}
         title="老後2,000万円問題は今いくら必要？─ 物価で再計算してみた"
-        description="2019年に話題となった「老後2,000万円問題」。報告書から5年経った2024年、物価上昇と社会保険料増加を反映すると、必要額はいくらまで膨らんでいるのか。データで再試算する。"
+        description="2019年に話題となった「老後2,000万円問題」。報告書から6年経った2025年、CPIが112.4→123.7（+10%）、社会保険料率も17.5%→18.6%へ上昇。必要額はいくらまで膨らんでいるのか、データで再試算する。"
         readingTime={7}
         tags={["老後資金", "年金", "老後2000万円"]}
       >
@@ -62,7 +62,7 @@ export default function Retirement2000ManPage() {
             「老後30年間で約2,000万円不足する」という試算が一人歩きし、社会的な議論を巻き起こした。
           </p>
           <p>
-            あれから5年。物価は上昇し、社会保険料率も増えた。この間に必要老後資金は<strong>いくらまで膨らんだのか</strong>。
+            あれから6年。CPIは112.4→123.7（+10%）、社会保険料率も17.5%→18.6%へ上昇した。この間に必要老後資金は<strong>いくらまで膨らんだのか</strong>。
             KeizaiMap のデータを使って再計算してみる。
           </p>
         </Section>
@@ -86,15 +86,15 @@ export default function Retirement2000ManPage() {
           </p>
         </Section>
 
-        <Section heading="2024年版で再計算する3つの調整">
+        <Section heading="2025年版で再計算する3つの調整">
           <div
             className="rounded-xl border p-4 space-y-3 my-4"
             style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
           >
             {[
-              { num: "①", title: "物価上昇分（+7%）", desc: "2017年からのCPI上昇は約7%。2017年の26.4万円支出は、2024年では約28.2万円に相当。" },
-              { num: "②", title: "社会保険料率の上昇", desc: "国民健康保険料の引き上げで、高齢者の負担も増加。月支出に追加で約3,000円相当。" },
-              { num: "③", title: "年金支給額の伸びは抑制", desc: "マクロ経済スライドにより、年金は物価ほど上がらない。実収入は20.9万円→21.5万円程度。" },
+              { num: "①", title: "物価上昇分（+10%）", desc: "2017年からのCPI上昇は約10%（107.6→118.4→123.7）。2017年の26.4万円支出は、2025年では約29.0万円に相当。" },
+              { num: "②", title: "社会保険料率の上昇", desc: "国民健康保険料・介護保険料の引き上げで、高齢者の負担も増加。月支出に追加で約4,000円相当。" },
+              { num: "③", title: "年金支給額の伸びは抑制", desc: "マクロ経済スライドにより、年金は物価ほど上がらない。実収入は20.9万円→21.7万円程度。" },
             ].map(({ num, title, desc }) => (
               <div key={num} className="flex gap-3">
                 <span className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ backgroundColor: "#ef444420", color: "#ef4444" }}>
@@ -109,42 +109,42 @@ export default function Retirement2000ManPage() {
           </div>
         </Section>
 
-        <Section heading="2024年版の再試算結果">
+        <Section heading="2025年版の再試算結果">
           <DataBox
             items={[
-              { label: "月の実収入（再）", value: "≒21.5万円", note: "+2.9%",         color: "#22c55e" },
-              { label: "月の実支出（再）", value: "≒28.2万円", note: "+6.8%",          color: "#ef4444" },
-              { label: "月の不足額（再）", value: "≒6.7万円",  note: "+1.2万円",      color: "#ef4444" },
-              { label: "30年での不足",   value: "≒2,400万円", note: "+400万円",       color: "#ef4444" },
+              { label: "月の実収入（再）", value: "≒21.7万円", note: "+3.8%",         color: "#22c55e" },
+              { label: "月の実支出（再）", value: "≒29.0万円", note: "+9.8%",         color: "#ef4444" },
+              { label: "月の不足額（再）", value: "≒7.3万円",  note: "+1.8万円",      color: "#ef4444" },
+              { label: "30年での不足",   value: "≒2,600万円", note: "+600万円",       color: "#ef4444" },
             ]}
           />
           <p>
-            5年で<strong>必要資金が約400万円増加</strong>した計算。
-            「老後2,000万円問題」は、2024年版では実質「<strong>老後2,400万円問題</strong>」になっている。
+            6年で<strong>必要資金が約600万円増加</strong>した計算。
+            「老後2,000万円問題」は、2025年版では実質「<strong>老後2,600万円問題</strong>」になっている。
           </p>
         </Section>
 
-        <Section heading="35年後（2060年）にはいくら必要か">
+        <Section heading="35年後（2061年）にはいくら必要か">
           <p>
-            では、今30歳の人が65歳になる2060年時点ではどうか。年率1.5%のインフレが続くと仮定すると：
+            では、今30歳の人が65歳になる2061年時点ではどうか。年率1.5%のインフレが続くと仮定すると：
           </p>
           <DataBox
             items={[
-              { label: "現役世代（30歳）が65歳になる時", value: "2060年", color: "#4F8EF7" },
+              { label: "現役世代（30歳）が65歳になる時", value: "2061年", color: "#4F8EF7" },
               { label: "35年間のCPI上昇（1.5%/年）",     value: "+68%",   color: "#D97706" },
-              { label: "必要老後資金（2024年比）",       value: "≒4,000万円", note: "現在価値とは別物", color: "#ef4444" },
-              { label: "現在価値換算（実質）",           value: "≒2,400万円", note: "実質的には変わらず", color: "#22c55e" },
+              { label: "必要老後資金（2026年比）",       value: "≒4,400万円", note: "現在価値とは別物", color: "#ef4444" },
+              { label: "現在価値換算（実質）",           value: "≒2,600万円", note: "実質的には変わらず", color: "#22c55e" },
             ]}
           />
           <p>
-            未来の通貨ベースで見ると4,000万円になるが、現在価値（実質）では同じ2,400万円相当。
+            未来の通貨ベースで見ると4,400万円になるが、現在価値（実質）では同じ2,600万円相当。
             「未来額面が膨らんだ」だけで、実質的な負担は変わらないのが本質だ。
           </p>
         </Section>
 
-        <Section heading="その2,000万を作るには毎月いくら積み立てる？">
+        <Section heading="その2,600万を作るには毎月いくら積み立てる？">
           <p>
-            30年で2,400万円を貯めるとして、毎月の積立額はいくら必要か。
+            30年で2,600万円を貯めるとして、毎月の積立額はいくら必要か。
             運用利回り別にシミュレーションした。
           </p>
           <div className="rounded-xl border overflow-hidden overflow-x-auto my-4" style={{ borderColor: "var(--border)" }}>
@@ -158,11 +158,11 @@ export default function Retirement2000ManPage() {
               </thead>
               <tbody style={{ color: "var(--muted)" }}>
                 {[
-                  { y: "0%（預金）",      m: "6.7万円", t: "2,400万" },
-                  { y: "1%（債券）",      m: "5.7万円", t: "2,050万" },
-                  { y: "3%（バランス型）", m: "4.0万円", t: "1,440万" },
-                  { y: "5%（株式中心）",   m: "2.9万円", t: "1,040万" },
-                  { y: "7%（S&P500想定）", m: "2.0万円", t: "720万" },
+                  { y: "0%（預金）",      m: "7.3万円", t: "2,600万" },
+                  { y: "1%（債券）",      m: "6.2万円", t: "2,230万" },
+                  { y: "3%（バランス型）", m: "4.3万円", t: "1,560万" },
+                  { y: "5%（株式中心）",   m: "3.1万円", t: "1,130万" },
+                  { y: "7%（S&P500想定）", m: "2.2万円", t: "790万" },
                 ].map((r) => (
                   <tr key={r.y} className="border-b last:border-0" style={{ borderColor: "var(--border)" }}>
                     <td className="p-3 font-medium" style={{ color: "var(--text)" }}>{r.y}</td>
@@ -175,7 +175,7 @@ export default function Retirement2000ManPage() {
           </div>
           <p>
             運用利回りで月積立額は<strong>3倍以上変わる</strong>。
-            預金だけで6.7万円積み立てるのと、株式中心で2.9万円積み立てるのでは、家計への負担が全然違う。
+            預金だけで7.3万円積み立てるのと、株式中心で3.1万円積み立てるのでは、家計への負担が全然違う。
           </p>
         </Section>
 
@@ -189,17 +189,17 @@ export default function Retirement2000ManPage() {
 
         <Section heading="まとめ：『2,000万円』は古い目安">
           <ul className="list-disc pl-5 space-y-1 my-3 text-sm" style={{ color: "var(--text)" }}>
-            <li>2024年再計算では老後資金は約2,400万円必要</li>
-            <li>2060年時点では名目4,000万円だが、実質は2,400万円相当</li>
+            <li>2025年再計算では老後資金は約2,600万円必要</li>
+            <li>2061年時点では名目4,400万円だが、実質は2,600万円相当</li>
             <li>運用利回りで月積立額は3倍以上変わる</li>
             <li>持ち家・健康・長寿の個人差で大きく変動するため自分用試算が重要</li>
           </ul>
         </Section>
         <Section heading="関連記事">
           <ul className="list-disc pl-5 space-y-1">
-            <li><Link href="/articles/nisa-vs-savings" className="underline" style={{ color: "var(--link)" }}>新NISA vs 貯金 ─ データで考える「30年寝かせるならどっち」</Link></li>
-            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料30年の増加</Link></li>
-            <li><Link href="/articles/real-take-home-pay-30years" className="underline" style={{ color: "var(--link)" }}>年収500万でも30年前の年収300万に負けている？─ 実質手取りで見る30年</Link></li>
+            <li><Link href="/articles/nisa-vs-savings" className="underline" style={{ color: "var(--link)" }}>新NISA vs 貯金 ─ データで考える「35年寝かせるならどっち」</Link></li>
+            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料35年の増加</Link></li>
+            <li><Link href="/articles/real-take-home-pay-30years" className="underline" style={{ color: "var(--link)" }}>年収500万でも30年前の年収300万に負けている？─ 実質手取りで見る35年</Link></li>
           </ul>
         </Section>
       </ArticleLayout>

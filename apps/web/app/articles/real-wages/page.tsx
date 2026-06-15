@@ -34,11 +34,11 @@ export default function RealWagesPage() {
     },
     {
       question: "日本の実質賃金はどう推移しましたか？",
-      answer: "1990年を100とした場合、2024年の日本の実質賃金は99.2です。34年間でほぼ横ばいながら微減しており、同期間に物価（CPI）が約20%上昇したことと合わせると、実質的な購買力は低下しています。",
+      answer: "1990年を100とした場合、2025年の日本の実質賃金は97.9です。35年間で2.1%低下し、同期間に物価（CPI）が23.7%上昇したことと合わせると、実質的な購買力は明確に低下しています。",
     },
     {
       question: "なぜ日本の実質賃金は上がらないのですか？",
-      answer: "消費税増税（1989年〜2019年）・社会保険料負担率の上昇（1990年の10.8%→2024年の18.5%）・円安による輸入物価の上昇など、複合的な要因が実質賃金の停滞に影響しています。",
+      answer: "消費税増税（1989年〜2019年）・社会保険料負担率の上昇（1990年の10.8%→2025年の18.6%）・円安による輸入物価の上昇など、複合的な要因が実質賃金の停滞に影響しています。",
     },
   ]);
 
@@ -113,14 +113,14 @@ export default function RealWagesPage() {
 
       <Section heading="日本の実質賃金はどう推移したのか">
         <p>
-          KeizaiMapで確認すると、日本の実質賃金は1990年から2024年までほぼ横ばいとなっています。
+          KeizaiMapで確認すると、日本の実質賃金は1990年から2025年までほぼ横ばい、直近では低下に転じています。
         </p>
 
         <DataBox
           items={[
             { label: "1990年", value: "100.0", color: "#4F8EF7" },
-            { label: "2024年", value: "99.2", color: "#ef4444" },
-            { label: "物価（CPI）", value: "119.9", note: "同期間で20%上昇", color: "#D97706" },
+            { label: "2025年", value: "97.9", note: "1990年比 -2.1%", color: "#ef4444" },
+            { label: "物価（CPI）", value: "123.7", note: "同期間で +23.7%", color: "#D97706" },
           ]}
         />
 
@@ -149,7 +149,7 @@ export default function RealWagesPage() {
         <ul className="list-disc pl-5 space-y-1 my-3">
           <li>
             <Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>
-              社会保険料の上昇（1990年の10.8%→2024年の18.5%）
+              社会保険料の上昇（1990年の10.8%→2025年の18.6%）
             </Link>
             ─ 額面給与が増えても手取りが増えない主因のひとつ
           </li>
@@ -178,7 +178,7 @@ export default function RealWagesPage() {
           今後の経済動向を理解する第一歩となります。
         </p>
         <p>
-          → <Link href="/articles/real-wages-trend-1990-2024" className="underline" style={{ color: "var(--link)" }}>日本の実質賃金推移【1990〜2024】を詳細データで確認する</Link>
+          → <Link href="/articles/real-wages-trend-1990-2024" className="underline" style={{ color: "var(--link)" }}>日本の実質賃金推移【1990〜2025】を詳細データで確認する</Link>
         </p>
       </Section>
     </ArticleLayout>

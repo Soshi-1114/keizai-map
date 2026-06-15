@@ -9,14 +9,14 @@ const SLUG = "yen-depreciation";
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/yen-depreciation" },
   title: articleSeoTitle(SLUG),
-  description: "2012年の1ドル=79.8円から2024年の151.8円まで、なぜ円安が進んだのか。日米金利差、日銀の金融政策との関係と、輸出企業・輸入消費者への影響を解説する。",
+  description: "2012年の1ドル=79.8円から2025年の149.7円まで、なぜ円安が進んだのか。日米金利差、日銀の金融政策との関係と、輸出企業・輸入消費者への影響を解説する。",
   openGraph: articleOpenGraph("yen-depreciation"),
 };
 
 export default function YenDepreciationPage() {
   const articleJsonLd = generateArticleJsonLd({
     title: "円安が進む仕組みと日本経済への影響",
-    description: "2012年に1ドル=79.8円だった円相場は、2024年には151.8円まで下落しました。なぜ円安が進んだのか、その仕組みと影響を解説します。",
+    description: "2012年に1ドル=79.8円だった円相場は、2025年には149.7円まで下落しました。なぜ円安が進んだのか、その仕組みと影響を解説します。",
     slug: SLUG,
     readingTime: 4,
     tags: ["為替", "円安", "日銀"],
@@ -29,8 +29,8 @@ export default function YenDepreciationPage() {
       answer: "為替を動かす最大の要因は金利差です。お金はより高い金利が得られる国の通貨に流れるため、日本の金利が低く米国の金利が高いと、ドルへの需要が高まり円安が進みます。2022年以降は日米金利差の拡大が円安を加速させました。",
     },
     {
-      question: "円相場は1990年から2024年でどう変わりましたか？",
-      answer: "1990年の年平均144.8円から、2012年には1ドル=79.8円の歴史的円高をつけ、その後円安に転換しました。2024年には年平均151.8円となり、34年ぶり安値水準まで進みました。",
+      question: "円相場は1990年から2025年でどう変わりましたか？",
+      answer: "1990年の年平均144.8円から、2012年には1ドル=79.8円の歴史的円高をつけ、その後円安に転換しました。2024年には年平均151.8円、2025年も149.7円と高水準が続いており、35年ぶりの円安局面が長期化しています。",
     },
     {
       question: "円安は日本経済にどんな影響を与えますか？",
@@ -38,7 +38,7 @@ export default function YenDepreciationPage() {
     },
     {
       question: "2024年の日銀利上げで円安は止まりますか？",
-      answer: "2024年に日銀は17年ぶりの利上げを実施し、マイナス金利政策を解除しました。日米金利差が縮まれば円高要因となりますが、年間平均レートは151.8円と高水準のままです。為替は貿易収支・資本フロー・市場心理など複合要因で動くため予断を許しません。",
+      answer: "2024年に日銀は17年ぶりの利上げを実施しマイナス金利政策を解除、その後も段階的に政策金利を引き上げました。日米金利差が縮まれば円高要因となりますが、2025年の年間平均レートは149.7円と依然高水準です。為替は貿易収支・資本フロー・市場心理など複合要因で動くため予断を許しません。",
     },
   ]);
   return (
@@ -66,7 +66,7 @@ export default function YenDepreciationPage() {
       <ArticleLayout
         slug={SLUG}
         title="円安が進む仕組みと日本経済への影響"
-        description="2012年に1ドル=79.8円だった円相場は、2024年には151.8円まで下落しました。なぜ円安が進んだのか、その仕組みと影響を解説します。"
+        description="2012年に1ドル=79.8円だった円相場は、2025年には149.7円まで下落しました。なぜ円安が進んだのか、その仕組みと影響を解説します。"
         readingTime={4}
         tags={["為替", "円安", "日銀"]}
       >
@@ -83,10 +83,10 @@ export default function YenDepreciationPage() {
         </p>
       </Section>
 
-      <Section heading="日本の為替の歩み：1990〜2024年">
+      <Section heading="日本の為替の歩み：1990〜2025年">
         <p>
           KeizaiMapのデータは年平均の円ドルレートを示しています。
-          この30年間の変動を確認しましょう。
+          この35年間の変動を確認しましょう。
         </p>
 
         <DataBox
@@ -94,7 +94,8 @@ export default function YenDepreciationPage() {
             { label: "1990年",      value: "144.8円", note: "バブル期", color: "#4FD9A0" },
             { label: "2012年（最高）", value: "79.8円", note: "歴史的円高", color: "#22c55e" },
             { label: "2022年",      value: "131.5円", note: "円安加速", color: "#D97706" },
-            { label: "2024年",      value: "151.8円", note: "34年ぶり安値水準", color: "#ef4444" },
+            { label: "2024年",      value: "151.8円", note: "35年ぶり安値圏", color: "#ef4444" },
+            { label: "2025年",      value: "149.7円", note: "高止まり", color: "#ef4444" },
           ]}
         />
 
@@ -143,11 +144,11 @@ export default function YenDepreciationPage() {
         <p>
           日本はエネルギーと食料の多くを輸入に依存しています。
           そのため円安は輸入コストを直撃し、消費者物価の上昇を通じて家計を圧迫します。
-          2022〜2024年の物価上昇（CPI 114.9→119.9）の背景のひとつが、この円安による輸入コスト増です。
+          2022〜2025年の物価上昇（CPI 114.9→123.7）の背景のひとつが、この円安による輸入コスト増です。
         </p>
       </Section>
 
-      <Section heading="2024年の動向：日銀の政策転換">
+      <Section heading="2024〜2025年の動向：日銀の政策転換と円安の高止まり">
         <p>
           2024年、日銀は17年ぶりとなる利上げを実施し（3月・7月）、
           長年続けてきたマイナス金利政策から転換しました。
@@ -155,14 +156,14 @@ export default function YenDepreciationPage() {
         </p>
         <p>
           利上げによって日米金利差が縮まれば円高要因になりますが、
-          2024年の年間平均レートは151.8円と依然として高い水準にあります。
+          2024年の年間平均レートは151.8円、2025年も149.7円と依然として高い水準にあります。
           為替は金利差だけでなく、貿易収支・資本フロー・市場心理など多くの要因で動くため、
           今後の動向は予断を許しません。
         </p>
       </Section>
       <Section heading="関連記事">
         <ul className="list-disc pl-5 space-y-1">
-          <li><Link href="/articles/yen-depreciation-real-wages" className="underline" style={{ color: "var(--link)" }}>円安と実質賃金の関係【2012→2024】</Link></li>
+          <li><Link href="/articles/yen-depreciation-real-wages" className="underline" style={{ color: "var(--link)" }}>円安と実質賃金の関係【2012→2025】</Link></li>
           <li><Link href="/articles/inflation-cycles-japan" className="underline" style={{ color: "var(--link)" }}>物価高はいつまで続く？─ 過去30年の4つのインフレ局面を分析</Link></li>
           <li><Link href="/articles/abenomics" className="underline" style={{ color: "var(--link)" }}>アベノミクスとは何か ─ 3本の矢と経済指標の変化</Link></li>
         </ul>

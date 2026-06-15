@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/articles/university-cost-inflation" },
   title: articleSeoTitle(SLUG),
   description:
-    "1990年の国立大学授業料は年34万円、2024年は53.6万円。私立大学はさらに上昇率が高い。CPI補正・賃金との対比で「教育費は本当に重くなったのか」をデータで検証する。",
+    "1990年の国立大学授業料は年34万円、2025年は53.6万円。私立大学はさらに上昇率が高い。CPI補正・賃金との対比で「教育費は本当に重くなったのか」をデータで検証する。",
   openGraph: articleOpenGraph("university-cost-inflation"),
 };
 
@@ -27,19 +27,19 @@ export default function UniversityCostInflationPage() {
   const faqJsonLd = generateFaqPageJsonLd([
     {
       question: "国立大学の授業料は30年でどれくらい上がりましたか？",
-      answer: "1990年の33.9万円から2024年の53.6万円へ、約1.58倍に上昇しました。1990年から2005年まで毎年のように引き上げられた後、53.6万円に到達した時点から20年近く据え置かれています。",
+      answer: "1990年の33.9万円から2025年の53.6万円へ、約1.58倍に上昇しました。1990年から2005年まで毎年のように引き上げられた後、53.6万円に到達した時点から20年近く据え置かれています。",
     },
     {
       question: "私立大学の授業料はどれくらい上がりましたか？",
-      answer: "私立大学（文系平均）は1990年の61.5万円から2024年の約94万円へ、約53%上昇しました。理系・医療系はさらに上昇率が高く、医歯学系では年間500万円超に達するケースもあります。",
+      answer: "私立大学（文系平均）は1990年の61.5万円から2025年の約96万円へ、約56%上昇しました。理系・医療系はさらに上昇率が高く、医歯学系では年間500万円超に達するケースもあります。",
     },
     {
       question: "物価補正後の実質的な大学費用の負担増は？",
-      answer: "CPI（消費者物価指数）が同期間に約20%上昇したことを差し引いても、国立大の実質負担は+31%、私立大も+28%増加しています。一方で実質賃金は横ばいのため、世帯の購買力に対する大学費用の重さは30年で約30%増加しました。",
+      answer: "CPI（消費者物価指数）が同期間に約24%上昇したことを差し引いても、国立大の実質負担は+27%、私立大も+26%増加しています。一方で実質賃金は▲2.1%のため、世帯の購買力に対する大学費用の重さは35年で約30%増加しました。",
     },
     {
       question: "大学費用が上がる構造的な理由は？",
-      answer: "①大学進学率が1990年の約24%から2024年は60%超へ上昇し需要拡大、②国立大学運営費交付金が2004年の独立法人化以降年1%ずつ削減、③ICT環境・実験設備など教育水準維持のためのコスト増、④少子化による大学間競争激化での広告・施設投資増、の4つです。",
+      answer: "①大学進学率が1990年の約24%から2025年は60%超へ上昇し需要拡大、②国立大学運営費交付金が2004年の独立法人化以降年1%ずつ削減、③ICT環境・実験設備など教育水準維持のためのコスト増、④少子化による大学間競争激化での広告・施設投資増、の4つです。",
     },
   ]);
 
@@ -52,7 +52,7 @@ export default function UniversityCostInflationPage() {
       <ArticleLayout
         slug={SLUG}
         title="大学費用30年前と今 ─ 親世代と子世代の教育費インフレ実態"
-        description="1990年の国立大学授業料は年34万円、2024年は53.6万円。私立大学はさらに上昇率が高い。CPI補正・賃金との対比で「教育費は本当に重くなったのか」をデータで検証する。"
+        description="1990年の国立大学授業料は年34万円、2025年は53.6万円。私立大学はさらに上昇率が高い。CPI補正・賃金との対比で「教育費は本当に重くなったのか」をデータで検証する。"
         readingTime={6}
         tags={["教育費", "大学", "家計"]}
       >
@@ -73,7 +73,7 @@ export default function UniversityCostInflationPage() {
               { label: "1990年", value: "33.9万円", color: "#4F8EF7" },
               { label: "2000年", value: "47.8万円", note: "+41%",      color: "#D97706" },
               { label: "2010年", value: "53.6万円", note: "+58%",      color: "#ef4444" },
-              { label: "2024年", value: "53.6万円", note: "+58%（据置）", color: "#ef4444" },
+              { label: "2025年", value: "53.6万円", note: "+58%（据置）", color: "#ef4444" },
             ]}
           />
           <p>
@@ -89,31 +89,31 @@ export default function UniversityCostInflationPage() {
               { label: "1990年", value: "61.5万円", color: "#4F8EF7" },
               { label: "2000年", value: "78.9万円", note: "+28%",      color: "#D97706" },
               { label: "2010年", value: "85.8万円", note: "+39%",      color: "#ef4444" },
-              { label: "2024年", value: "≒94万円",  note: "+53%",      color: "#ef4444" },
+              { label: "2025年", value: "≒96万円",  note: "+56%",      color: "#ef4444" },
             ]}
           />
           <p>
-            私立大学（文系平均）も<strong>30年で約53%上昇</strong>。
+            私立大学（文系平均）も<strong>35年で約56%上昇</strong>。
             理系・医療系はさらに上昇率が高く、医歯学系では年間500万円超に達する。
           </p>
         </Section>
 
         <Section heading="CPI補正で見ると「実質負担」はどう変わったか">
           <p>
-            授業料の名目額だけを見ると「30年で1.5倍」だが、
-            CPI（消費者物価指数）も同期間に約20%上昇している。
+            授業料の名目額だけを見ると「35年で1.5〜1.6倍」だが、
+            CPI（消費者物価指数）も同期間に約24%上昇している。
             <strong>物価補正後（実質）</strong>の値を見るとどうか。
           </p>
           <DataBox
             items={[
-              { label: "国立大 実質負担増", value: "+31%", note: "1990年=100の物価で換算", color: "#D97706" },
-              { label: "私立大 実質負担増", value: "+28%", note: "同上",                  color: "#D97706" },
-              { label: "実質賃金推移",      value: "▲0.8%", note: "ほぼ横ばい",            color: "#ef4444" },
+              { label: "国立大 実質負担増", value: "+27%", note: "1990年=100の物価で換算", color: "#D97706" },
+              { label: "私立大 実質負担増", value: "+26%", note: "同上",                  color: "#D97706" },
+              { label: "実質賃金推移",      value: "▲2.1%", note: "97.9（1990年比）",      color: "#ef4444" },
             ]}
           />
           <p>
-            物価で割っても授業料は30%増えている。一方で実質賃金は横ばい。
-            つまり<strong>世帯の購買力に対する大学費用の重さは、30年で約30%増加</strong>している。
+            物価で割っても授業料は約27%増えている。一方で実質賃金は1990年水準を下回る。
+            つまり<strong>世帯の購買力に対する大学費用の重さは、35年で約30%増加</strong>している。
           </p>
         </Section>
 
@@ -128,7 +128,7 @@ export default function UniversityCostInflationPage() {
                 <tr style={{ backgroundColor: "var(--card)", borderBottom: "1px solid var(--border)" }}>
                   <th className="text-left p-3 font-medium">区分</th>
                   <th className="text-right p-3 font-medium">1990年</th>
-                  <th className="text-right p-3 font-medium">2024年</th>
+                  <th className="text-right p-3 font-medium">2025年</th>
                 </tr>
               </thead>
               <tbody style={{ color: "var(--muted)" }}>
@@ -160,7 +160,7 @@ export default function UniversityCostInflationPage() {
             style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
           >
             {[
-              { num: "①", title: "大学進学率の上昇（24% → 60%超）", desc: "1990年の進学率約24%から2024年は60%超。需要拡大が価格上昇要因に。" },
+              { num: "①", title: "大学進学率の上昇（24% → 60%超）", desc: "1990年の進学率約24%から2025年は60%超。需要拡大が価格上昇要因に。" },
               { num: "②", title: "国の運営費交付金の削減", desc: "国立大学運営費交付金は2004年の独立法人化以降、年1%ずつ削減。授業料引き上げ圧力となった。" },
               { num: "③", title: "施設・設備投資の高度化", desc: "ICT環境・実験設備など、現代の教育水準を維持するためのコスト増。" },
               { num: "④", title: "競争激化による広告・施設整備", desc: "少子化で大学間競争が激化。広告・施設投資が授業料に転嫁される構造。" },
@@ -192,8 +192,8 @@ export default function UniversityCostInflationPage() {
 
         <Section heading="まとめ：子世代の進学を支えるには">
           <ul className="list-disc pl-5 space-y-1 my-3 text-sm" style={{ color: "var(--text)" }}>
-            <li>国立大授業料は30年で1.58倍、私立は1.53倍に上昇</li>
-            <li>実質負担は30%増、対して実質賃金は横ばい</li>
+            <li>国立大授業料は35年で1.58倍、私立は1.56倍に上昇</li>
+            <li>実質負担は約27%増、対して実質賃金は1990年水準を下回る</li>
             <li>4年間の総額は私立理系一人暮らしで1,000万円超</li>
             <li>給付奨学金・授業料減免の活用と、早期からの積立が重要</li>
           </ul>
@@ -204,7 +204,7 @@ export default function UniversityCostInflationPage() {
         </Section>
         <Section heading="関連記事">
           <ul className="list-disc pl-5 space-y-1">
-            <li><Link href="/articles/real-take-home-pay-30years" className="underline" style={{ color: "var(--link)" }}>年収500万でも30年前の年収300万に負けている？─ 実質手取りで見る30年</Link></li>
+            <li><Link href="/articles/real-take-home-pay-30years" className="underline" style={{ color: "var(--link)" }}>年収500万でも30年前の年収300万に負けている？─ 実質手取りで見る35年</Link></li>
             <li><Link href="/articles/declining-birthrate-economy" className="underline" style={{ color: "var(--link)" }}>少子化と経済の悪循環 ─ 出生数激減が家計と社会保障に与える影響</Link></li>
             <li><Link href="/articles/money-value-time-comparison" className="underline" style={{ color: "var(--link)" }}>30年前の月収30万円は今いくら？─ お金の実質価値</Link></li>
           </ul>

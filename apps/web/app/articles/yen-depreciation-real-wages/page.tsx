@@ -9,14 +9,14 @@ const SLUG = "yen-depreciation-real-wages";
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/yen-depreciation-real-wages" },
   title: articleSeoTitle(SLUG),
-  description: "円相場が79.8円から151.8円へ90%下落した12年間、実質賃金はどう変わったのか。円安が輸出企業を潤す一方で、家計の購買力をどう圧迫したかを分析。",
+  description: "円相場が79.8円から149.7円へ約88%下落した13年間、実質賃金はどう変わったのか。円安が輸出企業を潤す一方で、家計の購買力をどう圧迫したかを分析。",
   openGraph: articleOpenGraph("yen-depreciation-real-wages"),
 };
 
 export default function YenDepreciationRealWagesPage() {
   const articleJsonLd = generateArticleJsonLd({
-    title: "円安と実質賃金の関係【2012→2024】",
-    description: "円相場が79.8円から151.8円へ90%下落した12年間、実質賃金はどう変わったのか。円安が輸出企業を潤す一方で、家計の購買力をどう圧迫したかを解く。",
+    title: "円安と実質賃金の関係【2012→2025】",
+    description: "円相場が79.8円から149.7円へ約88%下落した13年間、実質賃金はどう変わったのか。円安が輸出企業を潤す一方で、家計の購買力をどう圧迫したかを解く。",
     slug: SLUG,
     readingTime: 6,
     tags: ["円安", "実質賃金", "家計"],
@@ -25,8 +25,8 @@ export default function YenDepreciationRealWagesPage() {
   const organizationJsonLd = generateOrganizationJsonLd();
   const faqJsonLd = generateFaqPageJsonLd([
     {
-      question: "2012年から2024年で円相場はどれだけ円安が進みましたか？",
-      answer: "1ドル=79.8円（2012年）から151.8円（2024年）へ約90%の円安が進みました。アベノミクスの日銀大規模緩和に加え、2022年以降の米FRBの急速な利上げで日米金利差が拡大したことが要因です。",
+      question: "2012年から2025年で円相場はどれだけ円安が進みましたか？",
+      answer: "1ドル=79.8円（2012年）から149.7円（2025年）へ約88%の円安が進みました。アベノミクスの日銀大規模緩和に加え、2022年以降の米FRBの急速な利上げで日米金利差が拡大したことが要因です。",
     },
     {
       question: "円安はなぜ家計の購買力を下げるのですか？",
@@ -38,7 +38,7 @@ export default function YenDepreciationRealWagesPage() {
     },
     {
       question: "円安と企業利益・実質賃金にはどんな差がありますか？",
-      answer: "2012〜2024年に法人税収は8.5兆円から18.8兆円へ121%増加しましたが、実質賃金は97.4から99.2へ1.8%しか上昇していません。円安による企業利益の増加が労働者に還流せず、株主配当や内部留保に充てられた構造が背景にあります。",
+      answer: "2012〜2025年に法人税収は8.5兆円から20兆円規模へ大幅増加した一方、実質賃金は97.4から97.9へ0.5%しか上昇していません。CPIが105.6→123.7（+17.1%）と上昇する中、円安による企業利益の増加は株主配当や内部留保に充てられ、労働者にほぼ還流していない構図です。",
     },
   ]);
 
@@ -66,8 +66,8 @@ export default function YenDepreciationRealWagesPage() {
       />
       <ArticleLayout
         slug={SLUG}
-        title="円安と実質賃金の関係【2012→2024】"
-        description="円相場が79.8円から151.8円へ90%下落した12年間、実質賃金はどう変わったのか。円安が輸出企業を潤す一方で、家計の購買力をどう圧迫したかを分析。"
+        title="円安と実質賃金の関係【2012→2025】"
+        description="円相場が79.8円から149.7円へ約88%下落した13年間、実質賃金はどう変わったのか。円安が輸出企業を潤す一方で、家計の購買力をどう圧迫したかを分析。"
         readingTime={6}
         tags={["円安", "実質賃金", "家計"]}
       >
@@ -75,7 +75,7 @@ export default function YenDepreciationRealWagesPage() {
         <p>
           アベノミクスの最大の成果の一つが「円安」です。
           2012年の1ドル=79.8円（歴史的円高）から、
-          2024年の1ドル=151.8円（34年ぶりの円安水準）へと転換しました。
+          2024年の1ドル=151.8円（35年ぶりの円安水準）、2025年も149.7円と高止まりへ転換しました。
         </p>
         <p>
           円安は企業（特に輸出企業）にとって朗報です。
@@ -87,13 +87,14 @@ export default function YenDepreciationRealWagesPage() {
         </p>
       </Section>
 
-      <Section heading="2012→2024年：円安の進行と実質賃金の関係">
+      <Section heading="2012→2025年：円安の進行と実質賃金の関係">
         <DataBox
           items={[
             { label: "2012年",   value: "79.8円",  note: "歴史的円高", color: "#22c55e" },
             { label: "2014年",   value: "105.9円", note: "アベノミクス後2年", color: "#D97706" },
             { label: "2020年",   value: "106.8円", note: "COVID-19前", color: "#D97706" },
-            { label: "2024年",   value: "151.8円", note: "34年ぶり円安", color: "#ef4444" },
+            { label: "2024年",   value: "151.8円", note: "35年ぶり円安圏", color: "#ef4444" },
+            { label: "2025年",   value: "149.7円", note: "高止まり", color: "#ef4444" },
           ]}
         />
         <DataBox
@@ -101,7 +102,8 @@ export default function YenDepreciationRealWagesPage() {
             { label: "2012年", value: "97.4",  note: "実質賃金", color: "#4F8EF7" },
             { label: "2014年", value: "97.1",  note: "▼0.3%（円安加速期）", color: "#ef4444" },
             { label: "2020年", value: "96.5",  note: "横ばい", color: "#ef4444" },
-            { label: "2024年", value: "99.2",  note: "回復傾向だが依然低い", color: "#ef4444" },
+            { label: "2024年", value: "99.2",  note: "コロナ後の戻り高値", color: "#ef4444" },
+            { label: "2025年", value: "97.9",  note: "物価高で再低下", color: "#ef4444" },
           ]}
         />
         <p>
@@ -125,23 +127,24 @@ export default function YenDepreciationRealWagesPage() {
         </p>
       </Section>
 
-      <Section heading="円安による物価上昇のデータ：2012→2024年">
+      <Section heading="円安による物価上昇のデータ：2012→2025年">
         <DataBox
           items={[
             { label: "2012年", value: "105.6", note: "CPI（消費者物価指数）", color: "#D97706" },
             { label: "2015年", value: "110.4", note: "+4.8pt（消費税増税含む）", color: "#D97706" },
             { label: "2020年", value: "112.4", note: "COVID-19・エネルギー危機", color: "#ef4444" },
-            { label: "2024年", value: "119.9", note: "+14.3pt（全期間）", color: "#ef4444" },
+            { label: "2024年", value: "119.9", note: "コロナ後の物価高", color: "#ef4444" },
+            { label: "2025年", value: "123.7", note: "+18.1pt（全期間）", color: "#ef4444" },
           ]}
         />
         <p>
-          2012年から2024年にかけて、物価は105.6から119.9へ14.3ポイント上昇しました。
+          2012年から2025年にかけて、物価は105.6から123.7へ18.1ポイント上昇しました。
           特に2022年以降、ウクライナ戦争によるエネルギー価格上昇と、
           円安による輸入物価上昇が重なり、物価上昇が加速しました。
         </p>
         <p>
-          この間、実質賃金は97.4から99.2へわずか1.8ポイント上昇に留まり、
-          物価上昇に追い付いていません。
+          この間、実質賃金は97.4から97.9へわずか0.5ポイント上昇に留まり、
+          物価上昇にまったく追い付いていません。
         </p>
       </Section>
 
@@ -186,6 +189,7 @@ export default function YenDepreciationRealWagesPage() {
             { label: "2020年", value: "106.8円", note: "COVID-19直後", color: "#D97706" },
             { label: "2022年", value: "131.5円", note: "FRB利上げ加速", color: "#ef4444" },
             { label: "2024年", value: "151.8円", note: "日銀マイナス金利解除", color: "#ef4444" },
+            { label: "2025年", value: "149.7円", note: "日銀追加利上げ後も高止まり", color: "#ef4444" },
           ]}
         />
         <p>
@@ -195,7 +199,7 @@ export default function YenDepreciationRealWagesPage() {
           「日米金利差」が拡大し、ドルが買われ続けました。
         </p>
         <p>
-          この急速な円安の結果、日本の物価は2020年の112.4から2024年の119.9へ上昇し、
+          この急速な円安の結果、日本の物価は2020年の112.4から2025年の123.7へ上昇し、
           輸入物価の上昇が加速しました。
         </p>
       </Section>
@@ -204,14 +208,14 @@ export default function YenDepreciationRealWagesPage() {
         <DataBox
           items={[
             { label: "法人税（2012年）", value: "8.5兆円",  note: "円高時代", color: "#22c55e" },
-            { label: "法人税（2024年）", value: "18.8兆円", note: "円安時代（+121%）", color: "#22c55e" },
+            { label: "法人税（2025年）", value: "20兆円規模", note: "円安時代（約2.4倍）", color: "#22c55e" },
             { label: "実質賃金（2012年）", value: "97.4",    note: "円高時代", color: "#D97706" },
-            { label: "実質賃金（2024年）", value: "99.2",    note: "円安時代（+1.8%）", color: "#D97706" },
+            { label: "実質賃金（2025年）", value: "97.9",    note: "円安時代（+0.5%）", color: "#D97706" },
           ]}
         />
         <p>
-          円安による企業利益の増加（法人税+121%）と、
-          労働者の実質賃金停滞（+1.8%）という大きな格差が生まれました。
+          円安による企業利益の増加（法人税は約2.4倍）と、
+          労働者の実質賃金停滞（+0.5%）という大きな格差が生まれました。
         </p>
         <p>
           企業は円安による利益を労働者に還元せず、株主配当と内部留保に充てました。
@@ -222,7 +226,7 @@ export default function YenDepreciationRealWagesPage() {
       <Section heading="KeizaiMapで見る「隠れた代償」">
         <p>
           KeizaiMap のグラフで「USD/JPY」（円相場）と「消費者物価（CPI）」を同時表示してください。
-          2012年から2024年にかけて、円安とCPIの上昇がほぼ同期していることが分かります。
+          2012年から2025年にかけて、円安とCPIの上昇がほぼ同期していることが分かります。
         </p>
         <p>
           さらに「実質賃金」を追加表示すれば、
@@ -232,10 +236,10 @@ export default function YenDepreciationRealWagesPage() {
 
       <Section heading="まとめ：円安は「構造的な家計圧迫」のメカニズム">
         <ul className="list-disc pl-5 space-y-1">
-          <li>2012〜2024年の12年間で円安は90%進行（79.8円→151.8円）</li>
-          <li>円安は輸出企業の利益を大幅に増加させた（法人税+121%）</li>
-          <li>一方で、輸入物価上昇により家計は圧迫された（物価+14.3pt）</li>
-          <li>実質賃金は1.8%しか上昇せず、物価上昇に追い付かず</li>
+          <li>2012〜2025年の13年間で円安は約88%進行（79.8円→149.7円）</li>
+          <li>円安は輸出企業の利益を大幅に増加させた（法人税は約2.4倍）</li>
+          <li>一方で、輸入物価上昇により家計は圧迫された（物価+18.1pt）</li>
+          <li>実質賃金は0.5%しか上昇せず、物価上昇にまったく追い付かず</li>
           <li>企業利益の増加が労働者に還流しないメカニズム</li>
           <li>「強い企業」と「弱い家計」の格差拡大こそがアベノミクスの遺産</li>
         </ul>
@@ -244,7 +248,7 @@ export default function YenDepreciationRealWagesPage() {
         <ul className="list-disc pl-5 space-y-1">
           <li><Link href="/articles/yen-depreciation" className="underline" style={{ color: "var(--link)" }}>円安が進む仕組みと日本経済への影響</Link></li>
           <li><Link href="/articles/real-wages" className="underline" style={{ color: "var(--link)" }}>実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか</Link></li>
-          <li><Link href="/articles/yen-purchasing-power-decline" className="underline" style={{ color: "var(--link)" }}>日本の通貨価値はどれだけ下がったか ─ ドル建てで見る30年</Link></li>
+          <li><Link href="/articles/yen-purchasing-power-decline" className="underline" style={{ color: "var(--link)" }}>日本の通貨価値はどれだけ下がったか ─ ドル建てで見る35年</Link></li>
         </ul>
       </Section>
     </ArticleLayout>

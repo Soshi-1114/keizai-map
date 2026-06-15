@@ -27,15 +27,15 @@ export default function NationalDebtPerCitizenPage() {
   const faqJsonLd = generateFaqPageJsonLd([
   {
     "question": "「国民一人当たり約1,000万円の借金」は本当ですか？",
-    "answer": "この表現は誤解を招きます。国債（1,170兆円）を人口（約1.25億人）で単純に割った数字ですが、国債は政府の負債であり国民が個人として返済する義務はありません。また、国債の約90%は国内投資家が保有しており、対外債務とは性質が異なります。"
+    "answer": "この表現は誤解を招きます。国債（2025年度末1,128兆円）を人口（約1.24億人）で単純に割った数字（約910万円）ですが、国債は政府の負債であり国民が個人として返済する義務はありません。また、国債の約90%は国内投資家が保有しており、対外債務とは性質が異なります。"
   },
   {
     "question": "日本の国債は誰が保有していますか？",
     "answer": "日本国債の保有者の約50%以上は日本銀行、残りの多くは国内の銀行・保険会社・年金基金です。海外投資家の保有比率は約10〜15%程度と低く、ギリシャなどの財政危機とは構造が異なります。"
   },
   {
-    "question": "国債残高1,170兆円の正しい見方は？",
-    "answer": "絶対額よりもGDP比・税収比・金利動向・プライマリーバランスの4つで見ることが重要です。日本の政府債務のGDP比は約250%で先進国最高水準ですが、対外純資産が488兆円（世界1位）あり、海外への純借金ではありません。"
+    "question": "国債残高1,128兆円の正しい見方は？",
+    "answer": "絶対額よりもGDP比・税収比・金利動向・プライマリーバランスの4つで見ることが重要です。日本の政府債務のGDP比は約230%で先進国最高水準ですが、対外純資産が534兆円（世界1位）あり、海外への純借金ではありません。"
   }
 ]);
 
@@ -55,10 +55,10 @@ export default function NationalDebtPerCitizenPage() {
         <Section heading="「国民一人当たりの借金」という決まり文句">
           <p>
             財務省や新聞各社が定期的に発表する「国民一人当たり○○万円の借金」というニュース。
-            2024年時点では「<strong>約935万円</strong>」と報道されている。
+            2025年度末ベースでは「<strong>約910万円</strong>」と報道されている。
           </p>
           <p>
-            国債残高1,170兆円 ÷ 人口1.25億人 ≒ 936万円。確かに計算は合っている。
+            国債残高1,128兆円 ÷ 人口1.24億人 ≒ 910万円。確かに計算は合っている。
             だが、これは<strong>正しい読み方</strong>なのだろうか。
           </p>
         </Section>
@@ -81,8 +81,8 @@ export default function NationalDebtPerCitizenPage() {
               },
               {
                 num: "③",
-                title: "個人金融資産2,200兆円との比較が抜けている",
-                desc: "「借金が1,170兆円」と聞くと巨額に感じるが、日本の個人金融資産は約2,200兆円ある。家計が政府に貸している側面もあり、国全体としては純資産国（対外純資産488兆円）。",
+                title: "個人金融資産2,300兆円との比較が抜けている",
+                desc: "「借金が1,128兆円」と聞くと巨額に感じるが、日本の個人金融資産は2024年末で約2,300兆円ある。家計が政府に貸している側面もあり、国全体としては純資産国（対外純資産534兆円）。",
               },
             ].map(({ num, title, desc }) => (
               <div key={num} className="flex gap-3">
@@ -101,12 +101,12 @@ export default function NationalDebtPerCitizenPage() {
         <Section heading="複数の視点から見る国債残高">
           <DataBox
             items={[
-              { label: "国債残高（絶対額）",    value: "1,170兆円", note: "2024年",          color: "#ef4444" },
-              { label: "国民一人当たり",        value: "≒935万円",  note: "÷人口1.25億",     color: "#D97706" },
-              { label: "対GDP比",              value: "≒250%",     note: "先進国最悪水準",  color: "#ef4444" },
-              { label: "個人金融資産との比",    value: "≒53%",      note: "÷2,200兆円",      color: "#4F8EF7" },
-              { label: "対外純資産との比",      value: "238%",      note: "対外資産488兆円",  color: "#22c55e" },
-              { label: "税収に対する比",        value: "16.2倍",    note: "÷72兆円",         color: "#ef4444" },
+              { label: "国債残高（絶対額）",    value: "1,128兆円", note: "2025年度末",        color: "#ef4444" },
+              { label: "国民一人当たり",        value: "≒910万円",  note: "÷人口1.24億",       color: "#D97706" },
+              { label: "対GDP比",              value: "≒230%",     note: "先進国最悪水準",    color: "#ef4444" },
+              { label: "個人金融資産との比",    value: "≒49%",      note: "÷2,300兆円",        color: "#4F8EF7" },
+              { label: "対外純資産との比",      value: "211%",      note: "対外資産534兆円",    color: "#22c55e" },
+              { label: "税収に対する比",        value: "14.0倍",    note: "÷80.7兆円",         color: "#ef4444" },
             ]}
           />
           <p>
@@ -154,18 +154,18 @@ export default function NationalDebtPerCitizenPage() {
 
         <Section heading="まとめ：単純な割り算で財政を語らない">
           <ul className="list-disc pl-5 space-y-1 my-3 text-sm" style={{ color: "var(--text)" }}>
-            <li>「国民一人当たり935万円」は単純な割り算で、誤解を招く</li>
+            <li>「国民一人当たり910万円」は単純な割り算で、誤解を招く</li>
             <li>日本国債の90%は国内で保有されている</li>
-            <li>個人金融資産2,200兆円の53%が国債残高に相当</li>
-            <li>対外純資産は488兆円（世界1位）</li>
+            <li>個人金融資産2,300兆円の49%が国債残高に相当</li>
+            <li>対外純資産は534兆円（世界1位）</li>
             <li>絶対額より、PB・金利・社会保障費の動向を見ることが重要</li>
           </ul>
         </Section>
         <Section heading="関連記事">
           <ul className="list-disc pl-5 space-y-1">
-            <li><Link href="/articles/national-debt-1000trillion" className="underline" style={{ color: "var(--link)" }}>国債残高1,000兆円超 ─ 日本の財政赤字をデータで理解する</Link></li>
+            <li><Link href="/articles/national-debt-1000trillion" className="underline" style={{ color: "var(--link)" }}>国債残高1,100兆円超 ─ 日本の財政赤字をデータで理解する</Link></li>
             <li><Link href="/articles/fiscal-collapse-truth" className="underline" style={{ color: "var(--link)" }}>財政破綻は本当に起きるのか ─ 国債・対外純資産からデータで考える</Link></li>
-            <li><Link href="/articles/next-decade-forecast" className="underline" style={{ color: "var(--link)" }}>「失われた40年」になる前に ─ 2025〜2035年の日本経済展望</Link></li>
+            <li><Link href="/articles/next-decade-forecast" className="underline" style={{ color: "var(--link)" }}>「失われた40年」になる前に ─ 2026〜2035年の日本経済展望</Link></li>
           </ul>
         </Section>
       </ArticleLayout>
