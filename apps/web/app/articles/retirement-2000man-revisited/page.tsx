@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "retirement-2000man-revisited";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/retirement-2000man-revisited" },
-  title: "老後2,000万円問題は今いくら必要？─ 物価で再計算してみた",
+  title: articleSeoTitle(SLUG),
   description:
     "2019年に話題となった「老後2,000万円問題」。報告書から5年経った2024年、物価上昇と社会保険料増加を反映すると、必要額はいくらまで膨らんでいるのか。データで再試算する。",
   openGraph: articleOpenGraph("retirement-2000man-revisited"),

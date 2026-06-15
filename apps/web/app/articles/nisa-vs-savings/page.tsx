@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "nisa-vs-savings";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/nisa-vs-savings" },
-  title: "新NISA vs 貯金 ─ データで考える「30年寝かせるならどっち」",
+  title: articleSeoTitle(SLUG),
   description:
     "1990年に100万円を銀行預金とS&P500それぞれに置いた場合、2024年にいくらになっているか。日本の超低金利と米国株の長期トレンドを実データで比較し、新NISA時代の選択を考える。",
   openGraph: articleOpenGraph("nisa-vs-savings"),

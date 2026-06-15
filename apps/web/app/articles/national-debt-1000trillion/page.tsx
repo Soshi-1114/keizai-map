@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "national-debt-1000trillion";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/national-debt-1000trillion" },
-  title: "国債残高1,000兆円超 ─ 日本の財政赤字をデータで理解する",
+  title: articleSeoTitle(SLUG),
   description: "1990年に180兆円だった国債残高は2024年に1,170兆円を超えた。税収の16倍に膨らんだ借金の実態と、その背景にある財政構造を数字で確認する。",
   openGraph: articleOpenGraph("national-debt-1000trillion"),
 };

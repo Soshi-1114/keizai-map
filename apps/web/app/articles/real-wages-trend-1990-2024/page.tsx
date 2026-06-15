@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "real-wages-trend-1990-2024";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/real-wages-trend-1990-2024" },
-  title: "日本の実質賃金推移【1990〜2024】データ分析",
+  title: articleSeoTitle(SLUG),
   description: "バブル期の1990年を100とした実質賃金指数は34年後の2024年に99.2と0.8%低下。デフレ・リーマンショック・消費税増税・円安インフレの4つの局面で賃金がどう変化したかを時系列で分析。",
   openGraph: articleOpenGraph("real-wages-trend-1990-2024"),
 };

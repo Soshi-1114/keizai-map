@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "fiscal-collapse-truth";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/fiscal-collapse-truth" },
-  title: "財政破綻は本当に起きるのか ─ 国債・対外純資産・投資収益からデータで考える",
+  title: articleSeoTitle(SLUG),
   description: "国債残高1,170兆円は危機なのか。日本は世界最大の対外純資産国であり、海外投資からの収益（第一次所得収支）は年間35兆円超。財政破綻論の根拠と反論をデータで整理する。",
   openGraph: articleOpenGraph("fiscal-collapse-truth"),
 };

@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "mortgage-rate-simulation";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/mortgage-rate-simulation" },
-  title: "日銀利上げで住宅ローンはどうなる？─ 金利推移と家計シミュレーション",
+  title: articleSeoTitle(SLUG),
   description:
     "2024年3月、日銀はマイナス金利を解除。1990年代初頭の8%台から2022年の0.4%まで下がった住宅ローン金利は、ここから上昇に転じる可能性が高い。借入額別の月返済額シミュレーションを提示する。",
   openGraph: articleOpenGraph("mortgage-rate-simulation"),

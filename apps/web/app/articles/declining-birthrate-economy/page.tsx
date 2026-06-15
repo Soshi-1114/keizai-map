@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "declining-birthrate-economy";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/declining-birthrate-economy" },
-  title: "少子化と経済の悪循環 ─ 出生数激減が家計と社会保障に与える影響",
+  title: articleSeoTitle(SLUG),
   description: "1990年に121万人いた出生数は2024年に73万人台へ激減。人口減少は労働力不足を招き、社会保険料の上昇と国債残高の膨張を加速させる。少子化が経済に与える連鎖をデータで追う。",
   openGraph: articleOpenGraph("declining-birthrate-economy"),
 };

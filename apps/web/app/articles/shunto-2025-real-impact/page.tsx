@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "shunto-2025-real-impact";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/shunto-2025-real-impact" },
-  title: "2025年 春闘・賃上げの実態 ─ 過去30年で最高水準だが家計に届くか",
+  title: articleSeoTitle(SLUG),
   description:
     "2025年春闘の平均賃上げ率は5%超。33年ぶりの高水準だが、物価上昇と社会保険料増加でどれだけ手取りに反映されるのか。過去30年の賃上げ率と実質賃金の関係をデータで検証する。",
   openGraph: articleOpenGraph("shunto-2025-real-impact"),

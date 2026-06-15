@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "economic-shocks-comparison";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/economic-shocks-comparison" },
-  title: "リーマンショックとコロナ禍 ─ 2つの経済危機が日本人の生活に与えた傷跡",
+  title: articleSeoTitle(SLUG),
   description: "2008年のリーマンショックと2020年のコロナ禍。2つの危機で実質賃金・株価・為替・物価はどう動いたか。回復の速さ・深さをデータで比較する。",
   openGraph: articleOpenGraph("economic-shocks-comparison"),
 };

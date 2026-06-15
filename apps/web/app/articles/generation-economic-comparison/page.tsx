@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "generation-economic-comparison";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/generation-economic-comparison" },
-  title: "氷河期世代 vs Z世代 ─ 経済指標で見る「生まれた時代の不公平」",
+  title: articleSeoTitle(SLUG),
   description:
     "1973年生・1993年生・2003年生の3世代が就職時に直面した経済環境を、賃金・株価・住宅価格・社会保険料・出生数で比較。世代論を感情ではなくデータで論じる。",
   openGraph: articleOpenGraph("generation-economic-comparison"),

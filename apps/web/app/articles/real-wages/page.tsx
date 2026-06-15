@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import Link from "next/link";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "real-wages";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/real-wages" },
-  title: "実質賃金とは？なぜ日本人の生活は豊かになった実感がないのか",
+  title: articleSeoTitle(SLUG),
   description: "実質賃金とは、物価変動を考慮した賃金です。給料が10%増えても物価が20%上がれば、実際に買える商品は減ってしまいます。日本の実質賃金の推移を確認します。",
   openGraph: articleOpenGraph("real-wages"),
 };
