@@ -10,7 +10,9 @@ test.describe("ダッシュボード基本機能", () => {
   });
 
   test("h1 見出しが表示される", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: "KeizaiMap", level: 1 })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /日本の実質賃金・物価・税収・為替の推移グラフ/, level: 1 }),
+    ).toBeVisible();
   });
 
   test("グラフが描画される", async ({ page }) => {
