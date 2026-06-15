@@ -20,7 +20,7 @@ const GA_ID = "G-L3881RG05D";
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: "KeizaiMap — 数字で見る、日本の30年",
+    default: "実質賃金・物価・税収の推移グラフ｜日本経済35年を可視化 - KeizaiMap",
     template: "%s | KeizaiMap",
   },
   alternates: {

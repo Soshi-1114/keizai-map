@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import Link from "next/link";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "abenomics";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/abenomics" },
-  title: "アベノミクスとは何か ─ 3本の矢と経済指標の変化",
+  title: articleSeoTitle(SLUG),
   description: "2012年末に始まったアベノミクスの「3本の矢」を解説。8年間で税収は43.9兆円から60.8兆円へ増加し、円安も大幅に進んだ。実質賃金への影響はどうだったか。",
   openGraph: articleOpenGraph("abenomics"),
 };

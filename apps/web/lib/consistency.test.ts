@@ -182,32 +182,18 @@ describe("整合性: /og 既定エンドポイントの LATEST_VALUES が data �
 });
 
 describe("整合性: 記事タイトルの単一ソース化", () => {
-  // page.tsx 内の `export const metadata` ブロックから title を抽出。
-  // 同じ slug の lib/articles.ts エントリと一致しなければビルドを落とす。
+  // 各 page.tsx の metadata.title は articleSeoTitle(SLUG) ヘルパー経由で
+  // lib/articles.ts を単一ソースとする。リテラル直書きは禁止。
   const ARTICLES_DIR = resolve(APP_DIR, "articles");
 
-  function pageMetadataTitle(slug: string): string | null {
-    const pagePath = join(ARTICLES_DIR, slug, "page.tsx");
-    try {
-      const text = readFileSync(pagePath, "utf-8");
-      const block = text.match(/export const metadata[^{]*\{([\s\S]*?)\n\};/);
-      if (!block) return null;
-      const titleMatch = block[1].match(/title:\s*"([^"]+)"/);
-      return titleMatch ? titleMatch[1] : null;
-    } catch {
-      return null;
-    }
-  }
-
   for (const article of ARTICLES) {
-    it(`${article.slug}: lib/articles.ts の title と page.tsx metadata.title が一致`, () => {
-      const pageTitle = pageMetadataTitle(article.slug);
-      // page.tsx が無い記事はスキップ（テンプレ的記事のみ）。
-      // 実在しないファイルは別テストで担保すべきだが、本ケースは現状全記事に存在。
-      if (pageTitle === null) {
-        expect.fail(`page.tsx not found or metadata.title not parseable for slug "${article.slug}"`);
-      }
-      expect(pageTitle).toBe(article.title);
+    it(`${article.slug}: page.tsx metadata.title が articleSeoTitle(SLUG) を参照`, () => {
+      const text = readFileSync(`${ARTICLES_DIR}/${article.slug}/page.tsx`, "utf-8");
+      const block = text.match(/export const metadata[^{]*\{([\s\S]*?)\n\};/);
+      expect(block, `metadata ブロックが見つからない: ${article.slug}`).not.toBeNull();
+      expect(block![1]).toMatch(/title:\s*articleSeoTitle\(SLUG\)/);
+      // articleOpenGraph 同様、ヘルパー import も必要
+      expect(text).toMatch(/import\s*\{[^}]*articleSeoTitle[^}]*\}\s*from\s*"@\/lib\/article-metadata"/);
     });
   }
 });

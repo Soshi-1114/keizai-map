@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "university-cost-inflation";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/university-cost-inflation" },
-  title: "大学費用30年前と今 ─ 親世代と子世代の教育費インフレ実態",
+  title: articleSeoTitle(SLUG),
   description:
     "1990年の国立大学授業料は年34万円、2024年は53.6万円。私立大学はさらに上昇率が高い。CPI補正・賃金との対比で「教育費は本当に重くなったのか」をデータで検証する。",
   openGraph: articleOpenGraph("university-cost-inflation"),

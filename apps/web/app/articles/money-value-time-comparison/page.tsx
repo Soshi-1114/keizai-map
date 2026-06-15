@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { LiveDataBox } from "@/components/LiveDataBox";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "money-value-time-comparison";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/money-value-time-comparison" },
-  title: "30年前の月収30万円は今いくら？─ 物価で換算する「お金の実質価値」",
+  title: articleSeoTitle(SLUG),
   description:
     "1990年の30万円は2024年の何円相当か。消費者物価指数（CPI）を使って、過去の金額を現在価値に換算する方法を解説。月収・年収・貯金額を年代別に実質換算してみよう。",
   openGraph: articleOpenGraph("money-value-time-comparison"),

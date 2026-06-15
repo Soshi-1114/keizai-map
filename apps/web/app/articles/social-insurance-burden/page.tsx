@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import Link from "next/link";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "social-insurance-burden";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/social-insurance-burden" },
-  title: "手取りが増えない本当の理由 ─ 社会保険料30年の増加をデータで見る",
+  title: articleSeoTitle(SLUG),
   description: "給与が上がっても手取りが増えない。その原因のひとつが社会保険料の上昇だ。1990年の10.8%から2024年の18.5%へ、34年で約8ポイント増加した社会保険料負担率をデータで読む。",
   openGraph: articleOpenGraph("social-insurance-burden"),
 };

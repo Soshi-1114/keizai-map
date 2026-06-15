@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "consumption-tax-wage-price";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/consumption-tax-wage-price" },
-  title: "消費税増税後の物価と賃金の変化【1997→2019】",
+  title: articleSeoTitle(SLUG),
   description: "消費税の4回の引き上げ（3→5→8→10%）で、物価はどう変わり、賃金はどう反応したのか。1997年の橋本増税と2019年の岸田増税を比較分析。",
   openGraph: articleOpenGraph("consumption-tax-wage-price"),
 };

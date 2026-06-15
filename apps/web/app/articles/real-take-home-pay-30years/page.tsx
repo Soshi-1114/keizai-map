@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "real-take-home-pay-30years";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/real-take-home-pay-30years" },
-  title: "年収500万でも、30年前の年収300万に負けている？─ 実質手取りで見る30年",
+  title: articleSeoTitle(SLUG),
   description:
     "名目の年収が増えても、社会保険料・消費税・物価上昇で実質手取りは目減りしている。年収300万・500万・800万の3パターンで「実質手取り」を1990年と2024年で比較する。",
   openGraph: articleOpenGraph("real-take-home-pay-30years"),

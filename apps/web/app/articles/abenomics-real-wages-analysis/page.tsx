@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "abenomics-real-wages-analysis";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/abenomics-real-wages-analysis" },
-  title: "アベノミクスで実質賃金は上がったのか？",
+  title: articleSeoTitle(SLUG),
   description: "2012〜2020年のアベノミクス8年間で実質賃金は0.9%低下。株価は上昇し円安が進む中、なぜ実質賃金だけが下落したのか。消費税増税・非正規雇用増加・物価上昇の影響をデータで検証。",
   openGraph: articleOpenGraph("abenomics-real-wages-analysis"),
 };

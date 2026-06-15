@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { LiveDataBox } from "@/components/LiveDataBox";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "yen-purchasing-power-decline";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/yen-purchasing-power-decline" },
-  title: "日本の通貨価値はどれだけ下がったか ─ ドル建てで見る30年",
+  title: articleSeoTitle(SLUG),
   description:
     "円安と物価上昇のダブルパンチで、円の購買力は急減している。ドル建て換算した最低賃金・日経平均・GDPで日本経済を見直すと、別の風景が見えてくる。",
   openGraph: articleOpenGraph("yen-purchasing-power-decline"),

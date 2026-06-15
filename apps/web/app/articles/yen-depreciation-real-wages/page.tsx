@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "yen-depreciation-real-wages";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/yen-depreciation-real-wages" },
-  title: "円安と実質賃金の関係【2012→2024】",
+  title: articleSeoTitle(SLUG),
   description: "円相場が79.8円から151.8円へ90%下落した12年間、実質賃金はどう変わったのか。円安が輸出企業を潤す一方で、家計の購買力をどう圧迫したかを分析。",
   openGraph: articleOpenGraph("yen-depreciation-real-wages"),
 };
