@@ -13,8 +13,11 @@ import {
   generateOrganizationJsonLd,
   generatePersonJsonLd,
   generateWebSiteJsonLd,
+  generateDatasetJsonLd,
+  generateAllDatasetJsonLd,
 } from "./jsonld";
 import { ARTICLES } from "./articles";
+import { INDICATOR_CONFIGS, INDICATOR_LAST_YEAR } from "./data";
 
 describe("generateArticleJsonLd", () => {
   const known = ARTICLES[0];
@@ -154,5 +157,61 @@ describe("generateWebSiteJsonLd", () => {
     expect(ld["@type"]).toBe("WebSite");
     expect(ld.inLanguage).toBe("ja");
     expect(ld.publisher.name).toBe("KeizaiMap");
+  });
+});
+
+describe("generateDatasetJsonLd", () => {
+  it("emits Schema.org Dataset with required name/description/temporalCoverage", () => {
+    const ld = generateDatasetJsonLd("wage");
+    expect(ld["@context"]).toBe("https://schema.org");
+    expect(ld["@type"]).toBe("Dataset");
+    expect(ld.name).toMatch(/実質賃金の推移/);
+    // Google Dataset Search: description は 50 字以上
+    expect(ld.description.length).toBeGreaterThanOrEqual(50);
+    expect(ld.temporalCoverage).toMatch(/^1990\/\d{4}$/);
+    expect(ld.inLanguage).toBe("ja");
+    expect(ld.isAccessibleForFree).toBe(true);
+    expect(ld.creator.name).toBe("KeizaiMap");
+    expect(ld.spatialCoverage.name).toBe("日本");
+    expect(ld.variableMeasured).toBe("実質賃金");
+  });
+
+  it("temporalCoverage の終了年が INDICATOR_LAST_YEAR と一致", () => {
+    for (const cfg of INDICATOR_CONFIGS) {
+      const ld = generateDatasetJsonLd(cfg.key);
+      expect(ld.temporalCoverage).toBe(`1990/${INDICATOR_LAST_YEAR[cfg.key]}`);
+    }
+  });
+
+  it("公的統計指標には政府標準利用規約のライセンスURLを付与", () => {
+    const govIndicators = ["wage", "cpi", "tax", "fx", "housing", "debt", "births", "insurance"] as const;
+    for (const key of govIndicators) {
+      const ld = generateDatasetJsonLd(key);
+      expect(ld.license).toBe("https://www.digital.go.jp/resources/data_terms_of_use");
+    }
+  });
+
+  it("商用ソース（日経平均）は license を省略", () => {
+    const ld = generateDatasetJsonLd("nikkei");
+    expect("license" in ld).toBe(false);
+  });
+
+  it("throws on unknown indicator key", () => {
+    // @ts-expect-error 意図的に不正なキーを渡す
+    expect(() => generateDatasetJsonLd("invalid")).toThrow();
+  });
+});
+
+describe("generateAllDatasetJsonLd", () => {
+  it("returns one Dataset per indicator config", () => {
+    const all = generateAllDatasetJsonLd();
+    expect(all).toHaveLength(INDICATOR_CONFIGS.length);
+    expect(all.every((ld) => ld["@type"] === "Dataset")).toBe(true);
+  });
+
+  it("各 Dataset の name はユニーク（重複により <script> の React key が衝突しないこと）", () => {
+    const all = generateAllDatasetJsonLd();
+    const names = all.map((ld) => ld.name);
+    expect(new Set(names).size).toBe(names.length);
   });
 });

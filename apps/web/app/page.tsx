@@ -1,5 +1,9 @@
 import { MainView } from "@/components/MainView";
-import { generateOrganizationJsonLd, generateWebSiteJsonLd } from "@/lib/jsonld";
+import {
+  generateAllDatasetJsonLd,
+  generateOrganizationJsonLd,
+  generateWebSiteJsonLd,
+} from "@/lib/jsonld";
 
 export default function Home({ searchParams }: { searchParams: Record<string, string | string[]> }) {
   const params = {
@@ -9,11 +13,19 @@ export default function Home({ searchParams }: { searchParams: Record<string, st
   };
   const organizationJsonLd = generateOrganizationJsonLd();
   const websiteJsonLd = generateWebSiteJsonLd();
+  const datasetJsonLds = generateAllDatasetJsonLd();
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
+      {datasetJsonLds.map((jsonLd) => (
+        <script
+          key={jsonLd.name}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      ))}
       <MainView initialParams={params} />
     </>
   );
