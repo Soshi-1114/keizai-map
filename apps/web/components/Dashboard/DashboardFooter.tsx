@@ -9,8 +9,12 @@ export function DashboardFooter() {
       style={{ color: "var(--muted)", borderColor: "var(--border)" }}
     >
       <p>
-        データ出典: 厚労省・総務省・財務省・日本銀行 &nbsp;|&nbsp;
-        数値はすべて公開統計に基づきます
+        データ出典: 厚労省・総務省・財務省・日本銀行・国交省・OECD &nbsp;|&nbsp;
+        数値はすべて公開統計に基づきます（
+        <Link href="/about" className="underline hover:opacity-80" style={{ color: "var(--muted)" }}>
+          出典一覧
+        </Link>
+        ）
       </p>
       {DATA_UPDATED_AT && <p>最終更新: {formatUpdatedAt(DATA_UPDATED_AT)}</p>}
       <p>

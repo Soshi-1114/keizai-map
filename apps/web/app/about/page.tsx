@@ -17,21 +17,22 @@ type AutoStatus = "auto" | "manual";
 const SOURCES: {
   indicator: string;
   source: string;
+  sourceUrl: string;
   series: string;
   method: string;
   status: AutoStatus;
 }[] = [
-  { indicator: "実質賃金指数",          source: "厚生労働省 毎月勤労統計調査",      series: "実質賃金指数（現金給与総額）1990=100",         method: "手動更新（API非公開）",     status: "manual" },
-  { indicator: "消費者物価指数（CPI）", source: "総務省統計局 消費者物価指数",       series: "総合指数 1990=100",                            method: "e-Stat API（自動）",         status: "auto" },
-  { indicator: "税収（兆円）",          source: "財務省 一般会計税収決算",            series: "一般会計税収（国税）兆円",                       method: "MOF CSV（自動／fallback有）", status: "auto" },
-  { indicator: "USD/JPY 為替",          source: "日本銀行 時系列統計データ",          series: "年平均レート 円/ドル",                          method: "BOJ CSV（自動／fallback有）", status: "auto" },
-  { indicator: "日経平均株価",          source: "取引所公開資料 / 日本経済新聞社",    series: "日経平均株価 年末値（1990=100に基準化）",       method: "手動更新",                  status: "manual" },
-  { indicator: "住宅価格指数",          source: "国土交通省 不動産価格指数",          series: "住宅地 1990=100",                              method: "手動更新",                  status: "manual" },
-  { indicator: "国債残高（兆円）",      source: "財務省 国債統計年報",                series: "普通国債残高（年度末） 兆円",                    method: "MOF CSV（自動／fallback有）", status: "auto" },
-  { indicator: "出生数（万人）",        source: "厚生労働省 人口動態調査",            series: "出生数 万人",                                  method: "e-Stat API（自動）",         status: "auto" },
-  { indicator: "社会保険料負担率（%）", source: "厚生労働省 / 財務省 国民負担率推移", series: "社会保障負担率 ％",                              method: "手動更新（年1回）",         status: "manual" },
-  { indicator: "【比較】G7平均 実質賃金", source: "OECD Real Average Wages",         series: "G7加盟国平均 1990=100",                          method: "手動更新",                  status: "manual" },
-  { indicator: "【比較】G7平均 CPI",      source: "OECD Inflation (HICP)",            series: "G7加盟国平均 1990=100",                          method: "手動更新",                  status: "manual" },
+  { indicator: "実質賃金指数",          source: "厚生労働省 毎月勤労統計調査",      sourceUrl: "https://www.mhlw.go.jp/toukei/itiran/roudou/monthly/index.html",     series: "実質賃金指数（現金給与総額）1990=100",         method: "手動更新（API非公開）",     status: "manual" },
+  { indicator: "消費者物価指数（CPI）", source: "総務省統計局 消費者物価指数",       sourceUrl: "https://www.stat.go.jp/data/cpi/",                                  series: "総合指数 1990=100",                            method: "e-Stat API（自動）",         status: "auto" },
+  { indicator: "税収（兆円）",          source: "財務省 一般会計税収決算",            sourceUrl: "https://www.mof.go.jp/tax_policy/summary/condition/a02.htm",         series: "一般会計税収（国税）兆円",                       method: "MOF CSV（自動／fallback有）", status: "auto" },
+  { indicator: "USD/JPY 為替",          source: "日本銀行 時系列統計データ",          sourceUrl: "https://www.stat-search.boj.or.jp/",                                series: "年平均レート 円/ドル",                          method: "BOJ CSV（自動／fallback有）", status: "auto" },
+  { indicator: "日経平均株価",          source: "取引所公開資料 / 日本経済新聞社",    sourceUrl: "https://indexes.nikkei.co.jp/nkave/index?type=download",            series: "日経平均株価 年末値（1990=100に基準化）",       method: "手動更新",                  status: "manual" },
+  { indicator: "住宅価格指数",          source: "国土交通省 不動産価格指数",          sourceUrl: "https://www.mlit.go.jp/totikensangyo/totikensangyo_fr4_000043.html", series: "住宅地 1990=100",                              method: "手動更新",                  status: "manual" },
+  { indicator: "国債残高（兆円）",      source: "財務省 国債統計年報",                sourceUrl: "https://www.mof.go.jp/jgbs/reference/appendix/index.htm",            series: "普通国債残高（年度末） 兆円",                    method: "MOF CSV（自動／fallback有）", status: "auto" },
+  { indicator: "出生数（万人）",        source: "厚生労働省 人口動態調査",            sourceUrl: "https://www.mhlw.go.jp/toukei/list/81-1a.html",                      series: "出生数 万人",                                  method: "e-Stat API（自動）",         status: "auto" },
+  { indicator: "社会保険料負担率（%）", source: "厚生労働省 / 財務省 国民負担率推移", sourceUrl: "https://www.mof.go.jp/tax_policy/summary/condition/a04.htm",         series: "社会保障負担率 ％",                              method: "手動更新（年1回）",         status: "manual" },
+  { indicator: "【比較】G7平均 実質賃金", source: "OECD Real Average Wages",         sourceUrl: "https://data.oecd.org/earnwage/average-wages.htm",                  series: "G7加盟国平均 1990=100",                          method: "手動更新",                  status: "manual" },
+  { indicator: "【比較】G7平均 CPI",      source: "OECD Inflation (HICP)",            sourceUrl: "https://data.oecd.org/price/inflation-cpi.htm",                     series: "G7加盟国平均 1990=100",                          method: "手動更新",                  status: "manual" },
 ];
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -117,7 +118,17 @@ export default function AboutPage() {
                     }}
                   >
                     <td className="p-3 font-medium text-xs md:text-sm">{row.indicator}</td>
-                    <td className="p-3 text-xs" style={{ color: "var(--muted)" }}>{row.source}</td>
+                    <td className="p-3 text-xs" style={{ color: "var(--muted)" }}>
+                      <a
+                        href={row.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:opacity-80"
+                        style={{ color: "var(--link)" }}
+                      >
+                        {row.source}
+                      </a>
+                    </td>
                     <td className="p-3 text-xs hidden md:table-cell" style={{ color: "var(--muted)" }}>{row.series}</td>
                     <td className="p-3 text-xs" style={{ color: "var(--muted)" }}>{row.method}</td>
                     <td className="p-3 text-xs hidden sm:table-cell">
