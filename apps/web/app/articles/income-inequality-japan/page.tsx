@@ -10,14 +10,14 @@ export const metadata: Metadata = {
   alternates: { canonical: "/articles/income-inequality-japan" },
   title: articleSeoTitle(SLUG),
   description:
-    "「日本は格差社会化している」とよく言われる。本当か。ジニ係数（当初/再分配）・相対的貧困率・所得分布の変化を30年スパンで検証し、格差の実態と政策効果をデータで解説する。",
+    "「日本は格差社会化している」とよく言われる。本当か。ジニ係数（当初/再分配）・相対的貧困率・所得分布の変化を35年スパンで検証し、格差の実態と政策効果をデータで解説する。",
   openGraph: articleOpenGraph("income-inequality-japan"),
 };
 
 export default function IncomeInequalityPage() {
   const articleJsonLd = generateArticleJsonLd({
-    title: "格差は本当に広がっているのか？─ ジニ係数と所得分布で見る30年",
-    description: "ジニ係数・相対的貧困率・所得分布の変化を30年スパンで検証。",
+    title: "格差は本当に広がっているのか？─ ジニ係数と所得分布で見る35年",
+    description: "ジニ係数・相対的貧困率・所得分布の変化を35年スパンで検証。",
     slug: SLUG,
     readingTime: 7,
     tags: ["格差", "ジニ係数", "貧困"],
@@ -30,7 +30,7 @@ export default function IncomeInequalityPage() {
       answer: "ジニ係数は0〜1の間の数字で、0が完全平等・1が完全不平等を意味する格差指標です。日本では厚生労働省「所得再分配調査」が、政府介入前の「当初所得ジニ係数」と税・社会保障給付後の「再分配所得ジニ係数」の2種類を発表しています。",
     },
     {
-      question: "日本のジニ係数は30年でどう変化しましたか？",
+      question: "日本のジニ係数は35年でどう変化しましたか？",
       answer: "当初所得ジニ係数は1990年の0.434から2024年の約0.580へ34%上昇し、経済そのものの格差は大幅に拡大しています。一方、再分配後のジニ係数は0.364→約0.380とわずか4%の上昇にとどまっており、政府の再分配機能が格差を半分以上吸収しています。",
     },
     {
@@ -51,8 +51,8 @@ export default function IncomeInequalityPage() {
       <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
-        title="格差は本当に広がっているのか？─ ジニ係数と所得分布で見る30年"
-        description="「日本は格差社会化している」とよく言われる。本当か。ジニ係数（当初/再分配）・相対的貧困率・所得分布の変化を30年スパンで検証し、格差の実態と政策効果をデータで解説する。"
+        title="格差は本当に広がっているのか？─ ジニ係数と所得分布で見る35年"
+        description="「日本は格差社会化している」とよく言われる。本当か。ジニ係数（当初/再分配）・相対的貧困率・所得分布の変化を35年スパンで検証し、格差の実態と政策効果をデータで解説する。"
         readingTime={7}
         tags={["格差", "ジニ係数", "貧困"]}
       >
@@ -102,7 +102,7 @@ export default function IncomeInequalityPage() {
           />
           <p>
             ここに重要な発見がある。
-            <strong>当初所得のジニ係数は34年で34%も上昇</strong>（=格差拡大）したが、
+            <strong>当初所得のジニ係数は35年で34%も上昇</strong>（=格差拡大）したが、
             再分配後では<strong>わずか4%の上昇</strong>に抑えられている。
           </p>
           <p>
@@ -118,7 +118,7 @@ export default function IncomeInequalityPage() {
           >
             {[
               { title: "高齢化の影響", desc: "退職した高齢者の当初所得（給与）はほぼゼロ。高齢者が増えると、人口全体の当初所得格差は機械的に大きく見える。" },
-              { title: "非正規雇用の増加", desc: "1990年の非正規率約20%が2024年には約37%へ。給与差が固定化されると当初所得の格差は広がる。" },
+              { title: "非正規雇用の増加", desc: "1990年の非正規率約20%が2025年には約37%へ。給与差が固定化されると当初所得の格差は広がる。" },
               { title: "夫婦共働きの増加", desc: "ダブルインカム世帯が増えたことで、世帯間の所得差が広がっている。" },
               { title: "資産所得（株式・不動産）の偏在", desc: "アベノミクス以降の株高で、株式保有者と非保有者の差が拡大した。" },
             ].map(({ title, desc }) => (
@@ -200,7 +200,7 @@ export default function IncomeInequalityPage() {
 
         <Section heading="まとめ：『広がってはいるが、政府が抑えている』">
           <ul className="list-disc pl-5 space-y-1 my-3 text-sm" style={{ color: "var(--text)" }}>
-            <li>当初所得ジニ係数は30年で+34%（=格差大幅拡大）</li>
+            <li>当初所得ジニ係数は35年で+34%（=格差大幅拡大）</li>
             <li>再分配後は+4%に圧縮されている（=政府の再分配機能が働いている）</li>
             <li>相対的貧困率は15.4%、OECD平均を大きく上回る</li>
             <li>ひとり親世帯の貧困率44.5%は深刻</li>
@@ -211,7 +211,7 @@ export default function IncomeInequalityPage() {
           <ul className="list-disc pl-5 space-y-1">
             <li><Link href="/articles/average-income-trap" className="underline" style={{ color: "var(--link)" }}>「平均年収」の罠 ─ メディアが報じない統計の落とし穴</Link></li>
             <li><Link href="/articles/generation-economic-comparison" className="underline" style={{ color: "var(--link)" }}>氷河期世代 vs Z世代 ─ 経済指標で見る「生まれた時代の不公平」</Link></li>
-            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料30年の増加</Link></li>
+            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料35年の増加</Link></li>
           </ul>
         </Section>
       </ArticleLayout>

@@ -26,8 +26,8 @@ export default function MortgageRateSimulationPage() {
   const organizationJsonLd = generateOrganizationJsonLd();
   const faqJsonLd = generateFaqPageJsonLd([
     {
-      question: "住宅ローン変動金利は30年でどう変わりましたか？",
-      answer: "1990年に8.5%だった変動金利は、2000年に2.4%、2016年に0.5%、2022年に0.4%まで20倍以上の下落となりました。2024年の日銀利上げ後は約0.6%に上昇しており、長く続いた異常な低金利時代が転換点を迎えています。",
+      question: "住宅ローン変動金利は35年でどう変わりましたか？",
+      answer: "1990年に8.5%だった変動金利は、2000年に2.4%、2016年に0.5%、2022年に0.4%まで20倍以上の下落となりました。2024年の日銀利上げ・2025年の追加利上げ後は約0.7%に上昇しており、長く続いた異常な低金利時代が転換点を迎えています。",
     },
     {
       question: "金利上昇で月返済額はどれくらい変わりますか？",
@@ -63,24 +63,24 @@ export default function MortgageRateSimulationPage() {
           </p>
           <p>
             住宅ローン金利は政策金利と連動するため、変動型ローンを契約している人にとって、これは無視できない動きだ。
-            この記事では、過去30年の住宅ローン金利推移と、金利別の月返済額シミュレーションを提示する。
+            この記事では、過去35年の住宅ローン金利推移と、金利別の月返済額シミュレーションを提示する。
           </p>
         </Section>
 
-        <Section heading="住宅ローン金利の30年推移">
+        <Section heading="住宅ローン金利の35年推移">
           <DataBox
             items={[
               { label: "1990年 変動金利", value: "8.5%", note: "バブル末期",       color: "#ef4444" },
               { label: "2000年 変動金利", value: "2.4%", note: "ゼロ金利時代",     color: "#D97706" },
               { label: "2016年 変動金利", value: "0.5%", note: "マイナス金利下",   color: "#22c55e" },
               { label: "2022年 変動金利", value: "0.4%", note: "歴史的最低",       color: "#22c55e" },
-              { label: "2024年 変動金利", value: "≒0.6%", note: "利上げ後",        color: "#D97706" },
+              { label: "2025年 変動金利", value: "≒0.7%", note: "追加利上げ後",    color: "#D97706" },
             ]}
           />
           <p>
             <strong>1990年に8.5%だった変動金利は、2022年には0.4%まで20倍以上の下落</strong>。
             この異常な低金利が住宅価格上昇を支え、「家賃を払うより買った方が得」という時代を作ってきた。
-            しかし2024年から流れが変わりつつある。
+            しかし2024年から流れが変わり、2025年も追加利上げで変動金利は0.7%台に上昇している。
           </p>
         </Section>
 
@@ -199,15 +199,15 @@ export default function MortgageRateSimulationPage() {
             </div>
           </div>
           <p>
-            2024年現在、フラット35（35年固定）の金利は1.8%前後。変動0.6%との差は1.2%。
+            2025年現在、フラット35（35年固定）の金利は1.9%前後。変動0.7%との差は1.2%。
             <strong>金利が今後2%上昇すると変動の方が高くなる</strong>ため、固定への切替を検討する価値が出てくる。
           </p>
         </Section>
 
         <Section heading="まとめ：金利のある世界に備える">
           <ul className="list-disc pl-5 space-y-1 my-3 text-sm" style={{ color: "var(--text)" }}>
-            <li>住宅ローン変動金利は30年で8.5% → 0.4%まで20倍下落</li>
-            <li>2024年から利上げ局面入りし、すでに0.6%程度に上昇</li>
+            <li>住宅ローン変動金利は35年で8.5% → 0.4%まで20倍下落</li>
+            <li>2024年からの利上げで2025年には0.7%程度に上昇</li>
             <li>金利1.5%まで上がると月返済額は1.8〜2万円増</li>
             <li>変動 vs 固定の選択は「金利上昇に耐えられるか」が判断軸</li>
             <li>繰上返済・借換え・固定化など、複数の選択肢を検討すべき</li>
@@ -215,9 +215,9 @@ export default function MortgageRateSimulationPage() {
         </Section>
         <Section heading="関連記事">
           <ul className="list-disc pl-5 space-y-1">
-            <li><Link href="/articles/housing-price" className="underline" style={{ color: "var(--link)" }}>なぜ若者は家を買えないのか ─ 住宅価格と賃金の34年</Link></li>
+            <li><Link href="/articles/housing-price" className="underline" style={{ color: "var(--link)" }}>なぜ若者は家を買えないのか ─ 住宅価格と賃金の35年</Link></li>
             <li><Link href="/articles/yen-depreciation" className="underline" style={{ color: "var(--link)" }}>円安が進む仕組みと日本経済への影響</Link></li>
-            <li><Link href="/articles/nisa-vs-savings" className="underline" style={{ color: "var(--link)" }}>新NISA vs 貯金 ─ データで考える「30年寝かせるならどっち」</Link></li>
+            <li><Link href="/articles/nisa-vs-savings" className="underline" style={{ color: "var(--link)" }}>新NISA vs 貯金 ─ データで考える「35年寝かせるならどっち」</Link></li>
           </ul>
         </Section>
       </ArticleLayout>

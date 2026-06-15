@@ -199,7 +199,7 @@ export default function AbenomicsRealWagesPage() {
         <ul className="list-disc pl-5 space-y-1">
           <li><Link href="/articles/abenomics" className="underline" style={{ color: "var(--link)" }}>アベノミクスとは何か ─ 3本の矢と経済指標の変化</Link></li>
           <li><Link href="/articles/consumption-tax-wage-price" className="underline" style={{ color: "var(--link)" }}>消費税増税後の物価と賃金の変化【1997→2019】</Link></li>
-          <li><Link href="/articles/real-wages-trend-1990-2024" className="underline" style={{ color: "var(--link)" }}>日本の実質賃金推移【1990〜2024】データ分析</Link></li>
+          <li><Link href="/articles/real-wages-trend-1990-2024" className="underline" style={{ color: "var(--link)" }}>日本の実質賃金推移【1990〜2025】データ分析</Link></li>
         </ul>
       </Section>
     </ArticleLayout>

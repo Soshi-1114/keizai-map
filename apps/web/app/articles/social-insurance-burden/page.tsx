@@ -9,14 +9,14 @@ const SLUG = "social-insurance-burden";
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/social-insurance-burden" },
   title: articleSeoTitle(SLUG),
-  description: "給与が上がっても手取りが増えない。その原因のひとつが社会保険料の上昇だ。1990年の10.8%から2024年の18.5%へ、34年で約8ポイント増加した社会保険料負担率をデータで読む。",
+  description: "給与が上がっても手取りが増えない。その原因のひとつが社会保険料の上昇だ。1990年の10.8%から2025年の18.6%へ、35年で約7.8ポイント増加した社会保険料負担率をデータで読む。",
   openGraph: articleOpenGraph("social-insurance-burden"),
 };
 
 export default function SocialInsuranceBurdenPage() {
   const articleJsonLd = generateArticleJsonLd({
-    title: "手取りが増えない本当の理由 ─ 社会保険料30年の増加をデータで見る",
-    description: "給与が上がっても手取りが増えない。その原因のひとつが社会保険料の上昇だ。1990年の10.8%から2024年の18.5%へ増加した社会保険料負担率の実態をデータで読む。",
+    title: "手取りが増えない本当の理由 ─ 社会保険料35年の増加をデータで見る",
+    description: "給与が上がっても手取りが増えない。その原因のひとつが社会保険料の上昇だ。1990年の10.8%から2025年の18.6%へ増加した社会保険料負担率の実態をデータで読む。",
     slug: SLUG,
     readingTime: 5,
     tags: ["社会保険料", "手取り", "可処分所得"],
@@ -25,8 +25,8 @@ export default function SocialInsuranceBurdenPage() {
   const organizationJsonLd = generateOrganizationJsonLd();
   const faqJsonLd = generateFaqPageJsonLd([
     {
-      question: "社会保険料負担率は34年でどれくらい上がりましたか？",
-      answer: "1990年の10.8%から2024年の18.5%へ、34年間で約7.7ポイント上昇しました。「給与の約1割強」だった社会保険料が「約2割弱」へと増えたことになり、月給30万円の会社員なら社会保険料は約3.2万円から5.6万円へ増えた計算になります。",
+      question: "社会保険料負担率は35年でどれくらい上がりましたか？",
+      answer: "1990年の10.8%から2025年の18.6%へ、35年間で約7.8ポイント上昇しました。「給与の約1割強」だった社会保険料が「約2割弱」へと増えたことになり、月給30万円の会社員なら社会保険料は約3.2万円から5.6万円へ増えた計算になります。",
     },
     {
       question: "なぜ給与が上がっても手取りが増えないのですか？",
@@ -50,8 +50,8 @@ export default function SocialInsuranceBurdenPage() {
       <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
-        title="手取りが増えない本当の理由 ─ 社会保険料30年の増加をデータで見る"
-        description="給与が上がっても手取りが増えない。その原因のひとつが社会保険料の上昇だ。1990年の10.8%から2024年の18.5%へ増加した社会保険料負担率の実態をデータで読む。"
+        title="手取りが増えない本当の理由 ─ 社会保険料35年の増加をデータで見る"
+        description="給与が上がっても手取りが増えない。その原因のひとつが社会保険料の上昇だ。1990年の10.8%から2025年の18.6%へ増加した社会保険料負担率の実態をデータで読む。"
         readingTime={5}
         tags={["社会保険料", "手取り", "可処分所得"]}
       >
@@ -66,7 +66,7 @@ export default function SocialInsuranceBurdenPage() {
           </p>
         </Section>
 
-        <Section heading="34年間で約8ポイント上昇した社会保険料負担率">
+        <Section heading="35年間で約7.8ポイント上昇した社会保険料負担率">
           <p>
             KeizaiMapのデータによると、社会保険料負担率（社会保障負担率）は次のように推移している。
           </p>
@@ -77,16 +77,17 @@ export default function SocialInsuranceBurdenPage() {
               { label: "2000年", value: "13.8%", color: "#10B981" },
               { label: "2010年", value: "15.8%", color: "#F59E0B" },
               { label: "2024年", value: "18.5%", color: "#ef4444" },
+              { label: "2025年", value: "18.6%", note: "1990年比 +7.8pt", color: "#ef4444" },
             ]}
           />
 
           <p>
-            1990年から2024年の34年間で、社会保険料負担率は約7.7ポイント増加した。
+            1990年から2025年の35年間で、社会保険料負担率は約7.8ポイント増加した。
             この数字は、かつて「給与の約1割強」だった社会保険料が「約2割弱」へと増えたことを意味する。
           </p>
           <p>
             仮に月給30万円の会社員を想定すると、1990年基準では社会保険料は月約3.2万円だったが、
-            2024年基準では約5.6万円となる計算だ。この差額2.4万円が、34年間の「見えない手取り減少」の一端を表している。
+            2025年基準では約5.6万円となる計算だ。この差額2.4万円が、35年間の「見えない手取り減少」の一端を表している。
           </p>
         </Section>
 
@@ -125,13 +126,13 @@ export default function SocialInsuranceBurdenPage() {
           </p>
           <DataBox
             items={[
-              { label: "実質賃金（1990=100）", value: "99.2", note: "34年でほぼ横ばい", color: "#4F8EF7" },
-              { label: "社会保険料負担率", value: "+7.7pt", note: "10.8%→18.5%", color: "#ef4444" },
-              { label: "消費者物価（1990=100）", value: "119.9", note: "約20%上昇", color: "#D97706" },
+              { label: "実質賃金（1990=100）", value: "97.9", note: "35年で -2.1%", color: "#4F8EF7" },
+              { label: "社会保険料負担率", value: "+7.8pt", note: "10.8%→18.6%", color: "#ef4444" },
+              { label: "消費者物価（1990=100）", value: "123.7", note: "+23.7%", color: "#D97706" },
             ]}
           />
           <p>
-            賃金は実質で横ばい、物価は2割上昇、さらに社会保険料負担が増加。
+            賃金は実質で1990年水準を下回り、物価は約24%上昇、さらに社会保険料負担が増加。
             この3つが同時に起きたことが、多くの人が「生活が苦しくなった」と感じる数字上の根拠となっている。
           </p>
         </Section>

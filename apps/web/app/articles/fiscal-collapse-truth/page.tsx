@@ -9,14 +9,14 @@ const SLUG = "fiscal-collapse-truth";
 export const metadata: Metadata = {
   alternates: { canonical: "/articles/fiscal-collapse-truth" },
   title: articleSeoTitle(SLUG),
-  description: "国債残高1,170兆円は危機なのか。日本は世界最大の対外純資産国であり、海外投資からの収益（第一次所得収支）は年間35兆円超。財政破綻論の根拠と反論をデータで整理する。",
+  description: "国債残高1,128兆円（2025年度末）は危機なのか。日本は世界最大の対外純資産国であり、海外投資からの収益（第一次所得収支）は年間40兆円規模。財政破綻論の根拠と反論をデータで整理する。",
   openGraph: articleOpenGraph("fiscal-collapse-truth"),
 };
 
 export default function FiscalCollapseTruthPage() {
   const articleJsonLd = generateArticleJsonLd({
     title: "財政破綻は本当に起きるのか ─ 国債・対外純資産・投資収益からデータで考える",
-    description: "国債残高1,170兆円は危機なのか。日本は世界最大の対外純資産国であり、海外投資からの収益は年間35兆円超。財政破綻論の根拠と反論をデータで整理する。",
+    description: "国債残高1,128兆円（2025年度末）は危機なのか。日本は世界最大の対外純資産国であり、海外投資からの収益は年間40兆円規模。財政破綻論の根拠と反論をデータで整理する。",
     slug: SLUG,
     readingTime: 8,
     tags: ["財政破綻", "国債", "対外純資産"],
@@ -26,15 +26,15 @@ export default function FiscalCollapseTruthPage() {
   const faqJsonLd = generateFaqPageJsonLd([
   {
     "question": "日本は財政破綻しますか？",
-    "answer": "「即座の破綻」は考えにくいというのが多くのエコノミストの見方です。理由は①国債の90%が国内保有、②対外純資産488兆円（世界1位）、③海外投資収益が年間35兆円超であるためです。ただし、国債残高1,170兆円・GDP比250%という水準は持続可能かどうかという構造問題は残ります。"
+    "answer": "「即座の破綻」は考えにくいというのが多くのエコノミストの見方です。理由は①国債の約90%が国内保有、②対外純資産は2024年末で約534兆円（世界1位）、③海外投資収益（第一次所得収支）が年間40兆円規模に達するためです。ただし、国債残高1,128兆円（2025年度末）・GDP比約230%という水準は持続可能かどうかという構造問題は残ります。"
   },
   {
     "question": "財政破綻論の根拠は何ですか？",
-    "answer": "主な根拠は3つです。①国債残高がGDP比250%と先進国最悪水準、②少子高齢化による社会保障費の増大（毎年1兆円超の自然増）、③利上げ局面での利払い費急増リスク（金利1%上昇で利払い費が10兆円増加）です。"
+    "answer": "主な根拠は3つです。①国債残高がGDP比約230%と先進国最悪水準、②少子高齢化による社会保障費の増大（毎年1兆円超の自然増）、③日銀利上げ局面での利払い費急増リスク（金利1%上昇で利払い費が10兆円規模増加）です。"
   },
   {
     "question": "日本が財政破綻しにくい理由は何ですか？",
-    "answer": "①国債の約90%が国内保有のため海外投資家の「逃避」リスクが小さい、②日本は世界最大の対外純資産国（488兆円）で外貨建て借金が少ない、③海外投資からの所得収支が年間35兆円超ある、という3点が主な理由です。"
+    "answer": "①国債の約90%が国内保有のため海外投資家の「逃避」リスクが小さい、②日本は世界最大の対外純資産国（2024年末で約534兆円）で外貨建て借金が少ない、③海外投資からの所得収支が年間40兆円規模ある、という3点が主な理由です。"
   }
 ]);
 
@@ -47,13 +47,13 @@ export default function FiscalCollapseTruthPage() {
       <ArticleLayout
         slug={SLUG}
         title="財政破綻は本当に起きるのか ─ 国債・対外純資産・投資収益からデータで考える"
-        description="国債残高1,170兆円は危機なのか。日本は世界最大の対外純資産国であり、海外投資からの収益（第一次所得収支）は年間35兆円超。財政破綻論の根拠と反論をデータで整理する。"
+        description="国債残高1,128兆円（2025年度末）は危機なのか。日本は世界最大の対外純資産国であり、海外投資からの収益（第一次所得収支）は年間40兆円規模。財政破綻論の根拠と反論をデータで整理する。"
         readingTime={8}
         tags={["財政破綻", "国債", "対外純資産"]}
       >
-        <Section heading="「1,170兆円の借金」は本当に危機なのか">
+        <Section heading="「1,128兆円の借金」は本当に危機なのか">
           <p>
-            「国の借金が1,000兆円を超えた」「国民一人当たり900万円超の借金」といった報道を目にしたことがある人は多いだろう。
+            「国の借金が1,100兆円を超えた」「国民一人当たり900万円超の借金」といった報道を目にしたことがある人は多いだろう。
             数字だけを見れば、日本はすでに財政危機に陥っているように感じる。
           </p>
           <p>
@@ -72,9 +72,9 @@ export default function FiscalCollapseTruthPage() {
         <Section heading="財政破綻論の根拠：3つの数字">
           <DataBox
             items={[
-              { label: "国債残高（2024）",     value: "1,170兆円", note: "税収の約16年分",      color: "#ef4444" },
-              { label: "債務残高 / GDP比",     value: "約250%",    note: "先進国最悪水準",      color: "#ef4444" },
-              { label: "社会保障費の増加傾向", value: "毎年増加",  note: "少子高齢化で加速",    color: "#D97706" },
+              { label: "国債残高（2025年度末）", value: "1,128兆円", note: "税収の約14年分",      color: "#ef4444" },
+              { label: "債務残高 / GDP比",       value: "約230%",    note: "先進国最悪水準",      color: "#ef4444" },
+              { label: "社会保障費の増加傾向",   value: "毎年増加",  note: "少子高齢化で加速",    color: "#D97706" },
             ]}
           />
           <p>
@@ -93,15 +93,15 @@ export default function FiscalCollapseTruthPage() {
           </p>
           <DataBox
             items={[
-              { label: "対外純資産残高（2023）", value: "約488兆円", note: "33年連続世界1位", color: "#22c55e" },
-              { label: "比較：ドイツ（2位）",    value: "約390兆円", note: "円換算概算",        color: "#4F8EF7" },
-              { label: "比較：中国（3位）",      value: "約310兆円", note: "円換算概算",        color: "#4F8EF7" },
+              { label: "対外純資産残高（2024年末）", value: "約534兆円", note: "34年連続世界1位", color: "#22c55e" },
+              { label: "比較：ドイツ（2位）",        value: "約460兆円", note: "円換算概算",        color: "#4F8EF7" },
+              { label: "比較：中国（3位）",          value: "約340兆円", note: "円換算概算",        color: "#4F8EF7" },
             ]}
           />
           <p>
             対外純資産とは、日本の政府・企業・個人が海外に持つ資産から、
             外国人が日本に持つ資産を差し引いた純額だ。
-            日本は1991年から33年連続でこの数値が世界1位となっている。
+            日本は1991年から34年連続でこの数値が世界1位となっている。
           </p>
           <p>
             ギリシャやアルゼンチンが財政危機に陥ったのは、外国からの資金調達に依存していたためだ。
@@ -117,18 +117,18 @@ export default function FiscalCollapseTruthPage() {
           </p>
           <DataBox
             items={[
-              { label: "第一次所得収支（2023）",    value: "約35.9兆円", note: "過去最大水準",         color: "#22c55e" },
-              { label: "貿易収支（2023）",          value: "▼約9.3兆円", note: "赤字",                 color: "#ef4444" },
-              { label: "経常収支（2023）合計",      value: "約20.6兆円", note: "黒字維持",              color: "#22c55e" },
+              { label: "第一次所得収支（2024）",    value: "約40.2兆円", note: "過去最大水準",         color: "#22c55e" },
+              { label: "貿易収支（2024）",          value: "▼約4.5兆円", note: "赤字",                 color: "#ef4444" },
+              { label: "経常収支（2024）合計",      value: "約29.4兆円", note: "黒字維持",              color: "#22c55e" },
             ]}
           />
           <p>
             第一次所得収支とは、海外子会社からの配当、債券利息、直接投資収益などの合計だ。
-            日本企業が長年にわたり積み上げてきた海外投資が、年間35兆円超の「不労所得」として
+            日本企業が長年にわたり積み上げてきた海外投資が、年間40兆円規模の「不労所得」として
             日本に還流している。
           </p>
           <p>
-            この規模は、国の税収（72兆円）の約50%に相当する。
+            この規模は、国の税収（2025年度80.7兆円）の約半分に相当する。
             財政赤字を補填する「隠れた収益源」として機能しているとも言える。
           </p>
         </Section>
@@ -204,13 +204,13 @@ export default function FiscalCollapseTruthPage() {
             style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
           >
             <div className="text-xs font-semibold mb-2" style={{ color: "var(--muted)" }}>破綻しにくい要因</div>
-            {["世界最大の対外純資産（488兆円）", "第一次所得収支の黒字（年35兆円超）", "国債の国内保有率の高さ（約90%）", "円建て国債のため自国通貨での返済が可能"].map(item => (
+            {["世界最大の対外純資産（534兆円）", "第一次所得収支の黒字（年40兆円規模）", "国債の国内保有率の高さ（約90%）", "円建て国債のため自国通貨での返済が可能"].map(item => (
               <div key={item} className="flex items-center gap-2 text-xs" style={{ color: "var(--text)" }}>
                 <span style={{ color: "#22c55e" }}>✓</span>{item}
               </div>
             ))}
             <div className="text-xs font-semibold mb-2 mt-3" style={{ color: "var(--muted)" }}>リスク要因</div>
-            {["国債残高のGDP比250%（先進国最悪）", "少子高齢化による社会保障費の増大", "金利上昇による利払い費急増リスク", "人口減少による長期的な税収・経済縮小"].map(item => (
+            {["国債残高のGDP比約230%（先進国最悪）", "少子高齢化による社会保障費の増大", "日銀利上げによる利払い費急増リスク", "人口減少による長期的な税収・経済縮小"].map(item => (
               <div key={item} className="flex items-center gap-2 text-xs" style={{ color: "var(--text)" }}>
                 <span style={{ color: "#ef4444" }}>!</span>{item}
               </div>
@@ -229,9 +229,9 @@ export default function FiscalCollapseTruthPage() {
         </Section>
         <Section heading="関連記事">
           <ul className="list-disc pl-5 space-y-1">
-            <li><Link href="/articles/national-debt-1000trillion" className="underline" style={{ color: "var(--link)" }}>国債残高1,000兆円超 ─ 日本の財政赤字をデータで理解する</Link></li>
+            <li><Link href="/articles/national-debt-1000trillion" className="underline" style={{ color: "var(--link)" }}>国債残高1,100兆円超 ─ 日本の財政赤字をデータで理解する</Link></li>
             <li><Link href="/articles/national-debt-per-citizen" className="underline" style={{ color: "var(--link)" }}>「国民一人当たり1,000万円の借金」は本当か？</Link></li>
-            <li><Link href="/articles/next-decade-forecast" className="underline" style={{ color: "var(--link)" }}>「失われた40年」になる前に ─ 2025〜2035年の日本経済展望</Link></li>
+            <li><Link href="/articles/next-decade-forecast" className="underline" style={{ color: "var(--link)" }}>「失われた40年」になる前に ─ 2026〜2035年の日本経済展望</Link></li>
           </ul>
         </Section>
       </ArticleLayout>

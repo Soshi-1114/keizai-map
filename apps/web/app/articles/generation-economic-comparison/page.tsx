@@ -27,11 +27,11 @@ export default function GenerationEconomicComparisonPage() {
   const faqJsonLd = generateFaqPageJsonLd([
     {
       question: "氷河期世代の実質賃金水準はZ世代より高かったのですか？",
-      answer: "はい。1995年就職の氷河期世代の就職時実質賃金は1990年=100で109.0と高水準でした。一方、2015年就職のミレニアル世代は96.6、2025年就職のZ世代は推定99です。「就職が苦しかった」のは事実ですが、就職できた人の賃金水準は氷河期世代の方が高かったのです。",
+      answer: "はい。1995年就職の氷河期世代の就職時実質賃金は1990年=100で109.0と高水準でした。一方、2015年就職のミレニアル世代は96.6、2025年就職のZ世代は97.9です。「就職が苦しかった」のは事実ですが、就職できた人の賃金水準は氷河期世代の方が高かったのです。",
     },
     {
       question: "住宅を最も買いやすかった世代はどれですか？",
-      answer: "ミレニアル世代（2015年就職）です。住宅価格指数は1995年88.8、2015年63.7、2025年69+で、ミレニアル世代は底値圏の住宅価格と超低金利の住宅ローンを組めました。Z世代は住宅価格が上昇局面に転じ、日銀利上げも重なり最も家を買いにくい世代になりつつあります。",
+      answer: "ミレニアル世代（2015年就職）です。住宅価格指数は1995年88.8、2015年63.7、2025年68.8で、ミレニアル世代は底値圏の住宅価格と超低金利の住宅ローンを組めました。Z世代は住宅価格が上昇局面に転じ、日銀利上げも重なり最も家を買いにくい世代になりつつあります。",
     },
     {
       question: "社会保険料負担は世代でどれくらい違いますか？",
@@ -84,7 +84,7 @@ export default function GenerationEconomicComparisonPage() {
             items={[
               { label: "氷河期世代 (1995)", value: "109.0", note: "高い水準", color: "#4F8EF7" },
               { label: "ミレニアル (2015)", value: "96.6",  note: "▲11%",     color: "#ef4444" },
-              { label: "Z世代 (2025推定)",  value: "≒99",   note: "やや回復",  color: "#D97706" },
+              { label: "Z世代 (2025)",       value: "97.9",  note: "1990年比 -2.1%", color: "#ef4444" },
             ]}
           />
           <p>
@@ -102,7 +102,7 @@ export default function GenerationEconomicComparisonPage() {
             items={[
               { label: "1995年 日経平均",    value: "19,868円", note: "1990=100で102.5", color: "#8B5CF6" },
               { label: "2015年 日経平均",    value: "19,033円", note: "1990=100で80.0",  color: "#8B5CF6" },
-              { label: "2025年初 日経平均",  value: "≒39,000円", note: "1990=100で155+", color: "#22c55e" },
+              { label: "2025年末 日経平均",  value: "≒49,400円", note: "1990=100で196.1", color: "#22c55e" },
             ]}
           />
           <p>
@@ -120,7 +120,7 @@ export default function GenerationEconomicComparisonPage() {
             items={[
               { label: "1995年 住宅価格", value: "88.8", note: "バブル崩壊で下落中", color: "#EC4899" },
               { label: "2015年 住宅価格", value: "63.7", note: "底値圏",            color: "#EC4899" },
-              { label: "2025年 住宅価格", value: "≒69+", note: "上昇傾向",         color: "#ef4444" },
+              { label: "2025年 住宅価格", value: "68.8", note: "上昇傾向",         color: "#ef4444" },
             ]}
           />
           <p>
@@ -139,7 +139,7 @@ export default function GenerationEconomicComparisonPage() {
             items={[
               { label: "1995年", value: "12.5%", note: "比較的軽い", color: "#10B981" },
               { label: "2015年", value: "16.8%", note: "+4.3pt",     color: "#D97706" },
-              { label: "2025年", value: "≒18.6%", note: "+1.8pt",    color: "#ef4444" },
+              { label: "2025年", value: "18.6%", note: "+1.8pt",    color: "#ef4444" },
             ]}
           />
           <p>
@@ -243,9 +243,9 @@ export default function GenerationEconomicComparisonPage() {
         </Section>
         <Section heading="関連記事">
           <ul className="list-disc pl-5 space-y-1">
-            <li><Link href="/articles/housing-price" className="underline" style={{ color: "var(--link)" }}>なぜ若者は家を買えないのか ─ 住宅価格と賃金の34年</Link></li>
-            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料30年の増加</Link></li>
-            <li><Link href="/articles/real-wages-trend-1990-2024" className="underline" style={{ color: "var(--link)" }}>日本の実質賃金推移【1990〜2024】データ分析</Link></li>
+            <li><Link href="/articles/housing-price" className="underline" style={{ color: "var(--link)" }}>なぜ若者は家を買えないのか ─ 住宅価格と賃金の35年</Link></li>
+            <li><Link href="/articles/social-insurance-burden" className="underline" style={{ color: "var(--link)" }}>手取りが増えない本当の理由 ─ 社会保険料35年の増加</Link></li>
+            <li><Link href="/articles/real-wages-trend-1990-2024" className="underline" style={{ color: "var(--link)" }}>日本の実質賃金推移【1990〜2025】データ分析</Link></li>
           </ul>
         </Section>
       </ArticleLayout>

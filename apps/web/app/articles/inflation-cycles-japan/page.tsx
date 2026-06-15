@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function InflationCyclesJapanPage() {
   const articleJsonLd = generateArticleJsonLd({
-    title: "物価高はいつまで続く？─ 過去30年の4つのインフレ局面を分析",
+    title: "物価高はいつまで続く？─ 過去35年の4つのインフレ局面を分析",
     description: "1990年・1997年・2008年・2022年の4つのインフレを比較し終わりを予測。",
     slug: SLUG,
     readingTime: 7,
@@ -26,8 +26,8 @@ export default function InflationCyclesJapanPage() {
   const organizationJsonLd = generateOrganizationJsonLd();
   const faqJsonLd = generateFaqPageJsonLd([
     {
-      question: "日本は過去30年で何回インフレを経験しましたか？",
-      answer: "4回です。①バブル末期（1989-1991、+3.3%/年）、②橋本増税（1997-1998、+1.8%/年）、③資源高（2007-2008、+1.4%/年）、④円安+資源高（2022-現在、+2.5〜3.0%/年）。それぞれ主因と終わり方が異なります。",
+      question: "日本は過去35年で何回インフレを経験しましたか？",
+      answer: "4回です。①バブル末期（1989-1991、+3.3%/年）、②橋本増税（1997-1998、+1.8%/年）、③資源高（2007-2008、+1.4%/年）、④円安+資源高（2022-2025、+2.5〜3.2%/年）。それぞれ主因と終わり方が異なります。",
     },
     {
       question: "今回のインフレは過去とどう違いますか？",
@@ -51,14 +51,14 @@ export default function InflationCyclesJapanPage() {
       <script id="faq-jsonld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <ArticleLayout
         slug={SLUG}
-        title="物価高はいつまで続く？─ 過去30年の4つのインフレ局面を分析"
+        title="物価高はいつまで続く？─ 過去35年の4つのインフレ局面を分析"
         description="1990年バブル崩壊・1997年消費税増税・2008年資源高・2022年円安インフレ。日本経済が直面した4つのインフレ局面を比較し、今回の物価高の終わりを過去データから予測する。"
         readingTime={7}
         tags={["物価高", "インフレ", "予測"]}
       >
         <Section heading="今の物価高は『いつもと違う』のか">
           <p>
-            2022年から本格化した物価上昇は、2024年現在も続いている。
+            2022年から本格化した物価上昇は、2025年も続いている。
             食料品・電気・ガソリン・サービス価格まで上昇し、家計を直撃している。
           </p>
           <p>
@@ -99,8 +99,8 @@ export default function InflationCyclesJapanPage() {
                 </tr>
                 <tr>
                   <td className="p-3 font-medium" style={{ color: "var(--text)" }}>④ 円安+資源高</td>
-                  <td className="p-3">2022-2024</td>
-                  <td className="p-3 tabular-nums">+2.5〜3.0%/年</td>
+                  <td className="p-3">2022-2025</td>
+                  <td className="p-3 tabular-nums">+2.5〜3.2%/年</td>
                   <td className="p-3">円安・原油・賃上げ波及</td>
                 </tr>
               </tbody>
@@ -157,6 +157,7 @@ export default function InflationCyclesJapanPage() {
             items={[
               { label: "2021年 CPI", value: "112.2", color: "#D97706" },
               { label: "2024年 CPI", value: "119.9", note: "3年で+6.9%", color: "#ef4444" },
+              { label: "2025年 CPI", value: "123.7", note: "4年で+10.2%", color: "#ef4444" },
               { label: "終わりの引き金", value: "未確定",  note: "円高転換 or 賃金停止", color: "#4F8EF7" },
             ]}
           />
@@ -210,7 +211,7 @@ export default function InflationCyclesJapanPage() {
           <ul className="list-disc pl-5 space-y-1">
             <li><Link href="/articles/consumption-tax" className="underline" style={{ color: "var(--link)" }}>消費税率引き上げの歴史と家計への影響</Link></li>
             <li><Link href="/articles/yen-depreciation" className="underline" style={{ color: "var(--link)" }}>円安が進む仕組みと日本経済への影響</Link></li>
-            <li><Link href="/articles/real-wages-trend-1990-2024" className="underline" style={{ color: "var(--link)" }}>日本の実質賃金推移【1990〜2024】データ分析</Link></li>
+            <li><Link href="/articles/real-wages-trend-1990-2024" className="underline" style={{ color: "var(--link)" }}>日本の実質賃金推移【1990〜2025】データ分析</Link></li>
           </ul>
         </Section>
       </ArticleLayout>
