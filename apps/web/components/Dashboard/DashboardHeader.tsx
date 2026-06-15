@@ -9,15 +9,18 @@ export function DashboardHeader() {
       style={{ borderColor: "var(--border)" }}
     >
       <div className="min-w-0">
-        <h1
+        <div
           className="font-bold tracking-tight"
           style={{ fontSize: "clamp(22px, 5vw, 38px)" }}
         >
           KeizaiMap
+        </div>
+        <h1
+          className="text-xs sm:text-sm mt-0.5 font-normal leading-snug break-words"
+          style={{ color: "var(--muted)" }}
+        >
+          日本の実質賃金・物価・税収・為替の推移グラフ（1990〜2025）
         </h1>
-        <p className="text-sm mt-0.5" style={{ color: "var(--muted)" }}>
-          数字で見る、日本の30年
-        </p>
       </div>
       <nav aria-label="サイト内ナビゲーション" className="flex items-center gap-2 md:gap-3 shrink-0">
         <Link
