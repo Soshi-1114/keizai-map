@@ -273,6 +273,8 @@ export function Chart({ data, events, administrations, activeIndicators, activeC
           tickLine={false}
           domain={yDomain}
           tickFormatter={(v) => `${v}`}
+          // SP では Y軸ラベルが目盛りと衝突するため、ChartPanel 側で
+          // チャート上部にキャプションとして表示する
           label={isMobile ? undefined : { value: "指数（1990=100）", angle: -90, position: "insideLeft", fill: "var(--muted)", fontSize: 12, dx: -2 }}
         />
 

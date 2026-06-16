@@ -2,6 +2,8 @@
 
 import { useEffect, useId, useState } from "react";
 import dynamic from "next/dynamic";
+import { SlidersHorizontal, ChevronDown } from "lucide-react";
+import { IndicatorChipSelector } from "./Dashboard/IndicatorChipSelector";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
 import { useIsMobile } from "@/lib/hooks";
 import { INDICATOR_CONFIGS } from "@/lib/data";
@@ -32,6 +34,9 @@ const ChartPanel = dynamic(() => import("./Dashboard/ChartPanel").then(m => ({ d
 const ComparisonView = dynamic(() => import("./ComparisonView").then(m => ({ default: m.ComparisonView })), {
   loading: () => <div style={{ minHeight: 360 }} aria-label="比較ビュー読み込み中" />,
 });
+const MonthlyPanel = dynamic(() => import("./MonthlyPanel").then(m => ({ default: m.MonthlyPanel })), {
+  loading: () => <div style={{ minHeight: 280 }} aria-label="月次パネル読み込み中" />,
+});
 
 const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key) as IndicatorKey[];
 
@@ -52,6 +57,11 @@ export function MainView({ initialParams }: MainViewProps) {
 
   const [viewMode, setViewMode] = useState<ViewMode>("chart");
   const [showFiltersSheet, setShowFiltersSheet] = useState(false);
+  // SP: 月次推移パネルは折りたたみ（初期 closed）。PC は常時展開。
+  const [showMonthlyPanel, setShowMonthlyPanel] = useState(false);
+  // G7 比較線の表示 state。SP では MobileFiltersSheet 内、PC では ChartPanel 内
+  // の同じトグルから操作する必要があるため MainView で保持。
+  const [showComparison, setShowComparison] = useState(false);
   // DataTable はモード横断機能。state を MainView に持ち上げ、推移/政権/ショック/イベント
   // のどのビューでもチャート下に表示できるようにする。
   const [showDataTable, setShowDataTable] = useState(false);
@@ -108,11 +118,56 @@ export function MainView({ initialParams }: MainViewProps) {
   const chartContainer = (
     <div
       id="chart-container"
-      className="rounded-xl border p-2 md:p-4 -mx-2 md:mx-0 scroll-mt-4"
+      className="rounded-xl border p-2 md:p-4 -mx-2 md:mx-0 scroll-mt-4 relative"
       style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
       role="tabpanel"
       aria-label={VIEW_MODE_DESCRIPTIONS[viewMode]}
     >
+      {/* SP のみ: フィルター呼び出しをチャート枠右上にアイコンボタンで配置。
+          期間テキストは外しアイコン単体で視認性を上げる（期間は aria-label に残す） */}
+      {isMobile && (
+        <button
+          type="button"
+          onClick={() => setShowFiltersSheet(true)}
+          className="absolute top-2 right-2 z-10 inline-flex items-center justify-center rounded-lg border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          style={{
+            width: 44,
+            height: 44,
+            backgroundColor: "var(--bg)",
+            borderColor: "var(--border)",
+            color: "var(--text)",
+          }}
+          aria-haspopup="dialog"
+          aria-expanded={showFiltersSheet}
+          aria-label={`フィルター（表示期間 ${yearRange[0]}–${yearRange[1]}年）を開く`}
+        >
+          <SlidersHorizontal size={20} aria-hidden />
+        </button>
+      )}
+
+      {/* SP のみ: 分析モードタブをチャート枠上部に。
+          右上のフィルターアイコン（44px + 余白）と重ならないよう pr で確保 */}
+      {isMobile && (
+        <div className="mb-2 pr-[56px]">
+          <ViewModeTabs
+            viewMode={viewMode}
+            onChange={setViewMode}
+            isMobile
+            tabpanelId={tabpanelId}
+          />
+        </div>
+      )}
+
+      {/* SP のみ: 「他の指標を重ねる」テキストリンク。G7 ボタンの旧スロット位置 */}
+      {isMobile && viewMode === "chart" && (
+        <IndicatorChipSelector
+          mode="multi"
+          selected={activeIndicators}
+          onToggle={toggleIndicator}
+          compact
+        />
+      )}
+
       {viewMode === "chart" ? (
         <ChartPanel
           isMobile={isMobile}
@@ -120,7 +175,8 @@ export function MainView({ initialParams }: MainViewProps) {
           effectiveIndicators={activeIndicators}
           activeCategories={activeCategories}
           yearRange={yearRange}
-          onToggleIndicator={toggleIndicator}
+          showComparison={showComparison}
+          onShowComparisonChange={setShowComparison}
         />
       ) : (
         <ComparisonView
@@ -188,30 +244,8 @@ export function MainView({ initialParams }: MainViewProps) {
     />
   );
 
-  // SP のフィルター呼び出しボタン
-  const filterButton = (
-    <button
-      onClick={() => setShowFiltersSheet(true)}
-      className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-      style={{
-        minHeight: 56,
-        borderColor: "var(--border)",
-        backgroundColor: "var(--card)",
-      }}
-      aria-haspopup="dialog"
-      aria-expanded={showFiltersSheet}
-    >
-      <span className="flex flex-col items-start">
-        <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>
-          フィルター
-        </span>
-        <span className="text-xs tabular-nums" style={{ color: "var(--muted)" }}>
-          表示期間: {yearRange[0]}–{yearRange[1]}年
-        </span>
-      </span>
-      <span style={{ color: "var(--muted)", fontSize: 18 }} aria-hidden>›</span>
-    </button>
-  );
+  // SP のフィルター呼び出しは chartContainer 内のアイコンボタンに統合済み（上記）。
+  // 旧 filterButton（横長カード）は撤去。
 
   // 分析モードタブ + 現在モードの説明。SP はチャート直下に降ろす。
   const viewModeBlock = (
@@ -267,6 +301,13 @@ export function MainView({ initialParams }: MainViewProps) {
             onYearRangeCommit={setCommittedYearRange}
             onCategoryToggle={toggleCategory}
             onClose={() => setShowFiltersSheet(false)}
+            showComparison={showComparison}
+            onComparisonChange={setShowComparison}
+            showG7Trigger={
+              activeIndicators.includes("wage") ||
+              activeIndicators.includes("cpi") ||
+              activeIndicators.includes("fx")
+            }
           />
         )}
 
@@ -280,8 +321,43 @@ export function MainView({ initialParams }: MainViewProps) {
              6. ツールバー（CSV/データ表/ブックマーク/履歴） ← 第3層へ */
           <>
             {chartContainer}
-            {filterButton}
-            {viewModeBlock}
+            {/* 月次推移は SP では折りたたみ。フィルター/比較タブをチャート近くに残すため */}
+            <div
+              className="rounded-xl border overflow-hidden"
+              style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+            >
+              <button
+                type="button"
+                onClick={() => setShowMonthlyPanel(v => !v)}
+                className="w-full flex items-center justify-between gap-3 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                aria-expanded={showMonthlyPanel}
+                aria-controls="monthly-panel-collapsible"
+              >
+                <span className="flex flex-col items-start">
+                  <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>
+                    {showMonthlyPanel ? "月次推移を閉じる" : "月次推移を見る"}
+                  </span>
+                  <span className="text-xs" style={{ color: "var(--muted)" }}>
+                    CPI 直近24か月・前月比/前年同月比・主要政策イベント
+                  </span>
+                </span>
+                <ChevronDown
+                  size={18}
+                  style={{
+                    color: "var(--muted)",
+                    transform: showMonthlyPanel ? "rotate(180deg)" : "rotate(0)",
+                    transition: "transform 150ms",
+                  }}
+                  aria-hidden
+                />
+              </button>
+              {showMonthlyPanel && (
+                <div id="monthly-panel-collapsible" className="border-t" style={{ borderColor: "var(--border)" }}>
+                  <MonthlyPanel />
+                </div>
+              )}
+            </div>
+            {/* viewModeBlock は SP では chartContainer 内部の上部に移設済み */}
             {narrativeBlock}
             {insightCardsBlock}
             <RelatedArticles activeIndicators={activeIndicators} yearRange={yearRange} />
@@ -312,6 +388,7 @@ export function MainView({ initialParams }: MainViewProps) {
             </div>
             {viewModeBlock}
             {chartContainer}
+            <MonthlyPanel />
             {chartToolbar}
             {dataTableBlock}
             {narrativeBlock}

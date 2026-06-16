@@ -53,6 +53,14 @@ const SHOCK_EVENTS = [
 // 発生時を0として前後の相対年（2年刻み）
 const RELATIVE_OFFSETS = [-2, 0, 2, 4, 6];
 
+/**
+ * ショック比較で disabled にする指標。
+ * 単調増加（debt, insurance）/ 単調減少（births）は「ショック前後の山谷」が
+ * 出ず、各ショックで同じような直線パターンしか描画されないため、
+ * 選択しても意味のあるストーリーにならない。
+ */
+const SHOCK_DISABLED_KEYS: IndicatorKey[] = ["debt", "insurance", "births"];
+
 // ─────────────────────────────────────────────────────────
 // ヘルパー
 // ─────────────────────────────────────────────────────────
@@ -332,8 +340,9 @@ function ShockChart({
         mode="single"
         selected={indicator}
         onToggle={onChangePrimary}
-        label="表示する指標を1つ選択"
+        label="表示する指標を1つ選択（ショック前後で意味あるパターンが出る指標のみ）"
         compact={isMobile}
+        disabledKeys={SHOCK_DISABLED_KEYS}
       />
 
       <p className="text-xs mb-4" style={{ color: "var(--muted)" }}>
