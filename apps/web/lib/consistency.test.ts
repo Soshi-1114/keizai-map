@@ -155,28 +155,38 @@ describe("整合性: 全記事ページが articleOpenGraph を使う", () => {
   }
 });
 
-describe("整合性: /og 既定エンドポイントの LATEST_VALUES が data と一致", () => {
-  // /og/route.tsx は edge runtime のため lib/data を import せず、ハードコード
-  // された LATEST_VALUES 辞書を持っている。data.generated.json と乖離した場合
-  // OG 画像と本サイトの数値が食い違うので CI で突合する。
+describe("整合性: /og 動的OGPがダッシュボードと同一データソースを参照", () => {
+  // /og/route.tsx は深リンクのクエリに応じてチャート画像を生成する。
+  // ハードコードされた値の辞書を持たず、lib/og-series.ts 経由で RAW_DATA を
+  // そのまま使う構造になっていれば、本体と乖離する余地は構築上ゼロになる。
   const OG_ROUTE_PATH = resolve(APP_DIR, "og", "route.tsx");
 
-  it("各指標で /og/route.tsx の LATEST_VALUES が data.generated.json 最新年と一致", () => {
-    const latest = RAW_DATA[RAW_DATA.length - 1];
+  it("/og/route.tsx は lib/og-series.ts から getNormalizedSeries を import している", () => {
     const text = readFileSync(OG_ROUTE_PATH, "utf-8");
-    const match = text.match(/const LATEST_VALUES[^=]*=\s*\{([\s\S]*?)\};/);
-    expect(match, "/og/route.tsx に LATEST_VALUES 定義が見つからない").not.toBeNull();
-    const block = match![1];
+    expect(text).toMatch(/from\s+"@\/lib\/og-series"/);
+    expect(text).toMatch(/getNormalizedSeries/);
+  });
 
-    const pairs = Array.from(block.matchAll(/(\w+):\s*"([\d.]+)"/g));
-    const claimed: Record<string, number> = {};
-    for (const [, key, value] of pairs) claimed[key] = Number(value);
+  it("/og/route.tsx に LATEST_VALUES 等のハードコード辞書が無い（drift 源を作らない）", () => {
+    const text = readFileSync(OG_ROUTE_PATH, "utf-8");
+    expect(text).not.toMatch(/const LATEST_VALUES/);
+  });
+
+  it("lib/og-series.getNormalizedSeries の出力が data.generated.json と一致", async () => {
+    const { getNormalizedSeries } = await import("./og-series");
+    const { BASELINE_1990 } = await import("./data");
+    const latest = RAW_DATA[RAW_DATA.length - 1];
 
     for (const key of ["wage", "cpi", "tax", "fx", "nikkei", "housing", "debt", "births", "insurance"] as const) {
-      expect(
-        claimed[key],
-        `/og/route.tsx の LATEST_VALUES.${key} (${claimed[key]}) と data.generated.json 最新年 (${latest[key]}) が乖離`,
-      ).toBe(latest[key]);
+      const series = getNormalizedSeries([key], 1990, latest.year);
+      const last = series[0].points[series[0].points.length - 1];
+      const raw = latest[key];
+      if (raw == null) {
+        expect(last.value).toBeNull();
+      } else {
+        expect(last.year).toBe(latest.year);
+        expect(last.value).toBeCloseTo((raw / BASELINE_1990[key]) * 100, 5);
+      }
     }
   });
 });
