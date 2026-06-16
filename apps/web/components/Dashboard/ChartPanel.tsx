@@ -108,6 +108,17 @@ export function ChartPanel({
         </div>
       </div>
 
+      {/* SP では Recharts の YAxis label が目盛りと衝突するため、上に独立キャプションで表示 */}
+      {isMobile && (
+        <div
+          className="text-xs mb-1 pl-1"
+          style={{ color: "var(--muted)" }}
+          aria-hidden
+        >
+          縦軸: 指数（1990=100）
+        </div>
+      )}
+
       <Chart
         data={showComparison ? getComparisonData(filteredData) : filteredData}
         events={EVENTS}
