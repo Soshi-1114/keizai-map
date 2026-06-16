@@ -123,13 +123,16 @@ export function MainView({ initialParams }: MainViewProps) {
       role="tabpanel"
       aria-label={VIEW_MODE_DESCRIPTIONS[viewMode]}
     >
-      {/* SP のみ: フィルター呼び出しをチャート枠右上にアイコン埋め込み */}
+      {/* SP のみ: フィルター呼び出しをチャート枠右上にアイコンボタンで配置。
+          期間テキストは外しアイコン単体で視認性を上げる（期間は aria-label に残す） */}
       {isMobile && (
         <button
           type="button"
           onClick={() => setShowFiltersSheet(true)}
-          className="absolute top-2 right-2 z-10 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium tabular-nums focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+          className="absolute top-2 right-2 z-10 inline-flex items-center justify-center rounded-lg border focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           style={{
+            width: 44,
+            height: 44,
             backgroundColor: "var(--bg)",
             borderColor: "var(--border)",
             color: "var(--text)",
@@ -138,14 +141,14 @@ export function MainView({ initialParams }: MainViewProps) {
           aria-expanded={showFiltersSheet}
           aria-label={`フィルター（表示期間 ${yearRange[0]}–${yearRange[1]}年）を開く`}
         >
-          <SlidersHorizontal size={13} aria-hidden />
-          <span>{yearRange[0]}–{yearRange[1]}</span>
+          <SlidersHorizontal size={20} aria-hidden />
         </button>
       )}
 
-      {/* SP のみ: 分析モードタブをチャート枠上部に。fixed icon ボタンと重ならないよう右マージン確保 */}
+      {/* SP のみ: 分析モードタブをチャート枠上部に。
+          右上のフィルターアイコン（44px + 余白）と重ならないよう pr で確保 */}
       {isMobile && (
-        <div className="mb-2 pr-[100px]">
+        <div className="mb-2 pr-[56px]">
           <ViewModeTabs
             viewMode={viewMode}
             onChange={setViewMode}
