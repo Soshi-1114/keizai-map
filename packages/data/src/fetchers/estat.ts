@@ -68,3 +68,61 @@ export async function fetchBirths(): Promise<Map<number, number>> {
   for (const [y, v] of annual) inMan.set(y, Math.round((v / 10000) * 10) / 10);
   return inMan;
 }
+
+// ─── 月次取得（年集約せずそのまま返す）────────────────────────────
+
+/**
+ * e-Stat の @time フィールドから "YYYY-MM" を抽出。
+ * 観測された形式: "YYYY00MMMM"（例: "2026000404" → 2026-04, "1971000101" → 1971-01）
+ * 月次データは末尾2文字が "01"〜"12"。年次レコードは "0000" 等になり弾く。
+ */
+function yearMonthFromTime(t: string): string | null {
+  if (!t || t.length < 6) return null;
+  const year = t.slice(0, 4);
+  if (!/^\d{4}$/.test(year)) return null;
+  const month = t.slice(-2);
+  if (!/^(0[1-9]|1[0-2])$/.test(month)) return null;
+  return `${year}-${month}`;
+}
+
+/**
+ * 月次の値を YYYY-MM キーの Map に変換。
+ * @tab="1" の原指数のみ採用し、前年同月比（@tab="3"）等は除外。
+ */
+function monthlyMap(values: Array<Record<string, string>>, tab = "1"): Map<string, number> {
+  const result = new Map<string, number>();
+  for (const v of values) {
+    if (v["@tab"] != null && v["@tab"] !== tab) continue;
+    const raw = v.$;
+    if (!raw || raw === "-" || raw === "…" || raw === "x") continue;
+    const num = parseFloat(raw);
+    if (isNaN(num)) continue;
+    const ym = yearMonthFromTime(v["@time"] ?? "");
+    if (!ym) continue;
+    if (parseInt(ym.slice(0, 4), 10) < 1985) continue;
+    result.set(ym, num);
+  }
+  return result;
+}
+
+/** CPI 月次（総合指数 2020=100、原数値） */
+export async function fetchCPIMonthly(): Promise<Map<string, number>> {
+  console.log("  📊 CPI 月次 (e-Stat) を取得中...");
+  const json = await estatFetch({
+    statsDataId: "0003427113",
+    cdArea: "00000",
+    cdCat01: "0001",
+    cdTab: "1", // 1=原指数
+  });
+  return monthlyMap(extractValues(json), "1");
+}
+
+/** 出生数 月次（人 → 千人へ。月次は値が小さいので「千人」単位の方が読みやすい） */
+export async function fetchBirthsMonthly(): Promise<Map<string, number>> {
+  console.log("  📊 出生数 月次 (e-Stat) を取得中...");
+  const json = await estatFetch({ statsDataId: "0003411601", cdArea: "00000", cdCat01: "01" });
+  const raw = monthlyMap(extractValues(json));
+  const inSenNin = new Map<string, number>();
+  for (const [ym, v] of raw) inSenNin.set(ym, Math.round(v / 100) / 10);
+  return inSenNin;
+}

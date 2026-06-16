@@ -32,6 +32,9 @@ const ChartPanel = dynamic(() => import("./Dashboard/ChartPanel").then(m => ({ d
 const ComparisonView = dynamic(() => import("./ComparisonView").then(m => ({ default: m.ComparisonView })), {
   loading: () => <div style={{ minHeight: 360 }} aria-label="比較ビュー読み込み中" />,
 });
+const MonthlyPanel = dynamic(() => import("./MonthlyPanel").then(m => ({ default: m.MonthlyPanel })), {
+  loading: () => <div style={{ minHeight: 280 }} aria-label="月次パネル読み込み中" />,
+});
 
 const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key) as IndicatorKey[];
 
@@ -280,6 +283,7 @@ export function MainView({ initialParams }: MainViewProps) {
              6. ツールバー（CSV/データ表/ブックマーク/履歴） ← 第3層へ */
           <>
             {chartContainer}
+            <MonthlyPanel />
             {filterButton}
             {viewModeBlock}
             {narrativeBlock}
@@ -312,6 +316,7 @@ export function MainView({ initialParams }: MainViewProps) {
             </div>
             {viewModeBlock}
             {chartContainer}
+            <MonthlyPanel />
             {chartToolbar}
             {dataTableBlock}
             {narrativeBlock}

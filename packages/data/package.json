@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "fetch": "tsx src/fetch.ts"
+    "fetch": "tsx src/fetch.ts",
+    "fetch:monthly": "tsx src/fetch-monthly.ts"
   },
   "devDependencies": {
     "tsx": "^4.19.2",
