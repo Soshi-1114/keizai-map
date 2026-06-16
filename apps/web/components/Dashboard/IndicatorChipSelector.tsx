@@ -115,24 +115,24 @@ export function IndicatorChipSelector({
         onClick={() => setExpanded(v => !v)}
         aria-expanded={expanded}
         aria-controls={panelId}
-        className="w-full text-sm cursor-pointer inline-flex items-center justify-between gap-2 rounded-full px-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        className="inline-flex items-center gap-1.5 text-sm cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 py-1"
         style={{
-          minHeight: 44,
-          color: expanded ? "var(--text)" : "var(--link)",
-          border: "1px dashed var(--border)",
-          backgroundColor: expanded ? "var(--bg)" : "transparent",
+          color: "var(--link)",
+          background: "transparent",
+          border: "none",
           fontWeight: 600,
+          minHeight: 32,
         }}
       >
-        <span className="inline-flex items-center gap-1.5">
-          <span aria-hidden>{expanded ? "−" : "＋"}</span>
+        <span aria-hidden>{expanded ? "−" : "＋"}</span>
+        <span className="underline underline-offset-2 decoration-1">
           {expanded ? "指標選択を閉じる" : buttonClosedLabel}
         </span>
         <span
           className="text-xs tabular-nums"
-          style={{ color: "var(--muted)", fontWeight: 400 }}
+          style={{ color: "var(--muted)", fontWeight: 400, marginLeft: 4 }}
         >
-          {isSingleMode ? currentSingleLabel : `${activeCount}/${totalCount} 表示中`}
+          （{isSingleMode ? currentSingleLabel : `${activeCount}/${totalCount} 表示中`}）
         </span>
       </button>
       {expanded && (

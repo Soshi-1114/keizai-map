@@ -3,6 +3,7 @@
 import { useEffect, useId, useState } from "react";
 import dynamic from "next/dynamic";
 import { SlidersHorizontal, ChevronDown } from "lucide-react";
+import { IndicatorChipSelector } from "./Dashboard/IndicatorChipSelector";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
 import { useIsMobile } from "@/lib/hooks";
 import { INDICATOR_CONFIGS } from "@/lib/data";
@@ -58,6 +59,9 @@ export function MainView({ initialParams }: MainViewProps) {
   const [showFiltersSheet, setShowFiltersSheet] = useState(false);
   // SP: 月次推移パネルは折りたたみ（初期 closed）。PC は常時展開。
   const [showMonthlyPanel, setShowMonthlyPanel] = useState(false);
+  // G7 比較線の表示 state。SP では MobileFiltersSheet 内、PC では ChartPanel 内
+  // の同じトグルから操作する必要があるため MainView で保持。
+  const [showComparison, setShowComparison] = useState(false);
   // DataTable はモード横断機能。state を MainView に持ち上げ、推移/政権/ショック/イベント
   // のどのビューでもチャート下に表示できるようにする。
   const [showDataTable, setShowDataTable] = useState(false);
@@ -138,6 +142,29 @@ export function MainView({ initialParams }: MainViewProps) {
           <span>{yearRange[0]}–{yearRange[1]}</span>
         </button>
       )}
+
+      {/* SP のみ: 分析モードタブをチャート枠上部に。fixed icon ボタンと重ならないよう右マージン確保 */}
+      {isMobile && (
+        <div className="mb-2 pr-[100px]">
+          <ViewModeTabs
+            viewMode={viewMode}
+            onChange={setViewMode}
+            isMobile
+            tabpanelId={tabpanelId}
+          />
+        </div>
+      )}
+
+      {/* SP のみ: 「他の指標を重ねる」テキストリンク。G7 ボタンの旧スロット位置 */}
+      {isMobile && viewMode === "chart" && (
+        <IndicatorChipSelector
+          mode="multi"
+          selected={activeIndicators}
+          onToggle={toggleIndicator}
+          compact
+        />
+      )}
+
       {viewMode === "chart" ? (
         <ChartPanel
           isMobile={isMobile}
@@ -145,7 +172,8 @@ export function MainView({ initialParams }: MainViewProps) {
           effectiveIndicators={activeIndicators}
           activeCategories={activeCategories}
           yearRange={yearRange}
-          onToggleIndicator={toggleIndicator}
+          showComparison={showComparison}
+          onShowComparisonChange={setShowComparison}
         />
       ) : (
         <ComparisonView
@@ -270,6 +298,13 @@ export function MainView({ initialParams }: MainViewProps) {
             onYearRangeCommit={setCommittedYearRange}
             onCategoryToggle={toggleCategory}
             onClose={() => setShowFiltersSheet(false)}
+            showComparison={showComparison}
+            onComparisonChange={setShowComparison}
+            showG7Trigger={
+              activeIndicators.includes("wage") ||
+              activeIndicators.includes("cpi") ||
+              activeIndicators.includes("fx")
+            }
           />
         )}
 
@@ -319,7 +354,7 @@ export function MainView({ initialParams }: MainViewProps) {
                 </div>
               )}
             </div>
-            {viewModeBlock}
+            {/* viewModeBlock は SP では chartContainer 内部の上部に移設済み */}
             {narrativeBlock}
             {insightCardsBlock}
             <RelatedArticles activeIndicators={activeIndicators} yearRange={yearRange} />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Globe } from "lucide-react";
 import type { EventCategory } from "@/lib/types";
 import { DATA_YEARS } from "@/lib/constants";
 import { EraShortcuts } from "@/components/EraShortcuts";
@@ -19,6 +20,11 @@ interface Props {
   onYearRangeCommit?: (range: [number, number]) => void;
   onCategoryToggle: (cat: EventCategory) => void;
   onClose: () => void;
+  /** G7比較線トグル（賃金/CPI/為替のいずれかが表示中の場合のみ意味あり） */
+  showComparison: boolean;
+  onComparisonChange: (next: boolean) => void;
+  /** G7トグルを表示するかどうか（対応指標が選択されていなければ false） */
+  showG7Trigger: boolean;
 }
 
 export function MobileFiltersSheet({
@@ -28,6 +34,9 @@ export function MobileFiltersSheet({
   onYearRangeCommit,
   onCategoryToggle,
   onClose,
+  showComparison,
+  onComparisonChange,
+  showG7Trigger,
 }: Props) {
   const sheetRef = useRef<HTMLDivElement>(null);
   const dragStartY = useRef<number | null>(null);
@@ -188,6 +197,39 @@ export function MobileFiltersSheet({
             onToggle={onCategoryToggle}
           />
         </section>
+
+        {/* 比較線（G7平均）。賃金/CPI/為替のいずれかが選択中の時だけ意味がある */}
+        {showG7Trigger && (
+          <section aria-labelledby="compare-heading-sheet">
+            <h2 id="compare-heading-sheet" className="text-xs font-medium mb-2" style={{ color: "var(--muted)" }}>
+              比較線
+            </h2>
+            <button
+              type="button"
+              onClick={() => onComparisonChange(!showComparison)}
+              aria-pressed={showComparison}
+              className="w-full inline-flex items-center justify-between gap-2 px-4 rounded-xl border text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              style={{
+                minHeight: 44,
+                borderColor: showComparison ? "var(--link)" : "var(--border)",
+                color: showComparison ? "var(--link)" : "var(--text)",
+                backgroundColor: showComparison ? "#1d4ed815" : "transparent",
+                fontWeight: showComparison ? 600 : 500,
+              }}
+            >
+              <span className="inline-flex items-center gap-2">
+                <Globe size={14} aria-hidden />
+                G7平均と比較
+              </span>
+              <span className="text-xs" style={{ color: "var(--muted)" }}>
+                {showComparison ? "表示中" : "非表示"}
+              </span>
+            </button>
+            <p className="text-xs mt-1.5" style={{ color: "var(--muted)" }}>
+              賃金・CPI・為替のいずれかが表示中のときに有効。
+            </p>
+          </section>
+        )}
       </div>
 
       <style>{`
