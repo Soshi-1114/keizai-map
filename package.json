@@ -7,6 +7,7 @@
     "lint": "pnpm --filter web lint",
     "data:fetch": "pnpm --filter @keizai-map/data-fetcher fetch",
     "data:fetch:monthly": "pnpm --filter @keizai-map/data-fetcher fetch:monthly",
+    "data:fetch:daily": "pnpm --filter @keizai-map/data-fetcher fetch:daily",
     "data:audit": "tsx scripts/audit-article-numbers.ts"
   },
   "devDependencies": {

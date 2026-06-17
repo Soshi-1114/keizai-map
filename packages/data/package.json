@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "fetch": "tsx src/fetch.ts",
-    "fetch:monthly": "tsx src/fetch-monthly.ts"
+    "fetch:monthly": "tsx src/fetch-monthly.ts",
+    "fetch:daily": "tsx src/fetch-daily.ts"
   },
   "devDependencies": {
     "tsx": "^4.19.2",

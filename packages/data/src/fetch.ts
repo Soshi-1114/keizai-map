@@ -6,20 +6,25 @@
  * データソース:
  *   ✅ CPI    : e-Stat API (総務省 消費者物価指数 2020年基準)
  *   ✅ 出生数 : e-Stat API (厚労省 人口動態調査)
- *   🔄 為替    : 日銀 CSV → 失敗時 fallback
+ *   ✅ 為替    : FRED API (DEXJPUS 日次→年平均) → 失敗時 fallback
  *   🔄 税収    : 財務省 CSV → 失敗時 fallback
  *   🔄 国債残高 : 財務省 CSV → 失敗時 fallback
  *   📌 賃金・日経・住宅・社保: 公開API非対応のため fallback 固定
  *     （fallback 値は四半期ごとに人手で更新）
+ *
+ * 注: 旧 BOJ CSV フェッチャーは公開 URL が 404 を返すため FRED に置換。
+ *     コードは packages/data/src/fetchers/boj.ts に残置（参考用）。
  */
 
 import * as fs from "fs";
 import * as path from "path";
 import { fetchCPI, fetchBirths } from "./fetchers/estat";
-import { fetchFXFromBOJ } from "./fetchers/boj";
+import { fetchUsdJpyAnnual } from "./fetchers/fred";
 import { fetchTaxFromMOF, fetchDebtFromMOF } from "./fetchers/mof";
 import * as fallback from "./fetchers/fallback";
 import { round1 } from "./fetchers/utils";
+
+const FX_FROM_YEAR = 1990;
 
 const TARGET_YEARS: number[] = [];
 for (let y = 1990; y <= 2025; y++) TARGET_YEARS.push(y);
@@ -62,14 +67,37 @@ async function safeFetch<T>(fn: () => Promise<Map<number, number>>, label: strin
   }
 }
 
+async function loadEnvLocal(): Promise<void> {
+  const envPath = path.resolve(process.cwd(), "../../apps/web/.env.local");
+  if (!fs.existsSync(envPath)) return;
+  const text = fs.readFileSync(envPath, "utf-8");
+  for (const line of text.split("\n")) {
+    const m = line.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.+?)\s*$/);
+    if (!m) continue;
+    const [, key, value] = m;
+    if (process.env[key]) continue;
+    process.env[key] = value.replace(/^["']|["']$/g, "");
+  }
+}
+
 async function main() {
   console.log("📊 KeizaiMap データ取得（年次・1990-2025）\n");
+
+  await loadEnvLocal();
+
+  // FRED FX 取得には API キーが必要。未設定なら fallback に切り替わる。
+  const fxFetcher = process.env.FRED_API_KEY
+    ? () => fetchUsdJpyAnnual(FX_FROM_YEAR)
+    : async () => {
+        console.warn("  ⚠️  FRED_API_KEY 未設定: USD/JPY は fallback を使用");
+        return new Map<number, number>();
+      };
 
   // 並列フェッチ（失敗しても fallback に切り替わる）
   const [cpiMap, birthsMap, fxMap, taxMap, debtMap] = await Promise.all([
     safeFetch(fetchCPI, "CPI"),
     safeFetch(fetchBirths, "出生数"),
-    safeFetch(fetchFXFromBOJ, "USD/JPY"),
+    safeFetch(fxFetcher, "USD/JPY"),
     safeFetch(fetchTaxFromMOF, "税収"),
     safeFetch(fetchDebtFromMOF, "国債残高"),
   ]);
@@ -111,7 +139,7 @@ async function main() {
   console.log(`   最新値 (${latest.year}年): wage=${latest.wage} cpi=${latest.cpi} tax=${latest.tax} fx=${latest.fx}`);
   console.log(`                            nikkei=${latest.nikkei} housing=${latest.housing} debt=${latest.debt}`);
   console.log(`                            births=${latest.births} insurance=${latest.insurance}`);
-  console.log("\n📝 自動更新ソース: e-Stat (CPI/出生数) / BOJ (FX) / MOF (税収/国債)");
+  console.log("\n📝 自動更新ソース: e-Stat (CPI/出生数) / FRED (FX) / MOF (税収/国債)");
   console.log("   API 失敗時は fallback.ts の確定値を使用します。");
 }
 
