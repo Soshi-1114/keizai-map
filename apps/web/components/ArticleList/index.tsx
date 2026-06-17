@@ -57,9 +57,54 @@ export function ArticleList() {
         {/* ヘッダー */}
         <header className="mb-6 pb-6 border-b" style={{ borderColor: "var(--border)" }}>
           <h1 className="text-2xl font-bold mb-2">解説記事</h1>
-          <p className="text-sm" style={{ color: "var(--muted)" }}>
+          <p className="text-sm mb-4" style={{ color: "var(--muted)" }}>
             日本経済のキーワードをデータとともに解説します。
           </p>
+          <div className="space-y-3 text-sm leading-relaxed" style={{ color: "var(--text)" }}>
+            <p>
+              KeizaiMap は「なぜ自分たちの生活は30年で楽にならなかったのか」を、感情論ではなく公的統計データだけで読み解くために作りました。日本銀行の為替・国債、厚生労働省の毎月勤労統計、総務省の消費者物価指数、財務省の税収・国債残高、人口動態統計など、35年分の一次データを一画面で重ねて確認できます。
+            </p>
+            <p>
+              「数字は嘘をつかないが、切り取り方で印象は変わる」──という前提に立ち、すべての記事で複数指標を並べ、出典URLと取得方法を明示しています。賃金が上がらない理由も、円安が進む構造も、ひとつの数字ではなく組み合わせで初めて見えてきます。
+            </p>
+          </div>
+          <div
+            className="mt-5 p-4 rounded-lg border"
+            style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+          >
+            <p className="text-xs font-semibold mb-3" style={{ color: "var(--muted)" }}>
+              初めての方はこの3本から
+            </p>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link
+                  href="/articles/real-wages"
+                  className="hover:underline font-medium"
+                  style={{ color: "var(--link)" }}
+                >
+                  実質賃金とは？1990〜2025年の推移をデータで解説
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/articles/abenomics-real-wages-analysis"
+                  className="hover:underline font-medium"
+                  style={{ color: "var(--link)" }}
+                >
+                  アベノミクスで実質賃金は上がったのか？
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/articles/money-value-time-comparison"
+                  className="hover:underline font-medium"
+                  style={{ color: "var(--link)" }}
+                >
+                  30年前の月収30万円は今いくら？物価で換算する実質価値
+                </Link>
+              </li>
+            </ul>
+          </div>
         </header>
 
         {/* タグフィルター — SP では FV 確保のため主要タグだけ表示 */}
