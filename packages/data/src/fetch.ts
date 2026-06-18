@@ -19,7 +19,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { fetchCPI, fetchBirths } from "./fetchers/estat";
-import { fetchUsdJpyAnnual } from "./fetchers/fred";
+import { fetchUsdJpyAnnual, fetchNikkeiAnnual } from "./fetchers/fred";
 import { fetchTaxFromMOF, fetchDebtFromMOF } from "./fetchers/mof";
 import * as fallback from "./fetchers/fallback";
 import { round1 } from "./fetchers/utils";
@@ -36,6 +36,8 @@ interface DataPoint {
   tax: number | null;
   fx: number | null;
   nikkei: number | null;
+  /** 日経平均 年平均（実値・円）。MarketCard の Max レンジで使用 */
+  nikkeiYen: number | null;
   housing: number | null;
   debt: number | null;
   births: number | null;
@@ -85,21 +87,28 @@ async function main() {
 
   await loadEnvLocal();
 
-  // FRED FX 取得には API キーが必要。未設定なら fallback に切り替わる。
+  // FRED 取得には API キーが必要。未設定なら fallback / null に切り替わる。
   const fxFetcher = process.env.FRED_API_KEY
     ? () => fetchUsdJpyAnnual(FX_FROM_YEAR)
     : async () => {
         console.warn("  ⚠️  FRED_API_KEY 未設定: USD/JPY は fallback を使用");
         return new Map<number, number>();
       };
+  const nikkeiYenFetcher = process.env.FRED_API_KEY
+    ? () => fetchNikkeiAnnual(FX_FROM_YEAR)
+    : async () => {
+        console.warn("  ⚠️  FRED_API_KEY 未設定: Nikkei 実値はスキップ");
+        return new Map<number, number>();
+      };
 
   // 並列フェッチ（失敗しても fallback に切り替わる）
-  const [cpiMap, birthsMap, fxMap, taxMap, debtMap] = await Promise.all([
+  const [cpiMap, birthsMap, fxMap, taxMap, debtMap, nikkeiYenMap] = await Promise.all([
     safeFetch(fetchCPI, "CPI"),
     safeFetch(fetchBirths, "出生数"),
     safeFetch(fxFetcher, "USD/JPY"),
     safeFetch(fetchTaxFromMOF, "税収"),
     safeFetch(fetchDebtFromMOF, "国債残高"),
+    safeFetch(nikkeiYenFetcher, "Nikkei 225 (実値)"),
   ]);
 
   const getCPI      = mergeWithFallback(cpiMap,    fallback.CPI_FALLBACK);
@@ -108,18 +117,22 @@ async function main() {
   const getTax      = mergeWithFallback(taxMap,    fallback.TAX_FALLBACK);
   const getDebt     = mergeWithFallback(debtMap,   fallback.DEBT_FALLBACK);
 
-  const data: DataPoint[] = TARGET_YEARS.map((year) => ({
-    year,
-    wage:      round1(fallback.WAGE_FALLBACK[year]),
-    cpi:       getCPI(year),
-    tax:       getTax(year),
-    fx:        getFX(year),
-    nikkei:    round1(fallback.NIKKEI_FALLBACK[year]),
-    housing:   round1(fallback.HOUSING_FALLBACK[year]),
-    debt:      getDebt(year),
-    births:    getBirths(year),
-    insurance: round1(fallback.INSURANCE_FALLBACK[year]),
-  })).filter((d) => d.cpi !== null);
+  const data: DataPoint[] = TARGET_YEARS.map((year) => {
+    const ny = nikkeiYenMap.get(year);
+    return {
+      year,
+      wage:      round1(fallback.WAGE_FALLBACK[year]),
+      cpi:       getCPI(year),
+      tax:       getTax(year),
+      fx:        getFX(year),
+      nikkei:    round1(fallback.NIKKEI_FALLBACK[year]),
+      nikkeiYen: ny != null && !isNaN(ny) ? round1(ny) : null,
+      housing:   round1(fallback.HOUSING_FALLBACK[year]),
+      debt:      getDebt(year),
+      births:    getBirths(year),
+      insurance: round1(fallback.INSURANCE_FALLBACK[year]),
+    };
+  }).filter((d) => d.cpi !== null);
 
   if (data.length === 0) {
     console.error("❌ 有効なデータが0件です");

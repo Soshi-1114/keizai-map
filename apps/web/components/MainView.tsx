@@ -7,7 +7,7 @@ import { IndicatorChipSelector } from "./Dashboard/IndicatorChipSelector";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
 import { useIsMobile } from "@/lib/hooks";
 import { INDICATOR_CONFIGS } from "@/lib/data";
-import { FX_MARKET_CONFIG } from "@/lib/market";
+import { FX_MARKET_CONFIG, NIKKEI_MARKET_CONFIG } from "@/lib/market";
 import { parseRange, parseIndicators, parseCategories } from "@/lib/utils";
 import {
   useFilteredData,
@@ -65,6 +65,8 @@ export function MainView({ initialParams }: MainViewProps) {
   const [showMonthlyPanel, setShowMonthlyPanel] = useState(false);
   // SP: マーケットカード（FX）も折りたたみ（初期 closed）。PC は常時展開。
   const [showMarketCard, setShowMarketCard] = useState(false);
+  // SP: マーケットカード（Nikkei）。同じく折りたたみ。
+  const [showNikkeiCard, setShowNikkeiCard] = useState(false);
   // G7 比較線の表示 state。SP では MobileFiltersSheet 内、PC では ChartPanel 内
   // の同じトグルから操作する必要があるため MainView で保持。
   const [showComparison, setShowComparison] = useState(false);
@@ -399,6 +401,42 @@ export function MainView({ initialParams }: MainViewProps) {
                 </div>
               )}
             </div>
+            {/* マーケットカード（Nikkei 225）。SP も折りたたみで段階的開示。 */}
+            <div
+              className="rounded-xl border overflow-hidden"
+              style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+            >
+              <button
+                type="button"
+                onClick={() => setShowNikkeiCard(v => !v)}
+                className="w-full flex items-center justify-between gap-3 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                aria-expanded={showNikkeiCard}
+                aria-controls="market-card-nikkei-collapsible"
+              >
+                <span className="flex flex-col items-start">
+                  <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>
+                    {showNikkeiCard ? "日経平均を閉じる" : "日経平均 推移を見る"}
+                  </span>
+                  <span className="text-xs" style={{ color: "var(--muted)" }}>
+                    1週間〜35年で時間軸を切替（日次/月平均/年平均）
+                  </span>
+                </span>
+                <ChevronDown
+                  size={18}
+                  style={{
+                    color: "var(--muted)",
+                    transform: showNikkeiCard ? "rotate(180deg)" : "rotate(0)",
+                    transition: "transform 150ms",
+                  }}
+                  aria-hidden
+                />
+              </button>
+              {showNikkeiCard && (
+                <div id="market-card-nikkei-collapsible" className="border-t" style={{ borderColor: "var(--border)" }}>
+                  <MarketCard config={NIKKEI_MARKET_CONFIG} />
+                </div>
+              )}
+            </div>
             {/* viewModeBlock は SP では chartContainer 内部の上部に移設済み */}
             {narrativeBlock}
             {insightCardsBlock}
@@ -432,6 +470,7 @@ export function MainView({ initialParams }: MainViewProps) {
             {chartContainer}
             <MonthlyPanel />
             <MarketCard config={FX_MARKET_CONFIG} />
+            <MarketCard config={NIKKEI_MARKET_CONFIG} />
             {chartToolbar}
             {dataTableBlock}
             {narrativeBlock}
