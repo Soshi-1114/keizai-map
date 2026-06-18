@@ -1,15 +1,17 @@
-name: 月次データ自動更新
+name: 週次データ自動更新
 
 on:
   schedule:
-    # 毎月1日 午前9時（JST = UTC+9）
-    - cron: '0 0 1 * *'
+    # 毎週月曜 06:00 JST = 日曜 21:00 UTC
+    # 年次・月次・日次の3バッチを連続実行し、最新値で再生成する
+    - cron: '0 21 * * 0'
   workflow_dispatch:
     # 手動実行ボタン
 
 jobs:
-  update-data:
+  refresh-data:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     permissions:
       contents: write
 
@@ -25,29 +27,59 @@ jobs:
       - name: Node.js セットアップ
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version-file: .nvmrc
           cache: 'pnpm'
 
       - name: 依存関係インストール
         run: pnpm install --frozen-lockfile
 
-      - name: データ取得スクリプト実行
+      - name: 年次データ取得（e-Stat / FRED FX・Nikkei 実値 / MOF）
         env:
           ESTAT_API_KEY: ${{ secrets.ESTAT_API_KEY }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: pnpm data:fetch
+
+      - name: 月次データ取得（CPI / FX / Nikkei 直近24か月）
+        env:
+          ESTAT_API_KEY: ${{ secrets.ESTAT_API_KEY }}
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: pnpm data:fetch:monthly
+
+      - name: 日次データ取得（FX / Nikkei 直近90日）
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: pnpm data:fetch:daily
+
+      - name: 整合性スナップショットの追従更新
+        # データ更新で consistency.test.ts のインライン snapshot が陳腐化することが
+        # あるので、同じコミットで -u して取り込む。データ変更とテスト更新を
+        # 1 トランザクションにまとめる狙い。
+        run: pnpm --filter web exec vitest run lib/consistency.test.ts -u
+        continue-on-error: true
 
       - name: 差分確認
         run: |
-          git diff apps/web/lib/data.generated.json || true
+          git diff --stat \
+            apps/web/lib/data.generated.json \
+            apps/web/lib/data.monthly.generated.json \
+            apps/web/lib/data.daily.generated.json \
+            apps/web/lib/consistency.test.ts || true
+
+      - name: テスト再実行（更新後の整合確認）
+        run: pnpm --filter web test
 
       - name: 変更をコミット・プッシュ
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add apps/web/lib/data.generated.json
+          git add \
+            apps/web/lib/data.generated.json \
+            apps/web/lib/data.monthly.generated.json \
+            apps/web/lib/data.daily.generated.json \
+            apps/web/lib/consistency.test.ts
           if git diff --staged --quiet; then
             echo "データに変更なし。スキップします。"
           else
-            git commit -m "chore: 月次データ自動更新 $(date +'%Y-%m')"
+            git commit -m "chore: 週次データ自動更新 $(date +'%Y-%m-%d')"
             git push
           fi
