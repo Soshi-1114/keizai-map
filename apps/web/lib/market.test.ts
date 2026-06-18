@@ -47,9 +47,9 @@ vi.mock("./monthly", () => ({
 
 vi.mock("./data", () => ({
   RAW_DATA: [
-    { year: 2023, fx: 140, nikkei: 137 },
-    { year: 2024, fx: 151, nikkei: 155 },
-    { year: 2025, fx: 149, nikkei: 196 },
+    { year: 2023, fx: 140, nikkei: 137, nikkeiYen: 32500 },
+    { year: 2024, fx: 151, nikkei: 155, nikkeiYen: 38500 },
+    { year: 2025, fx: 149, nikkei: 196, nikkeiYen: 41800 },
   ],
   INDICATOR_CONFIGS: [],
 }));
@@ -109,9 +109,9 @@ describe("selectMarketSeries (FX)", () => {
 });
 
 describe("selectMarketSeries (Nikkei)", () => {
-  it("Max falls back to RAW_DATA.nikkei field", () => {
+  it("Max uses RAW_DATA.nikkeiYen (実値・円) — not the 1990=100 rebased field", () => {
     const s = selectMarketSeries(NIKKEI_MARKET_CONFIG, "Max");
-    expect(s.points.map(p => p.value)).toEqual([137, 155, 196]);
+    expect(s.points.map(p => p.value)).toEqual([32500, 38500, 41800]);
   });
 
   it("1Y returns empty when NIKKEI_MONTHLY is empty (batch not run)", () => {

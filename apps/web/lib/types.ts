@@ -8,6 +8,9 @@ export interface DataPoint {
   tax: number;
   fx: number;
   nikkei?: number;
+  /** 日経平均 年平均（実値、円）。MarketCard の Max レンジ用。
+   *  既存の nikkei は 1990=100 リベース指数で main chart 比較用、それとは別系列。 */
+  nikkeiYen?: number;
   housing?: number;
   debt?: number;
   births?: number;

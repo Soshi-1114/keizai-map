@@ -92,6 +92,13 @@ export async function fetchNikkeiDaily(daysBack: number): Promise<FredPoint[]> {
   return fetchFredDaily("NIKKEI225", daysBack);
 }
 
+/** Nikkei 225 年平均（fromYear 以降、実値・円） */
+export async function fetchNikkeiAnnual(fromYear: number): Promise<Map<number, number>> {
+  console.log(`  📈 Nikkei 年次 (FRED NIKKEI225, ${fromYear}年〜) を取得中...`);
+  const daily = await fetchFredSinceYear("NIKKEI225", fromYear);
+  return aggregateToAnnual(daily);
+}
+
 /** 日次配列 → 月平均 Map<"YYYY-MM", number> */
 export function aggregateToMonthly(points: FredPoint[]): Map<string, number> {
   const buckets = new Map<string, number[]>();

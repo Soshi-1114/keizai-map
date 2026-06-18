@@ -107,7 +107,9 @@ function monthlySource(indicator: "fx" | "nikkei"): MonthlyPoint[] {
 function annualSource(indicator: "fx" | "nikkei"): { year: number; value: number }[] {
   const out: { year: number; value: number }[] = [];
   for (const d of RAW_DATA) {
-    const v = d[indicator];
+    // nikkei は 1990=100 リベース指数で main chart 比較用なので、Max には
+    // 実値（円）の nikkeiYen を使う。fx は元から実値（円/USD）。
+    const v = indicator === "nikkei" ? d.nikkeiYen : d.fx;
     if (typeof v === "number" && Number.isFinite(v)) out.push({ year: d.year, value: v });
   }
   return out;
