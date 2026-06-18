@@ -7,6 +7,7 @@ import { IndicatorChipSelector } from "./Dashboard/IndicatorChipSelector";
 import type { IndicatorKey, EventCategory } from "@/lib/types";
 import { useIsMobile } from "@/lib/hooks";
 import { INDICATOR_CONFIGS } from "@/lib/data";
+import { FX_MARKET_CONFIG } from "@/lib/market";
 import { parseRange, parseIndicators, parseCategories } from "@/lib/utils";
 import {
   useFilteredData,
@@ -37,6 +38,9 @@ const ComparisonView = dynamic(() => import("./ComparisonView").then(m => ({ def
 const MonthlyPanel = dynamic(() => import("./MonthlyPanel").then(m => ({ default: m.MonthlyPanel })), {
   loading: () => <div style={{ minHeight: 280 }} aria-label="月次パネル読み込み中" />,
 });
+const MarketCard = dynamic(() => import("./MarketCard").then(m => ({ default: m.MarketCard })), {
+  loading: () => <div style={{ minHeight: 320 }} aria-label="マーケットカード読み込み中" />,
+});
 
 const ALL_INDICATOR_KEYS = INDICATOR_CONFIGS.map(c => c.key) as IndicatorKey[];
 
@@ -59,6 +63,8 @@ export function MainView({ initialParams }: MainViewProps) {
   const [showFiltersSheet, setShowFiltersSheet] = useState(false);
   // SP: 月次推移パネルは折りたたみ（初期 closed）。PC は常時展開。
   const [showMonthlyPanel, setShowMonthlyPanel] = useState(false);
+  // SP: マーケットカード（FX）も折りたたみ（初期 closed）。PC は常時展開。
+  const [showMarketCard, setShowMarketCard] = useState(false);
   // G7 比較線の表示 state。SP では MobileFiltersSheet 内、PC では ChartPanel 内
   // の同じトグルから操作する必要があるため MainView で保持。
   const [showComparison, setShowComparison] = useState(false);
@@ -357,6 +363,42 @@ export function MainView({ initialParams }: MainViewProps) {
                 </div>
               )}
             </div>
+            {/* マーケットカード（USD/JPY）。SP も折りたたみで段階的開示。 */}
+            <div
+              className="rounded-xl border overflow-hidden"
+              style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+            >
+              <button
+                type="button"
+                onClick={() => setShowMarketCard(v => !v)}
+                className="w-full flex items-center justify-between gap-3 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                aria-expanded={showMarketCard}
+                aria-controls="market-card-fx-collapsible"
+              >
+                <span className="flex flex-col items-start">
+                  <span className="text-sm font-semibold" style={{ color: "var(--text)" }}>
+                    {showMarketCard ? "USD/JPY を閉じる" : "USD/JPY 推移を見る"}
+                  </span>
+                  <span className="text-xs" style={{ color: "var(--muted)" }}>
+                    1週間〜35年で時間軸を切替（日次/月平均/年平均）
+                  </span>
+                </span>
+                <ChevronDown
+                  size={18}
+                  style={{
+                    color: "var(--muted)",
+                    transform: showMarketCard ? "rotate(180deg)" : "rotate(0)",
+                    transition: "transform 150ms",
+                  }}
+                  aria-hidden
+                />
+              </button>
+              {showMarketCard && (
+                <div id="market-card-fx-collapsible" className="border-t" style={{ borderColor: "var(--border)" }}>
+                  <MarketCard config={FX_MARKET_CONFIG} />
+                </div>
+              )}
+            </div>
             {/* viewModeBlock は SP では chartContainer 内部の上部に移設済み */}
             {narrativeBlock}
             {insightCardsBlock}
@@ -389,6 +431,7 @@ export function MainView({ initialParams }: MainViewProps) {
             {viewModeBlock}
             {chartContainer}
             <MonthlyPanel />
+            <MarketCard config={FX_MARKET_CONFIG} />
             {chartToolbar}
             {dataTableBlock}
             {narrativeBlock}
