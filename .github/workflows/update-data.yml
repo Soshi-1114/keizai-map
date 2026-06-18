@@ -97,17 +97,10 @@ jobs:
           if gh pr view "${BRANCH}" --json state --jq '.state' 2>/dev/null | grep -q OPEN; then
             echo "既存 PR を更新しました（force push）"
           else
+            BODY=$'GitHub Actions の週次バッチで生成されたデータ更新です。\n\n## 更新対象\n- apps/web/lib/data.generated.json（年次）\n- apps/web/lib/data.monthly.generated.json（月次・直近24か月）\n- apps/web/lib/data.daily.generated.json（日次・直近90日）\n- apps/web/lib/consistency.test.ts（snapshot 追従、必要時のみ）\n\nCI（verify / audit）が通れば squash merge してください。'
             gh pr create \
               --title "chore: 週次データ自動更新 ${DATE}" \
-              --body "GitHub Actions の週次バッチで生成されたデータ更新です。
-
-## 更新対象
-- \`apps/web/lib/data.generated.json\`（年次）
-- \`apps/web/lib/data.monthly.generated.json\`（月次・直近24か月）
-- \`apps/web/lib/data.daily.generated.json\`（日次・直近90日）
-- \`apps/web/lib/consistency.test.ts\`（snapshot 追従、必要時のみ）
-
-CI（\`verify\` / \`audit\`）が通れば squash merge してください。" \
+              --body "${BODY}" \
               --base master \
               --head "${BRANCH}"
           fi
