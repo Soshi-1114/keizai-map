@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "inflation-cycles-japan";
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   description:
     "1990年バブル崩壊・1997年消費税増税・2008年資源高・2022年円安インフレ。日本経済が直面した4つのインフレ局面を比較し、今回の物価高の終わりを過去データから予測する。",
   openGraph: articleOpenGraph("inflation-cycles-japan"),
+  robots: articleRobots(SLUG),
 };
 
 export default function InflationCyclesJapanPage() {

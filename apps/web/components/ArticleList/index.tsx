@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { ARTICLES } from "@/lib/articles";
+import { ARTICLES, type ArticleMeta } from "@/lib/articles";
 
 // 記事数の多い順にタグをソート
 const TAGS_BY_COUNT = (() => {
@@ -38,6 +38,11 @@ export function ArticleList() {
   const filtered = selectedTag
     ? ARTICLES.filter((a) => a.tags.includes(selectedTag))
     : ARTICLES;
+
+  // 公開中（検索エンジンに index される）と準備中（noindex）で分離。
+  // 新規ドメインの索引予算を強い記事に集中させるため一部を一時的に noindex 化している。
+  const liveArticles = filtered.filter((a) => !a.noindex);
+  const draftArticles = filtered.filter((a) => a.noindex);
 
   return (
     <main
@@ -172,46 +177,105 @@ export function ArticleList() {
         </div>
 
         {/* 記事リスト */}
-        <div className="space-y-4 min-w-0">
-          {filtered.length === 0 ? (
-            <p className="text-sm text-center py-8" style={{ color: "var(--muted)" }}>
-              該当する記事がありません
-            </p>
-          ) : (
-            filtered.map((article) => (
-              <Link
-                key={article.slug}
-                href={`/articles/${article.slug}`}
-                className="block rounded-xl border p-5 transition-colors hover:border-[var(--link)] min-w-0"
-                style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
-              >
-                <div className="flex gap-2 flex-wrap mb-2 min-w-0">
-                  {article.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-xs px-2 py-0.5 rounded-full border font-medium whitespace-nowrap"
-                      style={{
-                        borderColor: tag === selectedTag ? "var(--link)" : "var(--border)",
-                        color: tag === selectedTag ? "var(--link)" : "var(--text)",
-                        backgroundColor: tag === selectedTag ? "#1d4ed815" : "var(--bg)",
-                      }}
-                    >
-                      {tag}
-                    </span>
+        {filtered.length === 0 ? (
+          <p className="text-sm text-center py-8" style={{ color: "var(--muted)" }}>
+            該当する記事がありません
+          </p>
+        ) : (
+          <>
+            {liveArticles.length > 0 && (
+              <section aria-labelledby="live-section-heading" className="mb-8">
+                <h2
+                  id="live-section-heading"
+                  className="text-sm font-semibold mb-3"
+                  style={{ color: "var(--muted)" }}
+                >
+                  公開中（{liveArticles.length}）
+                </h2>
+                <div className="space-y-4 min-w-0">
+                  {liveArticles.map((article) => (
+                    <ArticleCard
+                      key={article.slug}
+                      article={article}
+                      selectedTag={selectedTag}
+                    />
                   ))}
                 </div>
-                <h2 className="text-base font-bold mb-2 leading-snug break-words" style={{ overflowWrap: "break-word" }}>{article.title}</h2>
-                <p className="text-xs leading-relaxed mb-3 break-words" style={{ color: "var(--muted)", overflowWrap: "break-word" }}>
-                  {article.description}
+              </section>
+            )}
+            {draftArticles.length > 0 && (
+              <section aria-labelledby="draft-section-heading">
+                <h2
+                  id="draft-section-heading"
+                  className="text-sm font-semibold mb-2"
+                  style={{ color: "var(--muted)" }}
+                >
+                  準備中（{draftArticles.length}）
+                </h2>
+                <p className="text-xs mb-3" style={{ color: "var(--muted)" }}>
+                  以下の記事は内容を磨いている途中で、現在は検索エンジンに掲載していません。記事の閲覧は通常通り可能です。
                 </p>
-                <div className="text-xs" style={{ color: "var(--link)" }}>
-                  読了時間 約 {article.readingTime} 分 →
+                <div className="space-y-4 min-w-0">
+                  {draftArticles.map((article) => (
+                    <ArticleCard
+                      key={article.slug}
+                      article={article}
+                      selectedTag={selectedTag}
+                    />
+                  ))}
                 </div>
-              </Link>
-            ))
-          )}
-        </div>
+              </section>
+            )}
+          </>
+        )}
       </div>
     </main>
+  );
+}
+
+function ArticleCard({
+  article,
+  selectedTag,
+}: {
+  article: ArticleMeta;
+  selectedTag: string | null;
+}) {
+  return (
+    <Link
+      href={`/articles/${article.slug}`}
+      className="block rounded-xl border p-5 transition-colors hover:border-[var(--link)] min-w-0"
+      style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+    >
+      <div className="flex gap-2 flex-wrap mb-2 min-w-0">
+        {article.tags.map((tag) => (
+          <span
+            key={tag}
+            className="text-xs px-2 py-0.5 rounded-full border font-medium whitespace-nowrap"
+            style={{
+              borderColor: tag === selectedTag ? "var(--link)" : "var(--border)",
+              color: tag === selectedTag ? "var(--link)" : "var(--text)",
+              backgroundColor: tag === selectedTag ? "#1d4ed815" : "var(--bg)",
+            }}
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+      <h3
+        className="text-base font-bold mb-2 leading-snug break-words"
+        style={{ overflowWrap: "break-word" }}
+      >
+        {article.title}
+      </h3>
+      <p
+        className="text-xs leading-relaxed mb-3 break-words"
+        style={{ color: "var(--muted)", overflowWrap: "break-word" }}
+      >
+        {article.description}
+      </p>
+      <div className="text-xs" style={{ color: "var(--link)" }}>
+        読了時間 約 {article.readingTime} 分 →
+      </div>
+    </Link>
   );
 }

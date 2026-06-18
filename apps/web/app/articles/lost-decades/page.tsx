@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import Link from "next/link";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "lost-decades";
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: articleSeoTitle(SLUG),
   description: "バブル崩壊（1991年）から現在まで、日本経済の何が「失われた」のか。実質賃金・物価・税収・為替の推移をデータで俯瞰し、長期停滞の構造を読み解く。",
   openGraph: articleOpenGraph("lost-decades"),
+  robots: articleRobots(SLUG),
 };
 
 export default function LostDecadesPage() {

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import { LiveDataBox } from "@/components/LiveDataBox";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "housing-price";
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   title: articleSeoTitle(SLUG),
   description: "バブル崩壊で一度は下落した住宅価格は、アベノミクス以降に再上昇。一方で実質賃金は横ばいのまま。住宅価格指数と賃金・金利の動きを重ねてデータで読み解く。",
   openGraph: articleOpenGraph("housing-price"),
+  robots: articleRobots(SLUG),
 };
 
 export default function HousingPricePage() {

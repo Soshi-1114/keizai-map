@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "real-take-home-pay-30years";
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   description:
     "名目の年収が増えても、社会保険料・消費税・物価上昇で実質手取りは目減りしている。年収300万・500万・800万の3パターンで「実質手取り」を1990年と2025年で比較する。",
   openGraph: articleOpenGraph("real-take-home-pay-30years"),
+  robots: articleRobots(SLUG),
 };
 
 export default function RealTakeHomePay30YearsPage() {

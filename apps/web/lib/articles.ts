@@ -10,6 +10,12 @@ export interface ArticleMeta {
   readingTime: number;
   tags: string[];
   presetQuery?: string;
+  /**
+   * true の場合、検索エンジンに対し `robots: { index: false, follow: true }` を返し、
+   * sitemap からも除外する。新規ドメインの索引予算を強い記事に集中させるための一時措置。
+   * 被リンク・権威性が育ち次第、本フラグを外して順次解禁する。
+   */
+  noindex?: boolean;
 }
 
 export const ARTICLES: ArticleMeta[] = [
@@ -36,6 +42,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 4,
     tags: ["消費税", "税収", "物価"],
     presetQuery: "?indicators=cpi,tax,wage&range=1989,2025&events=税制",
+    noindex: true,
   },
   {
     slug: "abenomics",
@@ -48,6 +55,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 5,
     tags: ["アベノミクス", "金融政策", "税収"],
     presetQuery: "?indicators=wage,cpi,fx,nikkei&range=2012,2020&events=経済政策",
+    noindex: true,
   },
   {
     slug: "yen-depreciation",
@@ -60,6 +68,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 4,
     tags: ["為替", "円安", "日銀"],
     presetQuery: "?indicators=fx,cpi,wage&range=2012,2025",
+    noindex: true,
   },
   {
     slug: "lost-decades",
@@ -72,6 +81,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 5,
     tags: ["バブル崩壊", "デフレ", "長期停滞"],
     presetQuery: "?indicators=wage,cpi,nikkei,housing&range=1990,2025",
+    noindex: true,
   },
   // ─ デ アナリシス記事
   {
@@ -85,6 +95,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 6,
     tags: ["実質賃金", "データ分析", "35年推移"],
     presetQuery: "?indicators=wage,cpi&range=1990,2025",
+    noindex: true,
   },
   {
     slug: "abenomics-real-wages-analysis",
@@ -97,6 +108,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 7,
     tags: ["アベノミクス", "実質賃金", "政策評価"],
     presetQuery: "?indicators=wage,cpi,tax,fx,nikkei&range=2012,2020",
+    noindex: true,
   },
   {
     slug: "consumption-tax-wage-price",
@@ -109,6 +121,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 6,
     tags: ["消費税", "物価", "賃金"],
     presetQuery: "?indicators=cpi,wage,tax&range=1989,2019&events=税制",
+    noindex: true,
   },
   {
     slug: "yen-depreciation-real-wages",
@@ -121,6 +134,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 6,
     tags: ["円安", "実質賃金", "家計"],
     presetQuery: "?indicators=fx,wage,cpi&range=2012,2025",
+    noindex: true,
   },
   {
     slug: "housing-price",
@@ -133,6 +147,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 5,
     tags: ["住宅価格", "不動産", "賃金"],
     presetQuery: "?indicators=housing,wage,cpi&range=1990,2025",
+    noindex: true,
   },
   // ─ 新規記事
   {
@@ -146,6 +161,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 5,
     tags: ["社会保険料", "手取り", "可処分所得"],
     presetQuery: "?indicators=wage,tax,insurance&range=1990,2025",
+    noindex: true,
   },
   {
     slug: "declining-birthrate-economy",
@@ -158,6 +174,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 6,
     tags: ["少子化", "出生数", "社会保障"],
     presetQuery: "?indicators=births,insurance,debt&range=1990,2025",
+    noindex: true,
   },
   {
     slug: "nikkei-vs-wages",
@@ -170,6 +187,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 5,
     tags: ["日経平均", "株高", "格差"],
     presetQuery: "?indicators=nikkei,wage,cpi&range=1990,2025",
+    noindex: true,
   },
   {
     slug: "national-debt-1000trillion",
@@ -182,6 +200,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 5,
     tags: ["国債", "財政赤字", "財政問題"],
     presetQuery: "?indicators=debt,tax&range=1990,2025",
+    noindex: true,
   },
   {
     slug: "economic-shocks-comparison",
@@ -194,6 +213,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 6,
     tags: ["リーマンショック", "コロナ禍", "経済危機"],
     presetQuery: "?indicators=wage,nikkei,fx,cpi&range=2006,2025&events=経済",
+    noindex: true,
   },
   {
     slug: "fiscal-collapse-truth",
@@ -206,6 +226,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 8,
     tags: ["財政破綻", "国債", "対外純資産"],
     presetQuery: "?indicators=debt,tax&range=1990,2025",
+    noindex: true,
   },
   // ─ SEO 強化記事（独自性重視）
   {
@@ -231,6 +252,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 7,
     tags: ["年収", "実質手取り", "社会保険料"],
     presetQuery: "?indicators=wage,cpi,tax,insurance&range=1990,2025",
+    noindex: true,
   },
   {
     slug: "yen-purchasing-power-decline",
@@ -243,6 +265,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 6,
     tags: ["円安", "購買力", "ドル建て"],
     presetQuery: "?indicators=fx,cpi,wage&range=1990,2025",
+    noindex: true,
   },
   {
     slug: "generation-economic-comparison",
@@ -255,6 +278,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 8,
     tags: ["世代格差", "氷河期世代", "Z世代"],
     presetQuery: "?indicators=wage,nikkei,housing,insurance,births&range=1990,2025",
+    noindex: true,
   },
   {
     slug: "next-decade-forecast",
@@ -267,6 +291,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 9,
     tags: ["経済予測", "長期展望", "2035年"],
     presetQuery: "?indicators=wage,cpi,debt,births&range=2000,2025",
+    noindex: true,
   },
   // ─ SEO 強化記事 第2弾
   {
@@ -280,6 +305,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 6,
     tags: ["平均年収", "所得分布", "統計"],
     presetQuery: "?indicators=wage,cpi&range=1990,2025",
+    noindex: true,
   },
   {
     slug: "shunto-2025-real-impact",
@@ -304,6 +330,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 7,
     tags: ["NISA", "投資", "貯金"],
     presetQuery: "?indicators=nikkei,cpi&range=1990,2025",
+    noindex: true,
   },
   {
     slug: "national-debt-per-citizen",
@@ -328,6 +355,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 7,
     tags: ["物価高", "インフレ", "予測"],
     presetQuery: "?indicators=cpi,fx,wage&range=1990,2025&events=経済,税制",
+    noindex: true,
   },
   {
     slug: "university-cost-inflation",
@@ -340,6 +368,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 6,
     tags: ["教育費", "大学", "家計"],
     presetQuery: "?indicators=cpi,wage&range=1990,2025",
+    noindex: true,
   },
   {
     slug: "retirement-2000man-revisited",
@@ -364,6 +393,7 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 7,
     tags: ["格差", "ジニ係数", "貧困"],
     presetQuery: "?indicators=wage,tax,insurance&range=1990,2025",
+    noindex: true,
   },
   {
     slug: "mortgage-rate-simulation",
@@ -376,5 +406,6 @@ export const ARTICLES: ArticleMeta[] = [
     readingTime: 7,
     tags: ["住宅ローン", "金利", "日銀"],
     presetQuery: "?indicators=housing,wage,cpi&range=1990,2025",
+    noindex: true,
   },
 ];

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "real-wages-trend-1990-2024";
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: articleSeoTitle(SLUG),
   description: "バブル期の1990年を100とした実質賃金指数は35年後の2025年に97.9と2.1%低下。デフレ・リーマンショック・消費税増税・円安インフレの4つの局面で賃金がどう変化したかを時系列で分析。",
   openGraph: articleOpenGraph("real-wages-trend-1990-2024"),
+  robots: articleRobots(SLUG),
 };
 
 export default function RealWagesTrendPage() {

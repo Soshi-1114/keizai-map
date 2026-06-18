@@ -39,12 +39,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const articleRoutes: MetadataRoute.Sitemap = ARTICLES.map((article) => ({
-    url: `${BASE_URL}/articles/${article.slug}`,
-    lastModified: new Date(article.updatedAt),
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
-  }));
+  // noindex 記事は sitemap からも除外し、Google にクロール優先度シグナルを与えない
+  const articleRoutes: MetadataRoute.Sitemap = ARTICLES.filter((a) => !a.noindex).map(
+    (article) => ({
+      url: `${BASE_URL}/articles/${article.slug}`,
+      lastModified: new Date(article.updatedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })
+  );
 
   return [...mainRoutes, ...articleRoutes];
 }

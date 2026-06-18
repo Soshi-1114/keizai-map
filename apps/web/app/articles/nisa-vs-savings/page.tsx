@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "nisa-vs-savings";
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   description:
     "1990年に100万円を銀行預金とS&P500それぞれに置いた場合、2025年にいくらになっているか。日本の超低金利と米国株の長期トレンドを実データで比較し、新NISA時代の選択を考える。",
   openGraph: articleOpenGraph("nisa-vs-savings"),
+  robots: articleRobots(SLUG),
 };
 
 export default function NisaVsSavingsPage() {

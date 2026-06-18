@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "income-inequality-japan";
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   description:
     "「日本は格差社会化している」とよく言われる。本当か。ジニ係数（当初/再分配）・相対的貧困率・所得分布の変化を35年スパンで検証し、格差の実態と政策効果をデータで解説する。",
   openGraph: articleOpenGraph("income-inequality-japan"),
+  robots: articleRobots(SLUG),
 };
 
 export default function IncomeInequalityPage() {

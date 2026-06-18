@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
 import Link from "next/link";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "social-insurance-burden";
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: articleSeoTitle(SLUG),
   description: "給与が上がっても手取りが増えない。その原因のひとつが社会保険料の上昇だ。1990年の10.8%から2025年の18.6%へ、35年で約7.8ポイント増加した社会保険料負担率をデータで読む。",
   openGraph: articleOpenGraph("social-insurance-burden"),
+  robots: articleRobots(SLUG),
 };
 
 export default function SocialInsuranceBurdenPage() {
