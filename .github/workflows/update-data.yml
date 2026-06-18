@@ -14,6 +14,7 @@ jobs:
     timeout-minutes: 20
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - name: チェックアウト
@@ -68,8 +69,13 @@ jobs:
       - name: テスト再実行（更新後の整合確認）
         run: pnpm --filter web test
 
-      - name: 変更をコミット・プッシュ
+      - name: 変更を PR として作成
+        # master は branch protection で verify check 必須のため直 push できない。
+        # 自動更新ブランチに push して PR を起こし、CI 通過後ユーザーがマージする。
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add \
@@ -79,7 +85,29 @@ jobs:
             apps/web/lib/consistency.test.ts
           if git diff --staged --quiet; then
             echo "データに変更なし。スキップします。"
+            exit 0
+          fi
+          DATE=$(date +'%Y-%m-%d')
+          BRANCH="chore/auto-data-refresh-${DATE}"
+          # 同日内の再実行で既存ブランチがあれば再利用（force push で上書き）
+          git checkout -b "${BRANCH}"
+          git commit -m "chore: 週次データ自動更新 ${DATE}"
+          git push -u --force origin "${BRANCH}"
+          # 同日内の PR が既に存在すればスキップ（force push で更新済）
+          if gh pr view "${BRANCH}" --json state --jq '.state' 2>/dev/null | grep -q OPEN; then
+            echo "既存 PR を更新しました（force push）"
           else
-            git commit -m "chore: 週次データ自動更新 $(date +'%Y-%m-%d')"
-            git push
+            gh pr create \
+              --title "chore: 週次データ自動更新 ${DATE}" \
+              --body "GitHub Actions の週次バッチで生成されたデータ更新です。
+
+## 更新対象
+- \`apps/web/lib/data.generated.json\`（年次）
+- \`apps/web/lib/data.monthly.generated.json\`（月次・直近24か月）
+- \`apps/web/lib/data.daily.generated.json\`（日次・直近90日）
+- \`apps/web/lib/consistency.test.ts\`（snapshot 追従、必要時のみ）
+
+CI（\`verify\` / \`audit\`）が通れば squash merge してください。" \
+              --base master \
+              --head "${BRANCH}"
           fi
