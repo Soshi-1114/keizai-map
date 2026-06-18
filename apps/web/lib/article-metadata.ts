@@ -28,3 +28,17 @@ export function articleSeoTitle(slug: string): string {
   if (!meta) throw new Error(`articleSeoTitle: unknown slug "${slug}"`);
   return meta.seoTitle ?? meta.title;
 }
+
+/**
+ * 記事の robots 設定を返す。noindex フラグが立っている記事は
+ * `{ index: false, follow: true }` を返し、検索結果から除外する。
+ * follow を true に保つことで、内部リンク先（=トップ・他の index 記事）への
+ * PR は正常に流れる。フラグが無ければ undefined を返し、Next.js のデフォルト
+ * （= index: true, follow: true）に委ねる。
+ */
+export function articleRobots(slug: string): Metadata["robots"] {
+  const meta = ARTICLES.find((a) => a.slug === slug);
+  if (!meta) throw new Error(`articleRobots: unknown slug "${slug}"`);
+  if (!meta.noindex) return undefined;
+  return { index: false, follow: true };
+}

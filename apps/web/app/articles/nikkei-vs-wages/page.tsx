@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "nikkei-vs-wages";
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: articleSeoTitle(SLUG),
   description: "2025年、日経平均は1990年比で約96%上昇している。しかし同じ期間の実質賃金は97.9と1990年水準を下回ったままだ。株高の恩恵はなぜ家計に届かないのか。データで構造を読み解く。",
   openGraph: articleOpenGraph("nikkei-vs-wages"),
+  robots: articleRobots(SLUG),
 };
 
 export default function NikkeiVsWagesPage() {

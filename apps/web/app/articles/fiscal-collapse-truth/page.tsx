@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "fiscal-collapse-truth";
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: articleSeoTitle(SLUG),
   description: "国債残高1,128兆円（2025年度末）は危機なのか。日本は世界最大の対外純資産国であり、海外投資からの収益（第一次所得収支）は年間40兆円規模。財政破綻論の根拠と反論をデータで整理する。",
   openGraph: articleOpenGraph("fiscal-collapse-truth"),
+  robots: articleRobots(SLUG),
 };
 
 export default function FiscalCollapseTruthPage() {

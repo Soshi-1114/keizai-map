@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "next-decade-forecast";
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   description:
     "過去30年のトレンドから今後10年の日本経済を展望。少子化・財政赤字・円安・賃上げの行方を、政府・IMF・OECDの長期見通しと過去データで照合する。",
   openGraph: articleOpenGraph("next-decade-forecast"),
+  robots: articleRobots(SLUG),
 };
 
 export default function NextDecadeForecastPage() {

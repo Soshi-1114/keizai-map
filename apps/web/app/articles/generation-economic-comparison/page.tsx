@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "generation-economic-comparison";
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   description:
     "1973年生・1993年生・2003年生の3世代が就職時に直面した経済環境を、賃金・株価・住宅価格・社会保険料・出生数で比較。世代論を感情ではなくデータで論じる。",
   openGraph: articleOpenGraph("generation-economic-comparison"),
+  robots: articleRobots(SLUG),
 };
 
 export default function GenerationEconomicComparisonPage() {

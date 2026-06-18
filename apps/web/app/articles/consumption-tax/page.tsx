@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "consumption-tax";
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: articleSeoTitle(SLUG),
   description: "1989年の3%導入から2019年の10%まで、消費税率はどのように変化し、家計や経済にどんな影響を与えてきたか。消費者物価指数のデータとあわせて振り返る。",
   openGraph: articleOpenGraph("consumption-tax"),
+  robots: articleRobots(SLUG),
 };
 
 export default function ConsumptionTaxPage() {

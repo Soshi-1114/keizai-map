@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "average-income-trap";
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   description:
     "「日本の平均年収は458万円」と言われるが、それを実際に稼いでいる人は意外と少ない。平均値・中央値・最頻値の違いをデータで解説し、本当の日本の所得分布を明らかにする。",
   openGraph: articleOpenGraph("average-income-trap"),
+  robots: articleRobots(SLUG),
 };
 
 export default function AverageIncomeTrapPage() {

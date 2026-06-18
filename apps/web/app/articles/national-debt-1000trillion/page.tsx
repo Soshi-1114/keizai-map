@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArticleLayout, Section, DataBox } from "@/components/ArticleLayout";
-import { articleOpenGraph, articleSeoTitle } from "@/lib/article-metadata";
+import { articleOpenGraph, articleSeoTitle, articleRobots } from "@/lib/article-metadata";
 import { generateArticleJsonLd, generateBreadcrumbJsonLd, generateOrganizationJsonLd, generateFaqPageJsonLd } from "@/lib/jsonld";
 
 const SLUG = "national-debt-1000trillion";
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: articleSeoTitle(SLUG),
   description: "1990年に180兆円だった国債残高は2025年度末で1,128兆円。税収80.7兆円の約14倍に膨らんだ借金の実態と、その背景にある財政構造を数字で確認する。",
   openGraph: articleOpenGraph("national-debt-1000trillion"),
+  robots: articleRobots(SLUG),
 };
 
 export default function NationalDebt1000TrillionPage() {
