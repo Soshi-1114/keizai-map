@@ -14,6 +14,8 @@ export interface MonthlyPoint {
 interface MonthlyPayload {
   generatedAt: string;
   cpi: MonthlyPoint[];
+  fx?: MonthlyPoint[];
+  nikkei?: MonthlyPoint[];
 }
 
 const PAYLOAD = generated as MonthlyPayload;
@@ -23,6 +25,12 @@ export const MONTHLY_GENERATED_AT: string = PAYLOAD.generatedAt;
 
 /** CPI 月次（2020年基準・原指数） */
 export const CPI_MONTHLY: MonthlyPoint[] = PAYLOAD.cpi;
+
+/** USD/JPY 月平均（FRED DEXJPUS 日次平均）。バッチ未実行時は空配列 */
+export const FX_MONTHLY: MonthlyPoint[] = PAYLOAD.fx ?? [];
+
+/** Nikkei 225 月平均（FRED NIKKEI225 日次平均）。バッチ未実行時は空配列 */
+export const NIKKEI_MONTHLY: MonthlyPoint[] = PAYLOAD.nikkei ?? [];
 
 /** "YYYY-MM" → 表示用ラベル "YYYY年M月" */
 export function formatYm(ym: string): string {

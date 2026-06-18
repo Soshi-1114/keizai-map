@@ -99,11 +99,11 @@ describe("整合性: 派生統計のスナップショット", () => {
     expect(snapshot).toMatchInlineSnapshot(`
       {
         "cpi": {
-          "endValue": 123.7,
+          "endValue": 123.9,
           "endYear": 2025,
           "indicator": "cpi",
-          "pctChange": 23.7,
-          "ratio": 1.237,
+          "pctChange": 23.9,
+          "ratio": 1.239,
           "startValue": 100,
           "startYear": 1990,
         },
