@@ -54,8 +54,8 @@ vi.mock("./data", () => ({
   INDICATOR_CONFIGS: [],
 }));
 
-const market = await import("./market");
-const {
+// vi.mock はホイストされるため通常の static import で OK。
+import {
   FX_MARKET_CONFIG,
   NIKKEI_MARKET_CONFIG,
   selectMarketSeries,
@@ -64,7 +64,7 @@ const {
   formatMarketValue,
   deltaLabelForRange,
   granularityLabel,
-} = market;
+} from "./market";
 
 describe("selectMarketSeries (FX)", () => {
   it("1W returns last 7 daily points (granularity=daily)", () => {
