@@ -2,34 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Light theme (default) ── */
-:root {
-  --bg:     #F7F8FC;
-  --card:   #FFFFFF;
-  --border: #E1E4EF;
-  --text:   #1A1D2E;
-  --muted:  #6B7280;
+/*
+  KeizaiMap — 「藍と朱 / 国民経済の台帳」デザインシステム
+  -------------------------------------------------------------
+  紙（document paper）の上に、墨（sumi ink）の文字、藍（indigo）の構造線・データ線、
+  朱（vermilion seal）のアクセントを一点だけ置く。日本の統計年鑑・官報の素材感を
+  デジタルに翻訳した識別子。アクセント＝朱は「印（はんこ）」と「悪化の符号」にのみ使う。
 
-  /* WCAG AA 対応リンク・アクセントカラー */
-  --link:         #1d4ed8; /* blue-700: 9.5:1 on --bg ✓ */
-  --link-on-tint: #1e40af; /* blue-800: 5.9:1 on #e2ebfb ✓ */
-  --accent-btn:   #1d4ed8; /* ボタン背景: white text 10.3:1 ✓ */
+  既存コンポーネントは --bg / --card / --border / --text / --muted / --link を参照するため、
+  これらの意味論名はそのまま維持し、値だけを新パレットに差し替える。
+*/
+
+/* ── Light（紙）── */
+:root {
+  --bg:     #EDEBE2;  /* 生成りの統計用紙。クリーム(#F4F1EA)より灰寄りに振り定番回避 */
+  --card:   #FBFAF4;  /* 一葉上の刷り。紙の上に重なる帳票 */
+  --border: #D5D2C4;  /* 罫線（warm hairline）*/
+  --text:   #1B1E2B;  /* 墨 */
+  --muted:  #5B5F6E;  /* 補注（AA: 約5.1:1 on --bg）*/
+
+  /* 藍（indigo）= 構造・リンク・主データ */
+  --link:         #27406A; /* 8:1 on --bg ✓ */
+  --link-on-tint: #1E3357; /* 藍タイント面の上のリンク */
+  --accent-btn:   #27406A; /* ボタン背景: white text 8.5:1 ✓ */
+
+  /* 意味論トークン（新規）*/
+  --indigo:        #27406A;
+  --indigo-soft:   #3E5A8C;
+  --indigo-tint:   #E4E7EF;  /* 藍の薄塗り面 */
+  --vermilion:     #B5302A;  /* 朱（文字可：約7.9:1）*/
+  --vermilion-seal:#BE3A30;  /* 印の塗り */
+  --good:          #2E7363;  /* 改善＝藍に寄せた深緑（generic green回避）*/
+  --paper-edge:    #E3E0D4;  /* 紙の縁・うっすらした影 */
+
+  --font-display: var(--font-shippori), 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+  --font-mono:    var(--font-plex-mono), 'SFMono-Regular', ui-monospace, monospace;
 
   color-scheme: light;
 }
 
-/* ── Dark theme ── */
+/* ── Dark（墨夜）── */
 .dark {
-  --bg:     #10121A;
-  --card:   #161921;
-  --border: #2E3245;
-  --text:   #E8EAF0;
-  --muted:  #8B95A8;
+  --bg:     #14151D;
+  --card:   #1C1E28;
+  --border: #2D2F3D;
+  --text:   #ECE9DD;  /* 温かい紙白 */
+  --muted:  #8A8F9F;
 
-  /* Dark mode: 明るい青系 */
-  --link:         #93c5fd; /* blue-300: 7.2:1 on dark-bg ✓ */
-  --link-on-tint: #bfdbfe; /* blue-200 */
-  --accent-btn:   #1d4ed8;
+  --link:         #8FB2EA; /* 藍を起こす（AA on dark ✓）*/
+  --link-on-tint: #B7CDF2;
+  --accent-btn:   #27406A;
+
+  --indigo:        #8FB2EA;
+  --indigo-soft:   #6E90C8;
+  --indigo-tint:   #20283A;
+  --vermilion:     #E58A80;
+  --vermilion-seal:#C84A40;
+  --good:          #5FB6A2;
+  --paper-edge:    #0F1017;
 
   color-scheme: dark;
 }
@@ -38,14 +68,83 @@ body {
   background-color: var(--bg);
   color: var(--text);
   font-family: var(--font-sans), 'Hiragino Sans', 'Helvetica Neue', Arial, sans-serif;
+  font-feature-settings: "palt" 1; /* 日本語のプロポーショナル詰め */
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* 横スクロール防止（Prompt B overflow 対策） */
+/* 横スクロール防止 */
 html, body {
   overflow-x: hidden;
   max-width: 100vw;
 }
+
+/* ── タイポグラフィ・ロール ── */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum" 1;
+}
+
+/* 見出し前の小ラベル（元号・節番号など）。等幅＋字間で「台帳」の符牒に */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--vermilion);
+}
+
+/* ── 朱印（はんこ）ロゴマーク ── */
+.seal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: #FBFAF4;
+  background: var(--vermilion-seal);
+  border-radius: 7px;
+  box-shadow: inset 0 0 0 1.5px rgba(251, 250, 244, 0.55);
+  line-height: 1;
+  user-select: none;
+}
+
+/* 元号ルーラー：紙の罫線でできた時間の背骨 */
+.era-rule {
+  position: relative;
+  border-top: 1px solid var(--border);
+}
+.era-tick {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  padding-top: 8px;
+}
+.era-tick::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 1px;
+  height: 7px;
+  background: var(--border);
+}
+.era-tick.is-now::before { background: var(--vermilion); height: 11px; top: -1px; }
+.era-tick.is-now { color: var(--vermilion); }
+
+/* 罫線見出し（節） */
+.ledger-rule {
+  border-bottom: 1px solid var(--border);
+}
+
+/* タブ数字を統一的に */
+.tnum { font-variant-numeric: tabular-nums; }
 
 /* Dual range slider thumb styles */
 input[type="range"]::-webkit-slider-thumb {
@@ -56,11 +155,11 @@ input[type="range"]::-moz-range-thumb {
   border: none;
 }
 
-/* スキップリンク：通常は視覚的に非表示、フォーカス時に表示（WCAG 2.4.1） */
+/* スキップリンク（WCAG 2.4.1）*/
 .skip-link {
   position: absolute;
   left: 8px;
-  top: -40px;
+  top: -48px;
   z-index: 100;
   padding: 8px 14px;
   border-radius: 8px;
@@ -75,4 +174,28 @@ input[type="range"]::-moz-range-thumb {
   top: 8px;
   outline: 3px solid #fff;
   outline-offset: 2px;
+}
+
+/* 一貫したフォーカスリング（藍）*/
+:where(a, button, [role="button"], input, select, summary):focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* 控えめなページ読み込み演出（hero など .reveal を付けた要素）*/
+@keyframes paper-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal { animation: paper-rise 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+.reveal-2 { animation-delay: 0.08s; }
+.reveal-3 { animation-delay: 0.16s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

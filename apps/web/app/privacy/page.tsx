@@ -13,8 +13,11 @@ export const metadata: Metadata = {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="space-y-3 pt-6 border-t" style={{ borderColor: "var(--border)" }}>
-      <h2 className="text-base font-semibold">{title}</h2>
+    <section className="space-y-3 pt-7 mt-7 border-t" style={{ borderColor: "var(--border)" }}>
+      <h2 className="font-display text-xl flex items-baseline gap-2.5" style={{ fontWeight: 700 }}>
+        <span style={{ color: "var(--vermilion)", fontWeight: 800 }} aria-hidden>§</span>
+        {title}
+      </h2>
       {children}
     </section>
   );
@@ -35,15 +38,19 @@ export default function PrivacyPage() {
 
         {/* Header */}
         <div className="pb-6">
-          <div className="flex items-center justify-between mb-4">
-            <Link href="/" className="text-sm hover:underline" style={{ color: "#4F8EF7" }}>
-              ← KeizaiMap に戻る
+          <div className="flex items-center justify-between mb-7">
+            <Link href="/" className="flex items-center gap-2.5 group" aria-label="経済地図 ホーム">
+              <span className="seal shrink-0" style={{ width: 30, height: 30, fontSize: 16 }} aria-hidden>経</span>
+              <span className="font-mono text-xs tracking-wider" style={{ color: "var(--muted)" }}>← KEIZAIMAP</span>
             </Link>
             <ThemeToggle />
           </div>
-          <h1 className="text-2xl font-bold">プライバシーポリシー</h1>
-          <p className="text-sm mt-2" style={{ color: "var(--muted)" }}>
-            最終更新日：{lastUpdated}
+          <p className="eyebrow mb-3">規約 / PRIVACY</p>
+          <h1 className="font-display" style={{ fontSize: "clamp(26px, 5vw, 36px)", fontWeight: 700 }}>
+            プライバシーポリシー
+          </h1>
+          <p className="font-mono text-xs mt-3" style={{ color: "var(--muted)" }}>
+            最終更新 {lastUpdated}
           </p>
         </div>
 
@@ -98,7 +105,7 @@ export default function PrivacyPage() {
                   href="https://tools.google.com/dlpage/gaoptout"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: "#4F8EF7" }}
+                  style={{ color: "var(--link)" }}
                 >
                   Google Analytics オプトアウトアドオン
                 </a>
@@ -113,7 +120,7 @@ export default function PrivacyPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline ml-1"
-              style={{ color: "#4F8EF7" }}
+              style={{ color: "var(--link)" }}
             >
               Google プライバシーポリシー
             </a>
@@ -130,7 +137,7 @@ export default function PrivacyPage() {
           <ul className="text-sm space-y-1 list-disc pl-5" style={{ color: "var(--muted)" }}>
             <li>表示される広告はユーザーの閲覧履歴等をもとにパーソナライズされる場合があります</li>
             <li>広告のパーソナライズは
-              <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" className="hover:underline ml-1" style={{ color: "#4F8EF7" }}>
+              <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer" className="hover:underline ml-1" style={{ color: "var(--link)" }}>
                 広告設定ページ
               </a>
               から無効化できます

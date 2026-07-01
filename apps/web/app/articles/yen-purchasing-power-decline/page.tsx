@@ -143,8 +143,8 @@ export default function YenPurchasingPowerDeclinePage() {
         <Section heading="ドル建てGDPで見る日本の世界順位">
           <DataBox
             items={[
-              { label: "1995年 ドル建GDP", value: "$5.5兆", note: "世界2位", color: "#4F8EF7" },
-              { label: "2012年 ドル建GDP", value: "$6.2兆", note: "世界3位", color: "#4F8EF7" },
+              { label: "1995年 ドル建GDP", value: "$5.5兆", note: "世界2位", color: "var(--link)" },
+              { label: "2012年 ドル建GDP", value: "$6.2兆", note: "世界3位", color: "var(--link)" },
               { label: "2024年 ドル建GDP", value: "$4.1兆", note: "世界4位（独に抜かれる）", color: "#ef4444" },
               { label: "2025年 ドル建GDP", value: "$4.2兆", note: "世界5位（印に抜かれる）", color: "#ef4444" },
             ]}

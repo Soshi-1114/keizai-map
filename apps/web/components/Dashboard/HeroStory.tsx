@@ -40,9 +40,6 @@ function highlightFor(
   return { label, phrase, bad: !upIsBad };
 }
 
-const BAD_COLOR = "#dc2626";   // red-600
-const GOOD_COLOR = "#16a34a";  // green-600
-
 function HeroStoryImpl({ data, yearRange }: Props) {
   const span = yearRange[1] - yearRange[0];
 
@@ -52,15 +49,17 @@ function HeroStoryImpl({ data, yearRange }: Props) {
     if (!d) return null;
     return (
       <section
-        className="rounded-xl border p-4 md:p-6 space-y-1.5 md:space-y-2"
+        className="rounded-xl border p-5 md:p-7 reveal reveal-2"
         style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
         aria-label="ファーストビューの解説"
       >
-        <h2 className="text-lg md:text-2xl font-bold leading-tight">
-          {d.year}年の状況 — 実質賃金 {d.wage.toFixed(1)}、物価 {d.cpi.toFixed(1)}
+        <p className="eyebrow">SINGLE&nbsp;YEAR</p>
+        <h2 className="font-display mt-2 leading-tight" style={{ fontSize: "clamp(20px, 4vw, 30px)" }}>
+          {d.year}年の状況 — 実質賃金 <span className="font-mono">{d.wage.toFixed(1)}</span>、物価{" "}
+          <span className="font-mono">{d.cpi.toFixed(1)}</span>
         </h2>
-        <p className="text-xs" style={{ color: "var(--muted)" }}>
-          1990年=100
+        <p className="text-xs mt-2 font-mono" style={{ color: "var(--muted)" }}>
+          1990 = 100
         </p>
       </section>
     );
@@ -69,9 +68,7 @@ function HeroStoryImpl({ data, yearRange }: Props) {
   const start = data[0];
   const end = data[data.length - 1];
 
-  const highlights: Highlight[] = [
-    highlightFor("wage", start.wage, end.wage),
-  ];
+  const highlights: Highlight[] = [highlightFor("wage", start.wage, end.wage)];
   if (start.tax && end.tax) {
     highlights.push(highlightFor("tax", start.tax, end.tax));
   }
@@ -81,32 +78,51 @@ function HeroStoryImpl({ data, yearRange }: Props) {
 
   return (
     <section
-      className="rounded-xl border p-4 md:p-6 space-y-1.5 md:space-y-3"
+      className="relative rounded-xl border overflow-hidden reveal reveal-2"
       style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
       aria-label="ファーストビューの解説"
     >
-      <h2 className="text-xl md:text-3xl font-bold leading-tight tracking-tight">
-        {highlights.map((h, i) => {
-          const color = h.bad ? BAD_COLOR : GOOD_COLOR;
-          const isLast = i === highlights.length - 1;
-          return (
-            <span key={h.label}>
-              {h.label}は
-              <span style={{ color }} className="tabular-nums">
-                {h.phrase}
+      {/* 左端に藍の太罫＝「この帳の要旨」を示す符牒 */}
+      <span
+        className="absolute left-0 top-0 bottom-0 w-1"
+        style={{ backgroundColor: "var(--indigo)" }}
+        aria-hidden
+      />
+      <div className="p-5 md:p-7 pl-6 md:pl-8">
+        <div className="flex items-baseline justify-between gap-3 ledger-rule pb-3 mb-4">
+          <p className="eyebrow">この帳の要旨</p>
+          <p className="font-mono text-xs tnum" style={{ color: "var(--muted)" }}>
+            {start.year}–{end.year} ／ {span}年
+          </p>
+        </div>
+
+        {/* 主文：明朝で読み解きを一文に */}
+        <h2
+          className="font-display leading-[1.5]"
+          style={{ fontSize: "clamp(19px, 3.4vw, 30px)", fontWeight: 600 }}
+        >
+          {highlights.map((h, i) => {
+            const color = h.bad ? "var(--vermilion)" : "var(--good)";
+            const isLast = i === highlights.length - 1;
+            return (
+              <span key={h.label}>
+                <span style={{ color: "var(--muted)" }}>{h.label}は</span>
+                <span style={{ color }} className="font-mono px-0.5">
+                  {h.phrase}
+                </span>
+                <span style={{ color: "var(--muted)" }}>{isLast ? "。" : "、"}</span>
+                {!isLast && " "}
               </span>
-              {isLast ? "。" : "、"}
-              {!isLast && " "}
-            </span>
-          );
-        })}
-      </h2>
-      <p className="text-xs" style={{ color: "var(--muted)" }}>
-        日本の{span}年（{start.year}→{end.year}）／1990年=100
-      </p>
+            );
+          })}
+        </h2>
+
+        <p className="text-xs mt-4 font-mono" style={{ color: "var(--muted)" }}>
+          基準 1990 = 100 ／ 出典: 厚労省・総務省・財務省
+        </p>
+      </div>
     </section>
   );
 }
 
 export const HeroStory = memo(HeroStoryImpl);
-

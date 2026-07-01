@@ -8,10 +8,21 @@
  * - next/image: 現状 remotePatterns 未設定で自己ホスト画像のみ。data:/blob: は OG 画像用
  * - inline script/style: GA 初期化スニペットと Recharts/Next.js の style 属性多用のため 'unsafe-inline' 必須
  *   （将来的に nonce 化が望ましい）
+ * - 'unsafe-eval': 本番では付与しない。`next dev` の Fast Refresh（HMR）が eval を使うため、
+ *   開発時のみ許可する。これが無いと dev でクライアント JS がハイドレートできずグラフ/フィルターが固まる。
  */
+const isDev = process.env.NODE_ENV !== "production";
+const scriptSrc = [
+  "script-src 'self' 'unsafe-inline'",
+  isDev ? "'unsafe-eval'" : null,
+  "https://www.googletagmanager.com https://www.google-analytics.com",
+]
+  .filter(Boolean)
+  .join(" ");
+
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
+  scriptSrc,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com",
@@ -20,8 +31,12 @@ const CSP = [
   "base-uri 'self'",
   "form-action 'self'",
   "object-src 'none'",
-  "upgrade-insecure-requests",
-].join("; ");
+  // 本番のみ http→https 昇格。dev で LAN の http://<IP>:3000 にスマホから繋ぐ際、
+  // これが有ると https に強制昇格して接続不能になるため開発時は外す。
+  isDev ? null : "upgrade-insecure-requests",
+]
+  .filter(Boolean)
+  .join("; ");
 
 const securityHeaders = [
   { key: "Content-Security-Policy", value: CSP },

@@ -52,18 +52,26 @@ export function ArticleList() {
     >
       <div className="mx-auto min-w-0" style={{ maxWidth: 720 }}>
         {/* ナビ */}
-        <div className="flex items-center justify-between mb-6">
-          <Link href="/" className="text-sm hover:underline" style={{ color: "var(--link)" }}>
-            ← KeizaiMap に戻る
+        <div className="flex items-center justify-between mb-8">
+          <Link href="/" className="flex items-center gap-2.5 group" aria-label="経済地図 ホーム">
+            <span className="seal shrink-0" style={{ width: 30, height: 30, fontSize: 16 }} aria-hidden>
+              経
+            </span>
+            <span className="font-mono text-xs tracking-wider" style={{ color: "var(--muted)" }}>
+              ← KEIZAIMAP
+            </span>
           </Link>
           <ThemeToggle />
         </div>
 
         {/* ヘッダー */}
-        <header className="mb-6 pb-6 border-b" style={{ borderColor: "var(--border)" }}>
-          <h1 className="text-2xl font-bold mb-2">解説記事</h1>
-          <p className="text-sm mb-4" style={{ color: "var(--muted)" }}>
-            日本経済のキーワードをデータとともに解説します。
+        <header className="mb-8 pb-7 border-b" style={{ borderColor: "var(--border)" }}>
+          <p className="eyebrow mb-3">読みもの / READINGS</p>
+          <h1 className="font-display mb-2" style={{ fontSize: "clamp(28px, 6vw, 40px)", fontWeight: 700 }}>
+            解説記事
+          </h1>
+          <p className="font-mono text-xs mb-5" style={{ color: "var(--muted)" }}>
+            全{ARTICLES.length}本 ／ 公的統計だけで日本経済35年を読む
           </p>
           <div className="space-y-3 text-sm leading-relaxed" style={{ color: "var(--text)" }}>
             <p>
@@ -74,41 +82,33 @@ export function ArticleList() {
             </p>
           </div>
           <div
-            className="mt-5 p-4 rounded-lg border"
+            className="mt-6 rounded-lg border overflow-hidden relative"
             style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
           >
-            <p className="text-xs font-semibold mb-3" style={{ color: "var(--muted)" }}>
-              初めての方はこの3本から
-            </p>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link
-                  href="/articles/real-wages"
-                  className="hover:underline font-medium"
-                  style={{ color: "var(--link)" }}
-                >
-                  実質賃金とは？1990〜2025年の推移をデータで解説
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/articles/abenomics-real-wages-analysis"
-                  className="hover:underline font-medium"
-                  style={{ color: "var(--link)" }}
-                >
-                  アベノミクスで実質賃金は上がったのか？
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/articles/money-value-time-comparison"
-                  className="hover:underline font-medium"
-                  style={{ color: "var(--link)" }}
-                >
-                  30年前の月収30万円は今いくら？物価で換算する実質価値
-                </Link>
-              </li>
-            </ul>
+            <span className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundColor: "var(--vermilion-seal)" }} aria-hidden />
+            <div className="p-5 pl-6">
+              <p className="eyebrow mb-3">はじめの3本 / START HERE</p>
+              <ul className="space-y-2.5">
+                {[
+                  { href: "/articles/real-wages", label: "実質賃金とは？1990〜2025年の推移をデータで解説" },
+                  { href: "/articles/abenomics-real-wages-analysis", label: "アベノミクスで実質賃金は上がったのか？" },
+                  { href: "/articles/money-value-time-comparison", label: "30年前の月収30万円は今いくら？物価で換算する実質価値" },
+                ].map(({ href, label }, i) => (
+                  <li key={href} className="flex items-baseline gap-3">
+                    <span className="font-mono text-xs shrink-0" style={{ color: "var(--vermilion)" }}>
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <Link
+                      href={href}
+                      className="font-display text-[15px] leading-snug hover:text-[var(--link)] transition-colors"
+                      style={{ fontWeight: 600 }}
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </header>
 
@@ -122,7 +122,7 @@ export function ArticleList() {
               style={{
                 borderColor: selectedTag === null ? "var(--link)" : "var(--border)",
                 color: selectedTag === null ? "var(--link)" : "var(--muted)",
-                backgroundColor: selectedTag === null ? "#1d4ed815" : "transparent",
+                backgroundColor: selectedTag === null ? "var(--indigo-tint)" : "transparent",
               }}
             >
               すべて（{ARTICLES.length}）
@@ -138,7 +138,7 @@ export function ArticleList() {
                   style={{
                     borderColor: active ? "var(--link)" : "var(--border)",
                     color: active ? "var(--link)" : "var(--muted)",
-                    backgroundColor: active ? "#1d4ed815" : "transparent",
+                    backgroundColor: active ? "var(--indigo-tint)" : "transparent",
                   }}
                 >
                   {tag}（{count}）
@@ -185,12 +185,8 @@ export function ArticleList() {
           <>
             {liveArticles.length > 0 && (
               <section aria-labelledby="live-section-heading" className="mb-8">
-                <h2
-                  id="live-section-heading"
-                  className="text-sm font-semibold mb-3"
-                  style={{ color: "var(--muted)" }}
-                >
-                  公開中（{liveArticles.length}）
+                <h2 id="live-section-heading" className="eyebrow mb-4" style={{ color: "var(--muted)" }}>
+                  公開中 / {String(liveArticles.length).padStart(2, "0")}
                 </h2>
                 <div className="space-y-4 min-w-0">
                   {liveArticles.map((article) => (
@@ -205,12 +201,8 @@ export function ArticleList() {
             )}
             {draftArticles.length > 0 && (
               <section aria-labelledby="draft-section-heading">
-                <h2
-                  id="draft-section-heading"
-                  className="text-sm font-semibold mb-2"
-                  style={{ color: "var(--muted)" }}
-                >
-                  準備中（{draftArticles.length}）
+                <h2 id="draft-section-heading" className="eyebrow mb-2" style={{ color: "var(--muted)" }}>
+                  準備中 / {String(draftArticles.length).padStart(2, "0")}
                 </h2>
                 <p className="text-xs mb-3" style={{ color: "var(--muted)" }}>
                   以下の記事は内容を磨いている途中で、現在は検索エンジンに掲載していません。記事の閲覧は通常通り可能です。
@@ -243,18 +235,18 @@ function ArticleCard({
   return (
     <Link
       href={`/articles/${article.slug}`}
-      className="block rounded-xl border p-5 transition-colors hover:border-[var(--link)] min-w-0"
+      className="group block rounded-xl border p-5 transition-colors hover:border-[var(--link)] min-w-0"
       style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
     >
-      <div className="flex gap-2 flex-wrap mb-2 min-w-0">
+      <div className="flex gap-2 flex-wrap mb-2.5 min-w-0">
         {article.tags.map((tag) => (
           <span
             key={tag}
-            className="text-xs px-2 py-0.5 rounded-full border font-medium whitespace-nowrap"
+            className="font-mono text-[11px] px-2 py-0.5 rounded border tracking-wide whitespace-nowrap"
             style={{
               borderColor: tag === selectedTag ? "var(--link)" : "var(--border)",
-              color: tag === selectedTag ? "var(--link)" : "var(--text)",
-              backgroundColor: tag === selectedTag ? "#1d4ed815" : "var(--bg)",
+              color: tag === selectedTag ? "var(--link)" : "var(--muted)",
+              backgroundColor: tag === selectedTag ? "var(--indigo-tint)" : "var(--bg)",
             }}
           >
             {tag}
@@ -262,19 +254,19 @@ function ArticleCard({
         ))}
       </div>
       <h3
-        className="text-base font-bold mb-2 leading-snug break-words"
-        style={{ overflowWrap: "break-word" }}
+        className="font-display text-lg mb-2 leading-snug break-words transition-colors group-hover:text-[var(--link)]"
+        style={{ fontWeight: 700, overflowWrap: "break-word" }}
       >
         {article.title}
       </h3>
       <p
-        className="text-xs leading-relaxed mb-3 break-words"
+        className="text-[13px] leading-relaxed mb-3 break-words"
         style={{ color: "var(--muted)", overflowWrap: "break-word" }}
       >
         {article.description}
       </p>
-      <div className="text-xs" style={{ color: "var(--link)" }}>
-        読了時間 約 {article.readingTime} 分 →
+      <div className="font-mono text-[11px]" style={{ color: "var(--muted)" }}>
+        読了 約{article.readingTime}分 <span style={{ color: "var(--link)" }}>→</span>
       </div>
     </Link>
   );

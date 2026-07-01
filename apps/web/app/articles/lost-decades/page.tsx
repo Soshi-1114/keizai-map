@@ -92,8 +92,8 @@ export default function LostDecadesPage() {
         </p>
         <DataBox
           items={[
-            { label: "1990年",   value: "100.0", color: "#4F8EF7" },
-            { label: "2000年",   value: "107.8", note: "バブル後の一時高水準", color: "#4F8EF7" },
+            { label: "1990年",   value: "100.0", color: "var(--link)" },
+            { label: "2000年",   value: "107.8", note: "バブル後の一時高水準", color: "var(--link)" },
             { label: "2012年",   value: "97.4",  note: "リーマン後の最低点", color: "#ef4444" },
             { label: "2024年",   value: "99.2",  note: "コロナ後の戻り高値", color: "#ef4444" },
             { label: "2025年",   value: "97.9",  note: "1990年比 −2.1%", color: "#ef4444" },

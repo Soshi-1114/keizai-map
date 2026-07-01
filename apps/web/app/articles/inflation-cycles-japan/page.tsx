@@ -114,7 +114,7 @@ export default function InflationCyclesJapanPage() {
             items={[
               { label: "1989年 CPI", value: "≒97",   color: "#D97706" },
               { label: "1991年 CPI", value: "103.3", note: "2年で+6.5%", color: "#ef4444" },
-              { label: "終わりの引き金", value: "バブル崩壊", note: "資産価格暴落", color: "#4F8EF7" },
+              { label: "終わりの引き金", value: "バブル崩壊", note: "資産価格暴落", color: "var(--link)" },
             ]}
           />
           <p>
@@ -128,7 +128,7 @@ export default function InflationCyclesJapanPage() {
             items={[
               { label: "1996年 CPI", value: "107.1", color: "#D97706" },
               { label: "1998年 CPI", value: "109.7", note: "+2.4%",      color: "#ef4444" },
-              { label: "終わりの引き金", value: "金融危機", note: "山一證券破綻", color: "#4F8EF7" },
+              { label: "終わりの引き金", value: "金融危機", note: "山一證券破綻", color: "var(--link)" },
             ]}
           />
           <p>
@@ -143,7 +143,7 @@ export default function InflationCyclesJapanPage() {
             items={[
               { label: "2006年 CPI", value: "106.6", color: "#D97706" },
               { label: "2008年 CPI", value: "108.2", note: "+1.5%",      color: "#ef4444" },
-              { label: "終わりの引き金", value: "リーマンショック", note: "資源価格暴落", color: "#4F8EF7" },
+              { label: "終わりの引き金", value: "リーマンショック", note: "資源価格暴落", color: "var(--link)" },
             ]}
           />
           <p>
@@ -159,7 +159,7 @@ export default function InflationCyclesJapanPage() {
               { label: "2021年 CPI", value: "112.2", color: "#D97706" },
               { label: "2024年 CPI", value: "119.9", note: "3年で+6.9%", color: "#ef4444" },
               { label: "2025年 CPI", value: "123.7", note: "4年で+10.2%", color: "#ef4444" },
-              { label: "終わりの引き金", value: "未確定",  note: "円高転換 or 賃金停止", color: "#4F8EF7" },
+              { label: "終わりの引き金", value: "未確定",  note: "円高転換 or 賃金停止", color: "var(--link)" },
             ]}
           />
           <p>

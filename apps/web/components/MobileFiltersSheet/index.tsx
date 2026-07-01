@@ -213,7 +213,7 @@ export function MobileFiltersSheet({
                 minHeight: 44,
                 borderColor: showComparison ? "var(--link)" : "var(--border)",
                 color: showComparison ? "var(--link)" : "var(--text)",
-                backgroundColor: showComparison ? "#1d4ed815" : "transparent",
+                backgroundColor: showComparison ? "var(--indigo-tint)" : "transparent",
                 fontWeight: showComparison ? 600 : 500,
               }}
             >

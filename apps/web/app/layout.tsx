@@ -1,18 +1,36 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Noto_Sans_JP } from "next/font/google";
+import { IBM_Plex_Sans_JP, IBM_Plex_Mono, Shippori_Mincho } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { BASE_URL } from "@/lib/constants";
 
-// next/font で Noto Sans JP を最適ロード。CSS 変数 --font-sans で参照
-const notoSansJP = Noto_Sans_JP({
+// 本文・UI: IBM Plex Sans JP（やや技術的で官製文書に通じる骨格）。CSS 変数 --font-sans
+const plexSansJP = IBM_Plex_Sans_JP({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
   variable: "--font-sans",
   preload: true,
+});
+
+// 見出し・元号: しっぽり明朝（統計年鑑の格式）。CSS 変数 --font-shippori → --font-display
+const shippori = Shippori_Mincho({
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  display: "swap",
+  variable: "--font-shippori",
+  preload: false,
+});
+
+// データ・年号: IBM Plex Mono（数表の等幅）。CSS 変数 --font-plex-mono → --font-mono
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+  variable: "--font-plex-mono",
+  preload: false,
 });
 
 const GA_ID = "G-L3881RG05D";
@@ -65,9 +83,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" suppressHydrationWarning className={notoSansJP.variable}>
+    <html
+      lang="ja"
+      suppressHydrationWarning
+      className={`${plexSansJP.variable} ${shippori.variable} ${plexMono.variable}`}
+    >
       <head>
-        <meta name="theme-color" content="#0f172a" />
+        <meta name="theme-color" content="#14151D" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body className="antialiased">

@@ -111,7 +111,7 @@ export function BookmarkPanel({ indicators, range, events }: Props) {
         style={{
           borderColor: bookmarked ? "var(--link)" : "var(--border)",
           color: bookmarked ? "var(--link)" : "var(--muted)",
-          backgroundColor: bookmarked ? "#1d4ed815" : "transparent",
+          backgroundColor: bookmarked ? "var(--indigo-tint)" : "transparent",
         }}
       >
         <Star
