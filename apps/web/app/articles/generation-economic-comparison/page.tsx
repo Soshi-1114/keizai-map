@@ -83,7 +83,7 @@ export default function GenerationEconomicComparisonPage() {
         <Section heading="就職時の実質賃金（1990=100）">
           <DataBox
             items={[
-              { label: "氷河期世代 (1995)", value: "109.0", note: "高い水準", color: "#4F8EF7" },
+              { label: "氷河期世代 (1995)", value: "109.0", note: "高い水準", color: "var(--link)" },
               { label: "ミレニアル (2015)", value: "96.6",  note: "▲11%",     color: "#ef4444" },
               { label: "Z世代 (2025)",       value: "97.9",  note: "1990年比 -2.1%", color: "#ef4444" },
             ]}

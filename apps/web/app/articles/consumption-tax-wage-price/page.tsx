@@ -93,8 +93,8 @@ export default function ConsumptionTaxWagePricePage() {
         />
         <DataBox
           items={[
-            { label: "1996年", value: "110.3", note: "実質賃金（増税前）", color: "#4F8EF7" },
-            { label: "1997年", value: "110.7", note: "実質賃金（増税年）", color: "#4F8EF7" },
+            { label: "1996年", value: "110.3", note: "実質賃金（増税前）", color: "var(--link)" },
+            { label: "1997年", value: "110.7", note: "実質賃金（増税年）", color: "var(--link)" },
             { label: "1998年", value: "109.5", note: "増税2年目で低下", color: "#ef4444" },
           ]}
         />
@@ -122,7 +122,7 @@ export default function ConsumptionTaxWagePricePage() {
         />
         <DataBox
           items={[
-            { label: "2012年", value: "97.4", note: "実質賃金（増税前）", color: "#4F8EF7" },
+            { label: "2012年", value: "97.4", note: "実質賃金（増税前）", color: "var(--link)" },
             { label: "2014年", value: "97.1", note: "実質賃金（増税後）▼0.3%", color: "#ef4444" },
           ]}
         />
@@ -147,7 +147,7 @@ export default function ConsumptionTaxWagePricePage() {
         />
         <DataBox
           items={[
-            { label: "2018年", value: "99.1", note: "実質賃金（増税前）", color: "#4F8EF7" },
+            { label: "2018年", value: "99.1", note: "実質賃金（増税前）", color: "var(--link)" },
             { label: "2019年", value: "98.7", note: "実質賃金（増税後）▼0.4%", color: "#ef4444" },
             { label: "2020年", value: "96.5", note: "COVID-19で一層低下", color: "#ef4444" },
           ]}

@@ -104,7 +104,7 @@ export default function NationalDebtPerCitizenPage() {
               { label: "国債残高（絶対額）",    value: "1,128兆円", note: "2025年度末",        color: "#ef4444" },
               { label: "国民一人当たり",        value: "≒910万円",  note: "÷人口1.24億",       color: "#D97706" },
               { label: "対GDP比",              value: "≒230%",     note: "先進国最悪水準",    color: "#ef4444" },
-              { label: "個人金融資産との比",    value: "≒49%",      note: "÷2,300兆円",        color: "#4F8EF7" },
+              { label: "個人金融資産との比",    value: "≒49%",      note: "÷2,300兆円",        color: "var(--link)" },
               { label: "対外純資産との比",      value: "211%",      note: "対外資産534兆円",    color: "#22c55e" },
               { label: "税収に対する比",        value: "14.0倍",    note: "÷80.7兆円",         color: "#ef4444" },
             ]}

@@ -64,7 +64,7 @@ export default function FiscalCollapseTruthPage() {
           </p>
           <div
             className="rounded-xl border-l-4 p-4 my-4 text-sm"
-            style={{ borderLeftColor: "#4F8EF7", backgroundColor: "var(--card)", color: "var(--muted)" }}
+            style={{ borderLeftColor: "var(--link)", backgroundColor: "var(--card)", color: "var(--muted)" }}
           >
             ※ 本記事はいかなる政治的立場も支持・批判しません。公開統計に基づくデータの整理です。
           </div>
@@ -95,8 +95,8 @@ export default function FiscalCollapseTruthPage() {
           <DataBox
             items={[
               { label: "対外純資産残高（2024年末）", value: "約534兆円", note: "34年連続世界1位", color: "#22c55e" },
-              { label: "比較：ドイツ（2位）",        value: "約460兆円", note: "円換算概算",        color: "#4F8EF7" },
-              { label: "比較：中国（3位）",          value: "約340兆円", note: "円換算概算",        color: "#4F8EF7" },
+              { label: "比較：ドイツ（2位）",        value: "約460兆円", note: "円換算概算",        color: "var(--link)" },
+              { label: "比較：中国（3位）",          value: "約340兆円", note: "円換算概算",        color: "var(--link)" },
             ]}
           />
           <p>

@@ -139,7 +139,7 @@ export default function HousingPricePage() {
           <DataBox
             items={[
               { label: "変動金利型ローン", value: "上昇傾向", note: "2024年以降", color: "#D97706" },
-              { label: "実質賃金への影響", value: "要注視", note: "賃上げとの競争", color: "#4F8EF7" },
+              { label: "実質賃金への影響", value: "要注視", note: "賃上げとの競争", color: "var(--link)" },
             ]}
           />
           <p>

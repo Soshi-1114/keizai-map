@@ -130,7 +130,7 @@ export default function Retirement2000ManPage() {
           </p>
           <DataBox
             items={[
-              { label: "現役世代（30歳）が65歳になる時", value: "2061年", color: "#4F8EF7" },
+              { label: "現役世代（30歳）が65歳になる時", value: "2061年", color: "var(--link)" },
               { label: "35年間のCPI上昇（1.5%/年）",     value: "+68%",   color: "#D97706" },
               { label: "必要老後資金（2026年比）",       value: "≒4,400万円", note: "現在価値とは別物", color: "#ef4444" },
               { label: "現在価値換算（実質）",           value: "≒2,600万円", note: "実質的には変わらず", color: "#22c55e" },

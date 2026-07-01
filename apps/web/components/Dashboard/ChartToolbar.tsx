@@ -81,7 +81,7 @@ export function ChartToolbar({
       } inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full text-xs border font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600`}
       style={{
         borderColor: showDataTable ? "var(--link)" : "var(--border)",
-        backgroundColor: showDataTable ? "#1d4ed815" : "transparent",
+        backgroundColor: showDataTable ? "var(--indigo-tint)" : "transparent",
         color: showDataTable ? "var(--link)" : "var(--muted)",
         fontWeight: showDataTable ? 600 : 400,
         minHeight: isPc ? undefined : 44,

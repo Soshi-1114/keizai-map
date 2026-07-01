@@ -13,8 +13,11 @@ export const metadata: Metadata = {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="space-y-3 pt-6 border-t" style={{ borderColor: "var(--border)" }}>
-      <h2 className="text-base font-semibold">{title}</h2>
+    <section className="space-y-3 pt-7 mt-7 border-t" style={{ borderColor: "var(--border)" }}>
+      <h2 className="font-display text-xl flex items-baseline gap-2.5" style={{ fontWeight: 700 }}>
+        <span style={{ color: "var(--vermilion)", fontWeight: 800 }} aria-hidden>§</span>
+        {title}
+      </h2>
       {children}
     </section>
   );
@@ -34,14 +37,18 @@ export default function ContactPage() {
 
         {/* Header */}
         <div className="pb-6">
-          <div className="flex items-center justify-between mb-4">
-            <Link href="/" className="text-sm hover:underline" style={{ color: "var(--link)" }}>
-              ← KeizaiMap に戻る
+          <div className="flex items-center justify-between mb-7">
+            <Link href="/" className="flex items-center gap-2.5 group" aria-label="経済地図 ホーム">
+              <span className="seal shrink-0" style={{ width: 30, height: 30, fontSize: 16 }} aria-hidden>経</span>
+              <span className="font-mono text-xs tracking-wider" style={{ color: "var(--muted)" }}>← KEIZAIMAP</span>
             </Link>
             <ThemeToggle />
           </div>
-          <h1 className="text-2xl font-bold">お問い合わせ</h1>
-          <p className="text-sm mt-2" style={{ color: "var(--muted)" }}>
+          <p className="eyebrow mb-3">連絡 / CONTACT</p>
+          <h1 className="font-display" style={{ fontSize: "clamp(26px, 5vw, 36px)", fontWeight: 700 }}>
+            お問い合わせ
+          </h1>
+          <p className="text-sm mt-3" style={{ color: "var(--muted)" }}>
             データの誤り・機能改善のご提案・その他のご連絡はこちらからお送りください。
           </p>
         </div>

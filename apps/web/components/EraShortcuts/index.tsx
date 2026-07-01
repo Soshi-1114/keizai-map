@@ -32,7 +32,7 @@ export function EraShortcuts({ yearRange, onRangeChange }: Props) {
               padding: "4px 14px",
               borderColor:     isActive ? "var(--link)" : "var(--border)",
               color:           isActive ? "var(--link)" : "var(--muted)",
-              backgroundColor: isActive ? "#1d4ed815" : "transparent",
+              backgroundColor: isActive ? "var(--indigo-tint)" : "transparent",
               fontWeight:      isActive ? 600 : 400,
             }}
           >

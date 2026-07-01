@@ -127,7 +127,7 @@ export default function SocialInsuranceBurdenPage() {
           </p>
           <DataBox
             items={[
-              { label: "実質賃金（1990=100）", value: "97.9", note: "35年で -2.1%", color: "#4F8EF7" },
+              { label: "実質賃金（1990=100）", value: "97.9", note: "35年で -2.1%", color: "var(--link)" },
               { label: "社会保険料負担率", value: "+7.8pt", note: "10.8%→18.6%", color: "#ef4444" },
               { label: "消費者物価（1990=100）", value: "123.7", note: "+23.7%", color: "#D97706" },
             ]}
