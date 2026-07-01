@@ -88,7 +88,7 @@ export default function AbenomicsPage() {
             <div key={n} className="flex gap-3">
               <span
                 className="shrink-0 text-xs font-bold px-2 py-0.5 rounded"
-                style={{ backgroundColor: "#4F8EF720", color: "#4F8EF7" }}
+                style={{ backgroundColor: "var(--indigo-tint)", color: "var(--link)" }}
               >
                 {n}
               </span>

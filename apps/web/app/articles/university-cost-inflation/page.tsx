@@ -71,7 +71,7 @@ export default function UniversityCostInflationPage() {
         <Section heading="国立大学授業料の30年推移">
           <DataBox
             items={[
-              { label: "1990年", value: "33.9万円", color: "#4F8EF7" },
+              { label: "1990年", value: "33.9万円", color: "var(--link)" },
               { label: "2000年", value: "47.8万円", note: "+41%",      color: "#D97706" },
               { label: "2010年", value: "53.6万円", note: "+58%",      color: "#ef4444" },
               { label: "2025年", value: "53.6万円", note: "+58%（据置）", color: "#ef4444" },
@@ -87,7 +87,7 @@ export default function UniversityCostInflationPage() {
         <Section heading="私立大学授業料の30年推移（文系平均）">
           <DataBox
             items={[
-              { label: "1990年", value: "61.5万円", color: "#4F8EF7" },
+              { label: "1990年", value: "61.5万円", color: "var(--link)" },
               { label: "2000年", value: "78.9万円", note: "+28%",      color: "#D97706" },
               { label: "2010年", value: "85.8万円", note: "+39%",      color: "#ef4444" },
               { label: "2025年", value: "≒96万円",  note: "+56%",      color: "#ef4444" },

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { LineChart } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ARTICLES } from "@/lib/articles";
 
@@ -34,28 +33,32 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
     >
       <div className="mx-auto min-w-0" style={{ maxWidth: 720 }}>
         {/* ナビ */}
-        <div className="flex items-center justify-between mb-6">
-          <nav className="flex items-center gap-2 text-xs" style={{ color: "var(--muted)" }}>
-            <Link href="/" className="hover:underline" style={{ color: "var(--link)" }}>
-              KeizaiMap
+        <div className="flex items-center justify-between mb-8">
+          <nav className="flex items-center gap-2.5 min-w-0" aria-label="パンくず">
+            <Link href="/" aria-label="経済地図 ホーム">
+              <span className="seal shrink-0" style={{ width: 30, height: 30, fontSize: 16 }} aria-hidden>
+                経
+              </span>
             </Link>
-            <span>/</span>
-            <Link href="/articles" className="hover:underline" style={{ color: "var(--link)" }}>
-              解説記事
-            </Link>
+            <span className="font-mono text-xs tracking-wider truncate" style={{ color: "var(--muted)" }}>
+              <Link href="/" className="hover:text-[var(--link)]">KEIZAIMAP</Link>
+              <span className="px-1.5" style={{ color: "var(--border)" }}>/</span>
+              <Link href="/articles" className="hover:text-[var(--link)]">解説記事</Link>
+            </span>
           </nav>
           <ThemeToggle />
         </div>
 
         {/* ヘッダー */}
-        <header className="mb-8 pb-6 border-b" style={{ borderColor: "var(--border)" }}>
+        <header className="mb-9">
+          <p className="eyebrow mb-4">解説 / READING</p>
           {tags && (
-            <div className="flex gap-2 flex-wrap mb-3">
+            <div className="flex gap-2 flex-wrap mb-4">
               {tags.map(tag => (
                 <span
                   key={tag}
-                  className="text-xs px-2 py-0.5 rounded-full border"
-                  style={{ borderColor: "var(--border)", color: "var(--muted)" }}
+                  className="font-mono text-[11px] px-2 py-0.5 rounded border tracking-wide"
+                  style={{ borderColor: "var(--border)", color: "var(--muted)", backgroundColor: "var(--card)" }}
                 >
                   {tag}
                 </span>
@@ -63,28 +66,28 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
             </div>
           )}
           <h1
-            className="text-2xl font-bold leading-snug mb-3 break-words min-w-0"
-            style={{ overflowWrap: "break-word", wordBreak: "break-word" }}
+            className="font-display leading-[1.32] mb-4 break-words min-w-0"
+            style={{ fontSize: "clamp(24px, 4.6vw, 36px)", fontWeight: 700, overflowWrap: "break-word", wordBreak: "break-word" }}
           >
             {title}
           </h1>
-          <p className="text-sm leading-relaxed mb-4 break-words min-w-0" style={{ color: "var(--muted)", overflowWrap: "anywhere" }}>
+          <p className="text-[15px] leading-relaxed mb-5 break-words min-w-0" style={{ color: "var(--muted)", overflowWrap: "anywhere" }}>
             {description}
           </p>
-          <div className="text-xs flex flex-wrap gap-x-3 gap-y-1" style={{ color: "var(--muted)" }}>
+          <div className="font-mono text-[11px] flex flex-wrap items-center gap-x-3 gap-y-1 pt-4 border-t" style={{ color: "var(--muted)", borderColor: "var(--border)" }}>
             {meta && (
               <>
                 <span>
-                  公開: <time dateTime={meta.publishedAt}>{formatDate(meta.publishedAt)}</time>
+                  公開 <time dateTime={meta.publishedAt}>{formatDate(meta.publishedAt)}</time>
                 </span>
                 {meta.updatedAt !== meta.publishedAt && (
                   <span>
-                    更新: <time dateTime={meta.updatedAt}>{formatDate(meta.updatedAt)}</time>
+                    更新 <time dateTime={meta.updatedAt}>{formatDate(meta.updatedAt)}</time>
                   </span>
                 )}
               </>
             )}
-            <span>読了時間 約 {readingTime} 分</span>
+            <span style={{ color: "var(--vermilion)" }}>読了 約{readingTime}分</span>
           </div>
         </header>
 
@@ -93,42 +96,46 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
 
         {/* CTA — 記事のテーマに応じた指標・期間のプリセットで開く */}
         <div
-          className="mt-10 rounded-xl border p-5 text-center"
-          style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
+          className="mt-12 rounded-xl border overflow-hidden relative"
+          style={{ backgroundColor: "var(--indigo-tint)", borderColor: "var(--border)" }}
         >
-          <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
-            {article?.presetQuery
-              ? "この記事の指標・期間がそのまま表示される設定で KeizaiMap を開きます"
-              : "KeizaiMap でこの指標を実際のデータで確認できます"}
-          </p>
-          <Link
-            href={ctaHref}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition-opacity hover:opacity-80"
-            style={{ backgroundColor: "var(--accent-btn)", color: "#fff" }}
-          >
-            <LineChart size={16} aria-hidden />
-            この記事の設定で KeizaiMap を開く
-          </Link>
+          <span className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundColor: "var(--indigo)" }} aria-hidden />
+          <div className="p-6 pl-7">
+            <p className="eyebrow mb-2">DASHBOARD</p>
+            <p className="text-[15px] mb-4 leading-relaxed" style={{ color: "var(--text)" }}>
+              {article?.presetQuery
+                ? "この記事の指標・期間をそのまま開き、自分の手でグラフを動かせます。"
+                : "この指標を、政権の帯とともに実データで確認できます。"}
+            </p>
+            <Link
+              href={ctaHref}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold transition-opacity hover:opacity-90"
+              style={{ backgroundColor: "var(--accent-btn)", color: "#fff" }}
+            >
+              ダッシュボードで開く
+              <span aria-hidden>→</span>
+            </Link>
+          </div>
         </div>
 
         {/* 関連記事 */}
         {related.length > 0 && (
-          <div className="mt-8 pt-6 border-t" style={{ borderColor: "var(--border)" }}>
-            <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
-              関連記事
-            </h2>
-            <div className="space-y-2">
+          <div className="mt-10 pt-7 border-t" style={{ borderColor: "var(--border)" }}>
+            <p className="eyebrow mb-4">関連する帳 / RELATED</p>
+            <div className="space-y-2.5">
               {related.map((a) => (
                 <Link
                   key={a.slug}
                   href={`/articles/${a.slug}`}
-                  className="flex items-start gap-3 p-3 rounded-lg border transition-colors hover:border-[var(--link)]"
+                  className="group flex items-start gap-3 p-4 rounded-lg border transition-colors hover:border-[var(--link)]"
                   style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium leading-snug line-clamp-2">{a.title}</p>
-                    <p className="text-xs mt-1" style={{ color: "var(--link)" }}>
-                      読了時間 約 {a.readingTime} 分 →
+                    <p className="font-display text-[15px] leading-snug line-clamp-2 transition-colors group-hover:text-[var(--link)]" style={{ fontWeight: 600 }}>
+                      {a.title}
+                    </p>
+                    <p className="font-mono text-[11px] mt-1.5" style={{ color: "var(--muted)" }}>
+                      読了 約{a.readingTime}分 <span style={{ color: "var(--link)" }}>→</span>
                     </p>
                   </div>
                 </Link>
@@ -146,9 +153,7 @@ export function ArticleLayout({ title, description, readingTime, tags, slug, chi
 
         {/* データ出典 */}
         <div className="mt-6 pt-6 border-t" style={{ borderColor: "var(--border)" }}>
-          <h2 className="text-xs font-semibold mb-3" style={{ color: "var(--muted)" }}>
-            データ出典・免責
-          </h2>
+          <p className="eyebrow mb-3">出典・免責 / SOURCES</p>
           <div
             className="rounded-xl p-4 text-xs leading-relaxed space-y-2"
             style={{ backgroundColor: "var(--card)", border: "1px solid var(--border)", color: "var(--muted)" }}
@@ -210,21 +215,26 @@ export function Section({ heading, children }: { heading?: string; children: Rea
   return (
     <section>
       {heading && (
-        <h2
-          className="text-lg font-bold mb-3 pb-2 border-b"
-          style={{ borderColor: "var(--border)" }}
-        >
-          {heading}
+        <h2 className="font-display text-xl md:text-[22px] mb-4 flex items-baseline gap-2.5" style={{ fontWeight: 700 }}>
+          <span style={{ color: "var(--vermilion)", fontWeight: 800 }} aria-hidden>
+            §
+          </span>
+          <span className="min-w-0 break-words" style={{ overflowWrap: "anywhere" }}>
+            {heading}
+          </span>
         </h2>
       )}
-      <div className="text-sm leading-relaxed space-y-3 min-w-0 break-words" style={{ color: "var(--text)", overflowWrap: "anywhere" }}>
+      <div
+        className="text-[15px] leading-[1.85] space-y-4 min-w-0 break-words"
+        style={{ color: "var(--text)", overflowWrap: "anywhere" }}
+      >
         {children}
       </div>
     </section>
   );
 }
 
-// データ引用ボックス
+// データ引用ボックス — 等幅の数表として
 export function DataBox({
   items,
 }: {
@@ -232,22 +242,26 @@ export function DataBox({
 }) {
   return (
     <div
-      className="rounded-xl border p-4 grid grid-cols-2 md:grid-cols-4 gap-4 my-4"
+      className="rounded-xl border grid grid-cols-2 md:grid-cols-4 my-5 overflow-hidden"
       style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
     >
       {items.map(({ label, value, note, color }) => (
-        <div key={label}>
-          <div className="text-xs mb-1" style={{ color: "var(--muted)" }}>
+        <div
+          key={label}
+          className="p-4 border-b md:border-b-0 md:border-r last:border-r-0"
+          style={{ borderColor: "var(--border)" }}
+        >
+          <div className="font-mono text-[10px] tracking-wider uppercase mb-1.5" style={{ color: "var(--muted)" }}>
             {label}
           </div>
           <div
-            className="text-xl font-bold tabular-nums"
-            style={{ color: color ?? "var(--text)" }}
+            className="font-mono text-[22px] leading-none tnum"
+            style={{ color: color ?? "var(--text)", fontWeight: 600 }}
           >
             {value}
           </div>
           {note && (
-            <div className="text-xs mt-0.5" style={{ color: "var(--muted)" }}>
+            <div className="text-xs mt-1.5" style={{ color: "var(--muted)" }}>
               {note}
             </div>
           )}

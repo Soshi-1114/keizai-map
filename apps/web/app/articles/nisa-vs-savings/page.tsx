@@ -72,7 +72,7 @@ export default function NisaVsSavingsPage() {
             items={[
               { label: "銀行普通預金",   value: "≒101万円", note: "+1%程度",      color: "#ef4444" },
               { label: "日本国債（10年）", value: "≒123万円", note: "+23%",        color: "#D97706" },
-              { label: "日経平均",       value: "≒196万円", note: "+96%",        color: "#4F8EF7" },
+              { label: "日経平均",       value: "≒196万円", note: "+96%",        color: "var(--link)" },
               { label: "S&P500（円建）",  value: "≒1,500万円超", note: "+1,400%以上", color: "#22c55e" },
               { label: "金（ゴールド）", value: "≒800万円", note: "+700%",       color: "#D97706" },
             ]}

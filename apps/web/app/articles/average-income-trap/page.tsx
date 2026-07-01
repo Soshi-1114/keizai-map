@@ -93,7 +93,7 @@ export default function AverageIncomeTrapPage() {
           <DataBox
             items={[
               { label: "平均年収", value: "458万円", note: "報道される数字",      color: "#D97706" },
-              { label: "中央値",   value: "≒400万円", note: "半分はこれより低い",  color: "#4F8EF7" },
+              { label: "中央値",   value: "≒400万円", note: "半分はこれより低い",  color: "var(--link)" },
               { label: "最頻値",   value: "300〜400万円", note: "最も多い年収帯", color: "#22c55e" },
             ]}
           />
@@ -152,8 +152,8 @@ export default function AverageIncomeTrapPage() {
           </p>
           <DataBox
             items={[
-              { label: "1990年 平均年収", value: "≒425万円", color: "#4F8EF7" },
-              { label: "2000年 平均年収", value: "≒461万円", note: "ピーク",   color: "#4F8EF7" },
+              { label: "1990年 平均年収", value: "≒425万円", color: "var(--link)" },
+              { label: "2000年 平均年収", value: "≒461万円", note: "ピーク",   color: "var(--link)" },
               { label: "2010年 平均年収", value: "≒412万円", note: "リーマン後", color: "#ef4444" },
               { label: "2024年 平均年収", value: "≒460万円", note: "ピーク水準まで戻る", color: "#D97706" },
             ]}

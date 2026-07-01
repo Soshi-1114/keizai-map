@@ -84,10 +84,10 @@ export default function RealWagesTrendPage() {
       <Section heading="1990年代：バブル崩壊と金融危機（1990→2000）">
         <DataBox
           items={[
-            { label: "1990年",   value: "100.0", note: "バブル期のピーク", color: "#4F8EF7" },
-            { label: "1992年",   value: "107.2", note: "一時的な上昇", color: "#4F8EF7" },
-            { label: "1998年",   value: "109.5", note: "金融危機直前のピーク", color: "#4F8EF7" },
-            { label: "2000年",   value: "107.8", note: "-0.2%（1998年比）", color: "#4F8EF7" },
+            { label: "1990年",   value: "100.0", note: "バブル期のピーク", color: "var(--link)" },
+            { label: "1992年",   value: "107.2", note: "一時的な上昇", color: "var(--link)" },
+            { label: "1998年",   value: "109.5", note: "金融危機直前のピーク", color: "var(--link)" },
+            { label: "2000年",   value: "107.8", note: "-0.2%（1998年比）", color: "var(--link)" },
           ]}
         />
         <p>
@@ -101,7 +101,7 @@ export default function RealWagesTrendPage() {
       <Section heading="2000年代：デフレの深刻化（2000→2010）">
         <DataBox
           items={[
-            { label: "2000年",   value: "107.8", note: "2000年代の開始", color: "#4F8EF7" },
+            { label: "2000年",   value: "107.8", note: "2000年代の開始", color: "var(--link)" },
             { label: "2002年",   value: "104.1", note: "デフレ深刻化期", color: "#ef4444" },
             { label: "2006年",   value: "103.4", note: "小泉改革末期", color: "#D97706" },
             { label: "2010年",   value: "98.5",  note: "リーマン後の低水準", color: "#ef4444" },

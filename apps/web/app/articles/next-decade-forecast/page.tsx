@@ -69,7 +69,7 @@ export default function NextDecadeForecastPage() {
           </p>
           <div
             className="rounded-xl border-l-4 p-4 my-4 text-sm"
-            style={{ borderLeftColor: "#4F8EF7", backgroundColor: "var(--card)", color: "var(--muted)" }}
+            style={{ borderLeftColor: "var(--link)", backgroundColor: "var(--card)", color: "var(--muted)" }}
           >
             ※ 本記事の予測値はあくまで参考シナリオです。実際の経済動向は政策・国際情勢で大きく変動します。
           </div>
@@ -134,7 +134,7 @@ export default function NextDecadeForecastPage() {
           </p>
           <DataBox
             items={[
-              { label: "2025年（実績）",  value: "97.9", color: "#4F8EF7" },
+              { label: "2025年（実績）",  value: "97.9", color: "var(--link)" },
               { label: "2028年（楽観）",  value: "≒101", note: "1990年超え", color: "#22c55e" },
               { label: "2028年（悲観）",  value: "≒96",  note: "再下落",      color: "#ef4444" },
               { label: "2035年（楽観）",  value: "≒106", note: "本格回復",   color: "#22c55e" },

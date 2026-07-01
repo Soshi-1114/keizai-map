@@ -58,7 +58,7 @@ export function ChartPanel({
               style={{
                 borderColor: showComparison ? "var(--link)" : "var(--border)",
                 color: showComparison ? "var(--link)" : "var(--muted)",
-                backgroundColor: showComparison ? "#1d4ed815" : "transparent",
+                backgroundColor: showComparison ? "var(--indigo-tint)" : "transparent",
                 fontWeight: showComparison ? 600 : 400,
               }}
             >

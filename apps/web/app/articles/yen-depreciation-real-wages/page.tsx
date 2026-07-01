@@ -100,7 +100,7 @@ export default function YenDepreciationRealWagesPage() {
         />
         <DataBox
           items={[
-            { label: "2012年", value: "97.4",  note: "実質賃金", color: "#4F8EF7" },
+            { label: "2012年", value: "97.4",  note: "実質賃金", color: "var(--link)" },
             { label: "2014年", value: "97.1",  note: "▼0.3%（円安加速期）", color: "#ef4444" },
             { label: "2020年", value: "96.5",  note: "横ばい", color: "#ef4444" },
             { label: "2024年", value: "99.2",  note: "コロナ後の戻り高値", color: "#ef4444" },

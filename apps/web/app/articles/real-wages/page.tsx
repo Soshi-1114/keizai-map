@@ -83,7 +83,7 @@ export default function RealWagesPage() {
         </p>
         <div
           className="rounded-lg border-l-4 p-4 my-4 italic"
-          style={{ borderLeftColor: "#4F8EF7", backgroundColor: "var(--card)" }}
+          style={{ borderLeftColor: "var(--link)", backgroundColor: "var(--card)" }}
         >
           名目賃金 − 物価上昇
         </div>
@@ -118,7 +118,7 @@ export default function RealWagesPage() {
 
         <DataBox
           items={[
-            { label: "1990年", value: "100.0", color: "#4F8EF7" },
+            { label: "1990年", value: "100.0", color: "var(--link)" },
             { label: "2025年", value: "97.9", note: "1990年比 -2.1%", color: "#ef4444" },
             { label: "物価（CPI）", value: "123.7", note: "同期間で +23.7%", color: "#D97706" },
           ]}

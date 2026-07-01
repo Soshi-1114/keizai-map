@@ -95,9 +95,9 @@ export default function EconomicShocksComparisonPage() {
 
           <DataBox
             items={[
-              { label: "リーマン前（2006）", value: "103.4", color: "#4F8EF7" },
+              { label: "リーマン前（2006）", value: "103.4", color: "var(--link)" },
               { label: "底（2010）",         value: "98.5",  note: "▲4.7pt", color: "#ef4444" },
-              { label: "コロナ前（2018）",   value: "99.1",  color: "#4F8EF7" },
+              { label: "コロナ前（2018）",   value: "99.1",  color: "var(--link)" },
               { label: "底（2020）",         value: "96.5",  note: "▲2.6pt", color: "#ef4444" },
             ]}
           />

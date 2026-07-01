@@ -95,9 +95,9 @@ export default function IncomeInequalityPage() {
         <Section heading="日本のジニ係数30年推移">
           <DataBox
             items={[
-              { label: "1990年 当初所得",   value: "0.434", color: "#4F8EF7" },
+              { label: "1990年 当初所得",   value: "0.434", color: "var(--link)" },
               { label: "2024年 当初所得",   value: "≒0.580", note: "+34%", color: "#ef4444" },
-              { label: "1990年 再分配",     value: "0.364", color: "#4F8EF7" },
+              { label: "1990年 再分配",     value: "0.364", color: "var(--link)" },
               { label: "2024年 再分配",     value: "≒0.380", note: "+4%",   color: "#D97706" },
             ]}
           />
